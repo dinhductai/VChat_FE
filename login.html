@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoveConnect | Đăng Nhập</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff6b6b, #ff9f9f);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .login-container {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-container h2 {
+            color: #ff4d4d;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #ff4d4d;
+            outline: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #ff4d4d, #ff6b6b);
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Đăng Nhập LoveConnect</h2>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Nhập email của bạn" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Mật khẩu</label>
+            <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+        </div>
+        <button class="login-btn" onclick="handleLogin()">Đăng Nhập</button>
+        <p class="error-message" id="error-message">Email hoặc mật khẩu không đúng</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function handleLogin() {
+            // Lấy giá trị email và password
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            // Kiểm tra nếu email hoặc password trống
+            if (!email || !password) {
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Vui lòng nhập đầy đủ email và mật khẩu';
+                return;
+            }
+
+            try {
+                // Gửi yêu cầu POST đến API
+                const response = await fetch('http://localhost:8080/api/auth/log-in', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                // Chuyển response thành JSON
+                const result = await response.json();
+
+                // Kiểm tra nếu đăng nhập thành công
+                if (response.ok && result.success) {
+                    // Hiển thị thông báo đăng nhập thành công
+                    alert('Đăng nhập thành công');
+                    
+                    // Lưu token vào localStorage
+                    localStorage.setItem('token', result.data.token);
+                    // Chuyển hướng đến trang Home
+                    window.location.href = 'home.html';
+                } else {
+                    // Hiển thị thông báo lỗi từ API
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = result.message || 'Đăng nhập thất bại';
+                }
+            } catch (error) {
+                // Xử lý lỗi mạng hoặc API
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Có lỗi xảy ra, vui lòng thử lại';
+                console.error('Error:', error);
+            }
+        }
+
+        // Xử lý sự kiện Enter để đăng nhập
+        document.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                handleLogin();
+            }
+        });
+    </script>
+</body>
+</html>
