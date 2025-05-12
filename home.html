@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoveConnect | Hẹn Hò</title>
+    <title>LoveConnect | Trang Chủ</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -12,118 +12,152 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <style>
         body {
-            background-color: #1a1a1a;
-            color: #fff;
+            background-color: #f0f2f5;
             font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
         }
 
         /* Sidebar */
         .sidebar {
-            background-color: #2c2c2c;
+            background-color: #fff;
+            width: 280px;
             height: 100vh;
-            padding: 20px;
+            padding: 20px 15px;
+            border-right: 1px solid #ddd;
+            position: fixed;
+            top: 0;
+            left: 0;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .sidebar-item {
+        .sidebar-header {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.3s;
         }
 
-        .sidebar-item:hover {
-            background-color: #3a3a3a;
-        }
-
-        .sidebar-item i {
-            font-size: 24px;
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             margin-right: 10px;
         }
 
-        .sidebar-item:nth-child(1) {
-            background-color: #ff4d4d;
+        .sidebar-header span {
+            font-weight: 600;
+            color: #1a1a1a;
+            vertical-align: middle;
         }
 
-        .sidebar-item:nth-child(2) {
-            background-color: #d946ef;
+        .sidebar-menu {
+            flex-grow: 1;
+            margin-top: 20px;
         }
 
-        .sidebar-item:nth-child(3) {
-            background-color: #facc15;
-        }
-
-        .sidebar-item:nth-child(4) {
-            background-color: #22d3ee;
-        }
-
-        .verify-photo {
-            background-color: #ff6b6b;
-            text-align: center;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: auto;
-        }
-
-        .verify-photo img {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 10px;
-        }
-
-        /* Main content */
-        .main-content {
-            height: 100vh;
+        .sidebar-item {
             display: flex;
-            justify-content: center;
             align-items: center;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+            color: #1a1a1a;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            background-color: #e7f3ff;
+        }
+
+        .sidebar-item i {
+            font-size: 20px;
+            margin-right: 15px;
+            color: #1877f2;
+        }
+
+        .sidebar-item span {
+            font-size: 14px;
+        }
+
+        .sidebar-footer {
+            padding: 10px 0;
+            border-top: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .sidebar-footer a {
+            color: #606770;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .sidebar-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
             padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .user-card {
-            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%);
-            border-radius: 20px;
-            overflow: hidden;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 400px;
-            position: relative;
-        }
-
-        .user-card img {
-            width: 100%;
-            height: 500px;
-            object-fit: cover;
-        }
-
-        .user-info {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            color: #fff;
+            max-width: 500px;
+            margin-bottom: 20px;
+            padding: 20px;
+            text-align: center;
         }
 
         .user-info h3 {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 22px;
+            margin-bottom: 5px;
+            color: #1a1a1a;
         }
 
         .user-info p {
-            font-size: 16px;
+            font-size: 14px;
+            color: #606770;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .photo-grid img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
         }
 
         .user-actions {
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 20px;
+            padding: 20px;
+            background: #f0f2f5;
         }
 
-        .action-btn {
+        .action-btn, .next-btn {
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -132,89 +166,270 @@
             align-items: center;
             font-size: 20px;
             border: 2px solid;
+            background: #fff;
+            cursor: pointer;
             transition: transform 0.3s;
         }
 
-        .action-btn:hover {
+        .action-btn:hover, .next-btn:hover {
             transform: scale(1.1);
         }
 
-        .rewind-btn {
-            color: #facc15;
-            border-color: #facc15;
-        }
-
-        .dislike-btn {
-            color: #ff4d4d;
-            border-color: #ff4d4d;
-        }
-
-        .superlike-btn {
-            color: #22d3ee;
-            border-color: #22d3ee;
-        }
-
-        .like-btn {
-            color: #00ff00;
-            border-color: #00ff00;
-        }
-
-        .boost-btn {
-            color: #d946ef;
-            border-color: #d946ef;
-        }
+        .rewind-btn { color: #facc15; border-color: #facc15; }
+        .dislike-btn { color: #ff4d4d; border-color: #ff4d4d; }
+        .superlike-btn { color: #22d3ee; border-color: #22d3ee; }
+        .like-btn { color: #00ff00; border-color: #00ff00; }
+        .boost-btn { color: #d946ef; border-color: #d946ef; }
+        .next-btn { color: #4dabf7; border-color: #4dabf7; display: none; }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 sidebar">
-                <div>
-                    <div class="sidebar-item">
-                        <i class="fa-solid fa-heart"></i>
-                        <span>Người yêu</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <i class="fa-solid fa-moon"></i>
-                        <span>Rảnh tối nay</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <i class="fa-solid fa-link"></i>
-                        <span>Mối quan hệ không ràng buộc</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <i class="fa-solid fa-star"></i>
-                        <span>Nhắm người bạn mơ</span>
-                    </div>
+    <div class="row" style="height: 100vh; margin: 0;">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header" onclick="window.location.href='profile.html'">
+                <img src="https://via.placeholder.com/40" alt="Avatar">
+                <span>Admin</span>
+            </div>
+            <div class="sidebar-menu">
+                <a href="#" class="sidebar-item active">
+                    <i class="fa-solid fa-heart"></i>
+                    <span>Người yêu</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-solid fa-moon"></i>
+                    <span>Rảnh tối nay</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-solid fa-link"></i>
+                    <span>Mối quan hệ không ràng buộc</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-solid fa-star"></i>
+                    <span>Nhắm người bạn mơ</span>
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <a href="#">Quyền riêng tư</a> | <a href="#">Điều khoản</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="user-card" id="user-card">
+                <div class="user-info">
+                    <h3 id="user-name">Đang tải...</h3>
+                    <p id="user-location">Đang tải...</p>
                 </div>
-                <div class="verify-photo">
-                    <img src="https://via.placeholder.com/40" alt="Verify Photo">
-                    <p>Hãy xác minh ảnh<br>THỬ NGAY</p>
+                <div class="photo-grid" id="photo-grid">
+                    <!-- Ảnh sẽ được thêm động -->
                 </div>
             </div>
-
-            <!-- Main Content -->
-            <div class="col-md-9 col-lg-10 main-content">
-                <div class="user-card">
-                    <img src="https://via.placeholder.com/400x500" alt="User Photo">
-                    <div class="user-info">
-                        <h3>BôngBé 18</h3>
-                        <p>Cách xa 11 km</p>
-                    </div>
-                </div>
-                <div class="user-actions">
-                    <button class="action-btn rewind-btn"><i class="fa-solid fa-rotate-left"></i></button>
-                    <button class="action-btn dislike-btn"><i class="fa-solid fa-times"></i></button>
-                    <button class="action-btn superlike-btn"><i class="fa-solid fa-star"></i></button>
-                    <button class="action-btn like-btn"><i class="fa-solid fa-heart"></i></button>
-                    <button class="action-btn boost-btn"><i class="fa-solid fa-bolt"></i></button>
-                </div>
+            <div class="user-actions">
+                <button class="action-btn rewind-btn" onclick="rewindUser()"><i class="fa-solid fa-rotate-left"></i></button>
+                <button class="action-btn dislike-btn" onclick="nextUser()"><i class="fa-solid fa-times"></i></button>
+                <button class="action-btn superlike-btn"><i class="fa-solid fa-star"></i></button>
+                <button class="action-btn like-btn"><i class="fa-solid fa-heart"></i></button>
+                <button class="action-btn boost-btn"><i class="fa-solid fa-bolt"></i></button>
+                <button class="next-btn" id="next-btn" onclick="loadNextPage()"><i class="fa-solid fa-angle-right"></i></button>
             </div>
         </div>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JWT Decode -->
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script>
+        let userHistory = []; // Lưu lịch sử người dùng đã xem
+        let currentIndex = -1;
+        let currentPage = 0;
+        let pageSize = 10;
+        let totalPages = 0;
+        let currentUserId = null;
+        const nextBtn = document.getElementById('next-btn');
+        const CLOUDINARY_CLOUD_NAME = 'dvgxke1mp'; // Thay bằng cloud name thực tế của bạn
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            console.log('Token:', token);
+            if (!token) {
+                console.error('Token không tồn tại');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const decodedToken = jwt_decode(token);
+            console.log('Decoded Token:', decodedToken);
+            currentUserId = decodedToken.sub;
+            if (!currentUserId || isNaN(parseInt(currentUserId))) {
+                console.error('UserId không hợp lệ từ token:', decodedToken);
+                alert('Token không chứa userId hợp lệ');
+                return;
+            }
+            loadUsers(token, currentPage);
+        });
+
+        async function loadUsers(token, page) {
+            try {
+                console.log(`Attempting to load page ${page} with size ${pageSize} for userId ${currentUserId}`);
+                const response = await fetch(`http://localhost:8080/api/random-user-photos/${currentUserId}?page=${page}&size=${pageSize}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+                }
+                const result = await response.json();
+                console.log('API Response:', result);
+
+                if (!result.success || !result.data || !result.data.content) {
+                    alert(result.message || 'Dữ liệu không hợp lệ từ server');
+                    return false;
+                }
+
+                const pageData = result.data;
+                totalPages = pageData.totalPages || 0;
+                console.log(`Total pages updated to: ${totalPages}`);
+                const users = pageData.content || [];
+
+                if (users.length === 0) {
+                    console.log('No users returned for page:', page);
+                    alert('Không còn người dùng nào để hiển thị trong trang này');
+                    return false;
+                }
+
+                userHistory = userHistory.concat(users);
+                currentIndex = userHistory.length - users.length; // Đặt lại index về người đầu tiên của page mới
+                console.log(`Loaded ${users.length} users. Current Index: ${currentIndex}, Total History: ${userHistory.length}`);
+                updateNextButtonVisibility();
+                displayUser();
+                return true;
+            } catch (error) {
+                console.error('Error loading users:', error);
+                alert('Có lỗi xảy ra khi tải thông tin: ' + error.message);
+                return false;
+            }
+        }
+
+        function displayUser() {
+            if (currentIndex < 0 || currentIndex >= userHistory.length) {
+                console.log('No user to display at index:', currentIndex);
+                document.getElementById('user-name').textContent = 'Không có người dùng';
+                document.getElementById('user-location').textContent = '';
+                document.getElementById('photo-grid').innerHTML = '<p>Không có dữ liệu</p>';
+                updateNextButtonVisibility();
+                return;
+            }
+
+            const userData = userHistory[currentIndex];
+            document.getElementById('user-name').textContent = userData.fullName || 'Không có tên';
+            document.getElementById('user-location').textContent = userData.location || 'Không có địa điểm';
+
+            const photoGrid = document.getElementById('photo-grid');
+            photoGrid.innerHTML = '';
+            const photos = userData.photos || [];
+            console.log(`Public IDs for user ${userData.fullName}:`, photos);
+
+            if (photos.length === 0) {
+                photoGrid.innerHTML = '<p>Không có ảnh</p>';
+            } else {
+                photos.slice(0, 6).forEach(publicId => {
+                    // Tạo URL ảnh từ public ID
+                    const imageUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}.jpg`;
+                    console.log(`Generated image URL: ${imageUrl}`);
+
+                    const img = document.createElement('img');
+                    img.src = imageUrl; // Gán URL vào src
+                    img.alt = 'User photo';
+                    img.onerror = () => {
+                        console.error('Failed to load image:', imageUrl);
+                        img.src = 'https://via.placeholder.com/150?text=Image+Failed'; // Hình ảnh thay thế nếu lỗi
+                    };
+                    photoGrid.appendChild(img);
+                });
+            }
+            updateNextButtonVisibility();
+        }
+
+        async function nextUser() {
+            const token = localStorage.getItem('token');
+            if (currentIndex < 0 || currentIndex >= userHistory.length) {
+                console.log('No user to dislike or index out of bounds:', currentIndex);
+                updateNextButtonVisibility();
+                return;
+            }
+
+            try {
+                const currentUser = userHistory[currentIndex];
+                console.log('Disliking user with ID:', currentUser.userId);
+                const response = await fetch('http://localhost:8080/api/users/dislike', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ dislikedUserId: currentUser.userId })
+                });
+                if (!response.ok) {
+                    console.error('Failed to dislike user. Status:', response.status);
+                }
+            } catch (error) {
+                console.error('Error disliking user:', error);
+            }
+
+            currentIndex++;
+            console.log(`Next user index: ${currentIndex}, History length: ${userHistory.length}`);
+            
+            if (currentIndex >= userHistory.length) {
+                console.log('Reached end of user history');
+                document.getElementById('user-name').textContent = 'Không còn người dùng';
+                document.getElementById('user-location').textContent = '';
+                document.getElementById('photo-grid').innerHTML = '<p>Không có dữ liệu</p>';
+            } else {
+                displayUser();
+            }
+        }
+
+        function rewindUser() {
+            if (currentIndex <= 0) {
+                console.log('Cannot rewind. Already at the first user.');
+                return;
+            }
+            currentIndex--;
+            console.log('Rewinded to index:', currentIndex);
+            displayUser();
+        }
+
+        async function loadNextPage() {
+            const token = localStorage.getItem('token');
+            if (currentPage >= totalPages - 1) {
+                console.log('No more pages to load. Total pages:', totalPages);
+                alert('Đã hết người dùng để hiển thị');
+                nextBtn.style.display = 'none';
+                return;
+            }
+            currentPage++;
+            console.log(`Loading next page: ${currentPage}`);
+            const loaded = await loadUsers(token, currentPage);
+            if (!loaded) {
+                currentPage--; // Nếu không tải được, quay lại page trước
+                console.log('Failed to load next page, reverting to page:', currentPage);
+            }
+        }
+
+        function updateNextButtonVisibility() {
+            const usersInCurrentPage = userHistory.length - (currentPage * pageSize);
+            const isLastUserInPage = currentIndex === (currentPage * pageSize + usersInCurrentPage - 1);
+            const hasNextPage = currentPage < totalPages - 1;
+            const hasUsers = userHistory.length > 0;
+            const shouldShowNextBtn = isLastUserInPage && hasNextPage && hasUsers;
+
+            nextBtn.style.display = shouldShowNextBtn ? 'flex' : 'none';
+            console.log(`Next button visibility: ${nextBtn.style.display}, Current Index: ${currentIndex}, Users in current page: ${usersInCurrentPage}, Current Page: ${currentPage}, Total Pages: ${totalPages}, Is Last User: ${isLastUserInPage}, Has Next Page: ${hasNextPage}, Has Users: ${hasUsers}`);
+        }
+    </script>
 </body>
 </html>
