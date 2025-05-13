@@ -120,33 +120,75 @@
             width: 100%;
             max-width: 500px;
             margin-bottom: 20px;
-            padding: 20px;
+            padding: 0; /* Bỏ padding để ảnh chiếm toàn bộ */
             text-align: center;
+            position: relative;
+        }
+
+        .photo-container {
+            position: relative;
+            width: 100%;
+            height: 400px; /* Chiều cao cố định cho ảnh */
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .user-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6); /* Nền mờ để dễ đọc */
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-align: left;
         }
 
         .user-info h3 {
-            font-size: 22px;
-            margin-bottom: 5px;
-            color: #1a1a1a;
+            font-size: 20px;
+            margin: 0;
+            color: #fff;
         }
 
         .user-info p {
             font-size: 14px;
-            color: #606770;
+            margin: 2px 0 0;
+            color: #ddd;
         }
 
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 20px;
+        .photo-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            border: 2px solid #fff;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.3s;
         }
 
-        .photo-grid img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
+        .photo-nav-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .photo-nav-btn.prev {
+            left: 10px;
+        }
+
+        .photo-nav-btn.next {
+            right: 10px;
         }
 
         .user-actions {
@@ -157,7 +199,7 @@
             background: #f0f2f5;
         }
 
-        .action-btn, .next-btn {
+        .action-btn {
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -171,7 +213,7 @@
             transition: transform 0.3s;
         }
 
-        .action-btn:hover, .next-btn:hover {
+        .action-btn:hover {
             transform: scale(1.1);
         }
 
@@ -180,7 +222,7 @@
         .superlike-btn { color: #22d3ee; border-color: #22d3ee; }
         .like-btn { color: #00ff00; border-color: #00ff00; }
         .boost-btn { color: #d946ef; border-color: #d946ef; }
-        .next-btn { color: #4dabf7; border-color: #4dabf7; display: none; }
+        .next-page-btn { color: #4dabf7; border-color: #4dabf7; display: none; }
     </style>
 </head>
 <body>
@@ -217,12 +259,18 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="user-card" id="user-card">
-                <div class="user-info">
-                    <h3 id="user-name">Đang tải...</h3>
-                    <p id="user-location">Đang tải...</p>
-                </div>
-                <div class="photo-grid" id="photo-grid">
-                    <!-- Ảnh sẽ được thêm động -->
+                <div class="photo-container" id="photo-container">
+                    <button class="photo-nav-btn prev" id="prev-photo-btn" onclick="prevPhoto()" style="display: none;">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </button>
+                    <img id="user-photo" src="https://via.placeholder.com/500x400?text=Loading" alt="Ảnh người dùng">
+                    <button class="photo-nav-btn next" id="next-photo-btn" onclick="nextPhoto()" style="display: none;">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </button>
+                    <div class="user-info">
+                        <h3 id="user-name">Đang tải...</h3>
+                        <p id="user-details">Đang tải...</p>
+                    </div>
                 </div>
             </div>
             <div class="user-actions">
@@ -230,8 +278,10 @@
                 <button class="action-btn dislike-btn" onclick="nextUser()"><i class="fa-solid fa-times"></i></button>
                 <button class="action-btn superlike-btn"><i class="fa-solid fa-star"></i></button>
                 <button class="action-btn like-btn"><i class="fa-solid fa-heart"></i></button>
+                <button class="action-btn next-page-btn" id="next-page-btn" onclick="loadNextPage()">
+                    <i class="fa-solid fa-angle-right"></i>
+                </button>
                 <button class="action-btn boost-btn"><i class="fa-solid fa-bolt"></i></button>
-                <button class="next-btn" id="next-btn" onclick="loadNextPage()"><i class="fa-solid fa-angle-right"></i></button>
             </div>
         </div>
     </div>
@@ -241,14 +291,17 @@
     <!-- JWT Decode -->
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     <script>
-        let userHistory = []; // Lưu lịch sử người dùng đã xem
+        let userHistory = []; // Lưu người dùng của trang hiện tại
         let currentIndex = -1;
         let currentPage = 0;
         let pageSize = 10;
         let totalPages = 0;
         let currentUserId = null;
-        const nextBtn = document.getElementById('next-btn');
-        const CLOUDINARY_CLOUD_NAME = 'dvgxke1mp'; // Thay bằng cloud name thực tế của bạn
+        let currentPhotoIndex = 0; // Chỉ số ảnh hiện tại của người dùng
+        const nextPageBtn = document.getElementById('next-page-btn');
+        const prevPhotoBtn = document.getElementById('prev-photo-btn');
+        const nextPhotoBtn = document.getElementById('next-photo-btn');
+        const userPhoto = document.getElementById('user-photo');
 
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
@@ -272,7 +325,7 @@
 
         async function loadUsers(token, page) {
             try {
-                console.log(`Attempting to load page ${page} with size ${pageSize} for userId ${currentUserId}`);
+                console.log(`Đang thử tải trang ${page} với kích thước ${pageSize} cho userId ${currentUserId}`);
                 const response = await fetch(`http://localhost:8080/api/random-user-photos/${currentUserId}?page=${page}&size=${pageSize}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -280,10 +333,10 @@
                 });
                 if (!response.ok) {
                     const errorText = await response.text();
-                    throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+                    throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}, Thông điệp: ${errorText}`);
                 }
                 const result = await response.json();
-                console.log('API Response:', result);
+                console.log('Phản hồi API:', result);
 
                 if (!result.success || !result.data || !result.data.content) {
                     alert(result.message || 'Dữ liệu không hợp lệ từ server');
@@ -292,23 +345,21 @@
 
                 const pageData = result.data;
                 totalPages = pageData.totalPages || 0;
-                console.log(`Total pages updated to: ${totalPages}`);
-                const users = pageData.content || [];
+                userHistory = pageData.content || []; // Làm mới userHistory với dữ liệu trang mới
+                console.log(`Tổng số trang: ${totalPages}, Số người dùng trong trang ${page}: ${userHistory.length}`);
 
-                if (users.length === 0) {
-                    console.log('No users returned for page:', page);
-                    alert('Không còn người dùng nào để hiển thị trong trang này');
+                if (userHistory.length === 0) {
+                    console.log('Không có người dùng nào được trả về cho trang:', page);
+                    alert('Không có người dùng nào để hiển thị trong trang này');
                     return false;
                 }
 
-                userHistory = userHistory.concat(users);
-                currentIndex = userHistory.length - users.length; // Đặt lại index về người đầu tiên của page mới
-                console.log(`Loaded ${users.length} users. Current Index: ${currentIndex}, Total History: ${userHistory.length}`);
-                updateNextButtonVisibility();
+                currentIndex = 0; // Bắt đầu từ người dùng đầu tiên của trang mới
+                console.log(`Đã tải ${userHistory.length} người dùng. Chỉ số hiện tại: ${currentIndex}`);
                 displayUser();
                 return true;
             } catch (error) {
-                console.error('Error loading users:', error);
+                console.error('Lỗi khi tải người dùng:', error);
                 alert('Có lỗi xảy ra khi tải thông tin: ' + error.message);
                 return false;
             }
@@ -316,119 +367,106 @@
 
         function displayUser() {
             if (currentIndex < 0 || currentIndex >= userHistory.length) {
-                console.log('No user to display at index:', currentIndex);
-                document.getElementById('user-name').textContent = 'Không có người dùng';
-                document.getElementById('user-location').textContent = '';
-                document.getElementById('photo-grid').innerHTML = '<p>Không có dữ liệu</p>';
-                updateNextButtonVisibility();
+                console.log('Không có người dùng để hiển thị tại chỉ số:', currentIndex);
+                document.getElementById('user-name').textContent = 'Không còn người dùng trong trang này';
+                document.getElementById('user-details').textContent = '';
+                userPhoto.src = 'https://via.placeholder.com/500x400?text=No+Data';
+                userPhoto.alt = 'Không có dữ liệu';
+                prevPhotoBtn.style.display = 'none';
+                nextPhotoBtn.style.display = 'none';
+                // Hiển thị nút Next khi đến người dùng cuối cùng
+                nextPageBtn.style.display = 'flex';
                 return;
             }
 
             const userData = userHistory[currentIndex];
             document.getElementById('user-name').textContent = userData.fullName || 'Không có tên';
-            document.getElementById('user-location').textContent = userData.location || 'Không có địa điểm';
+            document.getElementById('user-details').textContent = `${userData.gender || 'Không xác định'}, ${userData.location || 'Không có địa điểm'}`;
 
-            const photoGrid = document.getElementById('photo-grid');
-            photoGrid.innerHTML = '';
-            const photos = userData.photos || [];
-            console.log(`Public IDs for user ${userData.fullName}:`, photos);
+            const photos = userData.listPhotoUrl || []; // Sử dụng listPhotoUrl thay vì photos
+            currentPhotoIndex = 0; // Đặt lại chỉ số ảnh khi chuyển người dùng
+            console.log(`URL ảnh cho người dùng ${userData.fullName}:`, photos);
 
             if (photos.length === 0) {
-                photoGrid.innerHTML = '<p>Không có ảnh</p>';
+                userPhoto.src = 'https://via.placeholder.com/500x400?text=No+Photo';
+                userPhoto.alt = 'Không có ảnh';
+                prevPhotoBtn.style.display = 'none';
+                nextPhotoBtn.style.display = 'none';
             } else {
-                photos.slice(0, 6).forEach(publicId => {
-                    // Tạo URL ảnh từ public ID
-                    const imageUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}.jpg`;
-                    console.log(`Generated image URL: ${imageUrl}`);
-
-                    const img = document.createElement('img');
-                    img.src = imageUrl; // Gán URL vào src
-                    img.alt = 'User photo';
-                    img.onerror = () => {
-                        console.error('Failed to load image:', imageUrl);
-                        img.src = 'https://via.placeholder.com/150?text=Image+Failed'; // Hình ảnh thay thế nếu lỗi
-                    };
-                    photoGrid.appendChild(img);
-                });
+                userPhoto.src = photos[currentPhotoIndex];
+                userPhoto.alt = 'Ảnh người dùng';
+                userPhoto.onerror = () => {
+                    console.error('Không tải được ảnh:', photos[currentPhotoIndex]);
+                    userPhoto.src = 'https://via.placeholder.com/500x400?text=Image+Failed';
+                };
+                // Hiển thị nút điều hướng ảnh
+                prevPhotoBtn.style.display = currentPhotoIndex > 0 ? 'flex' : 'none';
+                nextPhotoBtn.style.display = currentPhotoIndex < photos.length - 1 ? 'flex' : 'none';
             }
-            updateNextButtonVisibility();
+
+            // Ẩn nút Next khi chưa đến người dùng cuối cùng
+            nextPageBtn.style.display = 'none';
         }
 
-        async function nextUser() {
-            const token = localStorage.getItem('token');
-            if (currentIndex < 0 || currentIndex >= userHistory.length) {
-                console.log('No user to dislike or index out of bounds:', currentIndex);
-                updateNextButtonVisibility();
+        function prevPhoto() {
+            if (currentPhotoIndex <= 0) {
+                console.log('Không thể quay lại ảnh trước. Đã ở ảnh đầu tiên.');
                 return;
             }
+            currentPhotoIndex--;
+            const photos = userHistory[currentIndex].listPhotoUrl;
+            userPhoto.src = photos[currentPhotoIndex];
+            userPhoto.onerror = () => {
+                console.error('Không tải được ảnh:', photos[currentPhotoIndex]);
+                userPhoto.src = 'https://via.placeholder.com/500x400?text=Image+Failed';
+            };
+            prevPhotoBtn.style.display = currentPhotoIndex > 0 ? 'flex' : 'none';
+            nextPhotoBtn.style.display = currentPhotoIndex < photos.length - 1 ? 'flex' : 'none';
+            console.log(`Chuyển đến ảnh trước: ${currentPhotoIndex}, URL: ${photos[currentPhotoIndex]}`);
+        }
 
-            try {
-                const currentUser = userHistory[currentIndex];
-                console.log('Disliking user with ID:', currentUser.userId);
-                const response = await fetch('http://localhost:8080/api/users/dislike', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ dislikedUserId: currentUser.userId })
-                });
-                if (!response.ok) {
-                    console.error('Failed to dislike user. Status:', response.status);
-                }
-            } catch (error) {
-                console.error('Error disliking user:', error);
+        function nextPhoto() {
+            const photos = userHistory[currentIndex].listPhotoUrl;
+            if (currentPhotoIndex >= photos.length - 1) {
+                console.log('Không thể chuyển sang ảnh tiếp theo. Đã ở ảnh cuối cùng.');
+                return;
             }
+            currentPhotoIndex++;
+            userPhoto.src = photos[currentPhotoIndex];
+            userPhoto.onerror = () => {
+                console.error('Không tải được ảnh:', photos[currentPhotoIndex]);
+                userPhoto.src = 'https://via.placeholder.com/500x400?text=Image+Failed';
+            };
+            prevPhotoBtn.style.display = currentPhotoIndex > 0 ? 'flex' : 'none';
+            nextPhotoBtn.style.display = currentPhotoIndex < photos.length - 1 ? 'flex' : 'none';
+            console.log(`Chuyển đến ảnh tiếp theo: ${currentPhotoIndex}, URL: ${photos[currentPhotoIndex]}`);
+        }
 
+        function nextUser() {
             currentIndex++;
-            console.log(`Next user index: ${currentIndex}, History length: ${userHistory.length}`);
-            
-            if (currentIndex >= userHistory.length) {
-                console.log('Reached end of user history');
-                document.getElementById('user-name').textContent = 'Không còn người dùng';
-                document.getElementById('user-location').textContent = '';
-                document.getElementById('photo-grid').innerHTML = '<p>Không có dữ liệu</p>';
-            } else {
-                displayUser();
-            }
+            console.log(`Chuyển sang người dùng tiếp theo. Chỉ số hiện tại: ${currentIndex}, Độ dài danh sách: ${userHistory.length}`);
+            displayUser();
         }
 
         function rewindUser() {
             if (currentIndex <= 0) {
-                console.log('Cannot rewind. Already at the first user.');
+                console.log('Không thể quay lại. Đã ở người dùng đầu tiên.');
                 return;
             }
             currentIndex--;
-            console.log('Rewinded to index:', currentIndex);
+            console.log('Đã quay lại chỉ số:', currentIndex);
             displayUser();
         }
 
         async function loadNextPage() {
             const token = localStorage.getItem('token');
-            if (currentPage >= totalPages - 1) {
-                console.log('No more pages to load. Total pages:', totalPages);
-                alert('Đã hết người dùng để hiển thị');
-                nextBtn.style.display = 'none';
-                return;
-            }
             currentPage++;
-            console.log(`Loading next page: ${currentPage}`);
+            console.log(`Đang tải trang tiếp theo: ${currentPage}`);
             const loaded = await loadUsers(token, currentPage);
             if (!loaded) {
-                currentPage--; // Nếu không tải được, quay lại page trước
-                console.log('Failed to load next page, reverting to page:', currentPage);
+                currentPage--;
+                console.log('Không tải được trang tiếp theo, quay lại trang:', currentPage);
             }
-        }
-
-        function updateNextButtonVisibility() {
-            const usersInCurrentPage = userHistory.length - (currentPage * pageSize);
-            const isLastUserInPage = currentIndex === (currentPage * pageSize + usersInCurrentPage - 1);
-            const hasNextPage = currentPage < totalPages - 1;
-            const hasUsers = userHistory.length > 0;
-            const shouldShowNextBtn = isLastUserInPage && hasNextPage && hasUsers;
-
-            nextBtn.style.display = shouldShowNextBtn ? 'flex' : 'none';
-            console.log(`Next button visibility: ${nextBtn.style.display}, Current Index: ${currentIndex}, Users in current page: ${usersInCurrentPage}, Current Page: ${currentPage}, Total Pages: ${totalPages}, Is Last User: ${isLastUserInPage}, Has Next Page: ${hasNextPage}, Has Users: ${hasUsers}`);
         }
     </script>
 </body>
