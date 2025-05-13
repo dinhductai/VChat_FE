@@ -40,6 +40,12 @@
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 10px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .profile-header img:hover {
+            opacity: 0.8;
         }
 
         .profile-header h2 {
@@ -73,12 +79,35 @@
         .edit-btn:hover {
             background-color: #166fe5;
         }
+
+        .upload-form, .upload-profile-form {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .upload-form.active, .upload-profile-form.active {
+            display: block;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .photo-grid img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="profile-container">
         <div class="profile-header">
-            <img src="https://via.placeholder.com/120" alt="Profile Avatar">
+            <img src="https://via.placeholder.com/120" alt="Profile Avatar" id="profile-avatar" onclick="toggleUploadProfileForm()">
             <h2 id="profile-name">Đang tải...</h2>
         </div>
         <div class="profile-info" id="profile-details">
@@ -92,7 +121,32 @@
             <p><strong>Công ty:</strong> <span id="profile-company">Đang tải...</span></p>
             <p><strong>Trường học:</strong> <span id="profile-education">Đang tải...</span></p>
         </div>
-        <button class="edit-btn">Chỉnh sửa hồ sơ</button>
+        <button class="edit-btn" onclick="toggleUploadForm()">Chỉnh sửa hồ sơ</button>
+        <form class="upload-form" id="upload-form" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="photo-image" class="form-label">Chọn ảnh để thêm:</label>
+                <input type="file" class="form-control" id="photo-image" accept="image/*" required>
+            </div>
+            <div class="mb-3">
+                <label for="user-email-photo" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="user-email-photo" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Tải lên</button>
+            <button type="button" class="btn btn-secondary" onclick="toggleUploadForm()">Hủy</button>
+        </form>
+        <form class="upload-profile-form" id="upload-profile-form" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="profile-image" class="form-label">Chọn ảnh profile mới:</label>
+                <input type="file" class="form-control" id="profile-image" accept="image/*" required>
+            </div>
+            <div class="mb-3">
+                <label for="user-email-profile" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="user-email-profile" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Tải lên</button>
+            <button type="button" class="btn btn-secondary" onclick="toggleUploadProfileForm()">Hủy</button>
+        </form>
+        <div class="photo-grid" id="photo-grid"></div>
     </div>
 
     <!-- Bootstrap JS -->
@@ -108,8 +162,9 @@
             }
 
             const decodedToken = jwt_decode(token);
-            const userId = decodedToken.sub; // Lấy userId từ sub (ví dụ: "21")
+            const userId = decodedToken.sub;
 
+            // Load profile details
             fetch(`http://localhost:8080/api/user-profile/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -136,7 +191,150 @@
                 console.error('Error fetching profile:', error);
                 alert('Có lỗi xảy ra khi tải thông tin');
             });
+
+            // Load profile image
+            fetch(`http://localhost:8080/api/profile-photo?userid=${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data) {
+                    document.getElementById('profile-avatar').src = data.data;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching profile image:', error);
+                alert('Có lỗi xảy ra khi tải ảnh profile');
+            });
+
+            // Load all photos
+            fetch(`http://localhost:8080/api/photos?idUser=${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const photoGrid = document.getElementById('photo-grid');
+                    photoGrid.innerHTML = ''; // Clear existing photos
+                    data.data.forEach(url => {
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.alt = 'User Photo';
+                        photoGrid.appendChild(img);
+                    });
+                } else {
+                    alert('Lỗi khi tải ảnh: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching photos:', error);
+                alert('Có lỗi xảy ra khi tải ảnh');
+            });
+
+            // Handle upload photo form submission (normal photo)
+            const uploadForm = document.getElementById('upload-form');
+            uploadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData();
+                const fileInput = document.getElementById('photo-image');
+                const emailInput = document.getElementById('user-email-photo');
+                formData.append('file', fileInput.files[0]);
+                formData.append('userEmail', emailInput.value);
+
+                try {
+                    const response = await fetch('http://localhost:8080/api/photo/upload', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        alert('Tải ảnh thành công!');
+                        toggleUploadForm(); // Hide form after success
+                        // Reload photos
+                        fetch(`http://localhost:8080/api/photos?idUser=${userId}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const photoGrid = document.getElementById('photo-grid');
+                                photoGrid.innerHTML = '';
+                                data.data.forEach(url => {
+                                    const img = document.createElement('img');
+                                    img.src = url;
+                                    img.alt = 'User Photo';
+                                    photoGrid.appendChild(img);
+                                });
+                            }
+                        });
+                    } else {
+                        alert('Lỗi khi tải ảnh: ' + data.message);
+                    }
+                } catch (error) {
+                    console.error('Error uploading photo:', error);
+                    alert('Có lỗi xảy ra khi tải ảnh');
+                }
+            });
+
+            // Handle upload profile photo form submission
+            const uploadProfileForm = document.getElementById('upload-profile-form');
+            uploadProfileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData();
+                const fileInput = document.getElementById('profile-image');
+                const emailInput = document.getElementById('user-email-profile');
+                formData.append('file', fileInput.files[0]);
+                formData.append('userEmail', emailInput.value);
+
+                try {
+                    const response = await fetch('http://localhost:8080/api/prifile-photo/upload', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        alert('Tải ảnh profile thành công!');
+                        document.getElementById('profile-avatar').src = data.data;
+                        toggleUploadProfileForm(); // Hide form after success
+                    } else {
+                        alert('Lỗi khi tải ảnh profile: ' + data.message);
+                    }
+                } catch (error) {
+                    console.error('Error uploading profile photo:', error);
+                    alert('Có lỗi xảy ra khi tải ảnh profile');
+                }
+            });
         });
+
+        function toggleUploadForm() {
+            const uploadForm = document.getElementById('upload-form');
+            uploadForm.classList.toggle('active');
+            if (uploadForm.classList.contains('active')) {
+                const email = document.getElementById('profile-email').textContent;
+                document.getElementById('user-email-photo').value = email;
+            }
+        }
+
+        function toggleUploadProfileForm() {
+            const uploadProfileForm = document.getElementById('upload-profile-form');
+            uploadProfileForm.classList.toggle('active');
+            if (uploadProfileForm.classList.contains('active')) {
+                const email = document.getElementById('profile-email').textContent;
+                document.getElementById('user-email-profile').value = email;
+            }
+        }
     </script>
 </body>
 </html>
