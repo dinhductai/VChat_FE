@@ -21,12 +21,19 @@
         }
 
         .profile-container {
-            max-width: 600px;
+            max-width: 1200px;
             margin: 20px auto;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .profile-left {
+            flex: 1;
+            margin-right: 20px;
         }
 
         .profile-header {
@@ -66,7 +73,7 @@
             color: #1a1a1a;
         }
 
-        .edit-btn {
+        .edit-btn, .upload-photo-btn {
             background-color: #1877f2;
             color: #fff;
             border: none;
@@ -74,9 +81,10 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s;
+            margin-right: 10px;
         }
 
-        .edit-btn:hover {
+        .edit-btn:hover, .upload-photo-btn:hover {
             background-color: #166fe5;
         }
 
@@ -89,11 +97,16 @@
             display: block;
         }
 
+        .profile-right {
+            flex: 1;
+            min-width: 0;
+        }
+
         .photo-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 0;
         }
 
         .photo-grid img {
@@ -101,52 +114,252 @@
             height: 100px;
             object-fit: cover;
             border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .photo-grid img:hover {
+            transform: scale(1.05);
+        }
+
+        .modal, .update-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .close-modal, .close-update-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .update-modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .update-modal-content h3 {
+            margin-top: 0;
+        }
+
+        .update-modal-content .form-group {
+            margin-bottom: 15px;
+        }
+
+        .update-modal-content label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .update-modal-content input, .update-modal-content select, .update-modal-content textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .update-modal-content .interest-list {
+            margin-top: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+
+        .update-modal-content .interest-list span {
+            background: #e0e0e0;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .update-modal-content .interest-list span button {
+            margin-left: 5px;
+            color: red;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .update-modal-content .btn {
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="profile-container">
-        <div class="profile-header">
-            <img src="https://via.placeholder.com/120" alt="Profile Avatar" id="profile-avatar" onclick="toggleUploadProfileForm()">
-            <h2 id="profile-name">Đang tải...</h2>
+        <div class="profile-left">
+            <div class="profile-header">
+                <img src="https://via.placeholder.com/120" alt="Profile Avatar" id="profile-avatar" onclick="toggleUploadProfileForm()">
+                <h2 id="profile-name">Đang tải...</h2>
+            </div>
+            <div class="profile-info" id="profile-details">
+                <p><strong>Email:</strong> <span id="profile-email">Đang tải...</span></p>
+                <p><strong>Số điện thoại:</strong> <span id="profile-phone">Đang tải...</span></p>
+                <p><strong>Họ và tên:</strong> <span id="profile-fullname">Đang tải...</span></p>
+                <p><strong>Ngày sinh:</strong> <span id="profile-birthdate">Đang tải...</span></p>
+                <p><strong>Giới tính:</strong> <span id="profile-gender">Đang tải...</span></p>
+                <p><strong>Tìm kiếm:</strong> <span id="profile-lookingfor">Đang tải...</span></p>
+                <p><strong>Bio:</strong> <span id="profile-bio">Đang tải...</span></p>
+                <p><strong>Chiều cao:</strong> <span id="profile-height">Đang tải...</span></p>
+                <p><strong>Cân nặng:</strong> <span id="profile-weight">Đang tải...</span></p>
+                <p><strong>Địa điểm:</strong> <span id="profile-location">Đang tải...</span></p>
+                <p><strong>Nghề nghiệp:</strong> <span id="profile-job">Đang tải...</span></p>
+                <p><strong>Công ty:</strong> <span id="profile-company">Đang tải...</span></p>
+                <p><strong>Trường học:</strong> <span id="profile-education">Đang tải...</span></p>
+                <p><strong>Mô tả:</strong> <span id="profile-description">Đang tải...</span></p>
+                <p><strong>Sở thích (API):</strong> <span id="profile-interest">Đang tải...</span></p>
+                <p><strong>Sở thích:</strong> <span id="profile-hobbies">Đang tải...</span></p>
+                <p><strong>Quan tâm:</strong> <span id="profile-interests">Đang tải...</span></p>
+                <p><strong>Ưu tiên mối quan hệ:</strong> <span id="profile-relationship">Đang tải...</span></p>
+                <p><strong>Cung hoàng đạo:</strong> <span id="profile-zodiac">Đang tải...</span></p>
+            </div>
+            <button class="edit-btn" onclick="openUpdateModal()">Chỉnh sửa hồ sơ</button>
+            <button class="upload-photo-btn" onclick="toggleUploadForm()">Tải ảnh lên</button>
+            <form class="upload-form" id="upload-form" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="photo-image" class="form-label">Chọn ảnh để thêm:</label>
+                    <input type="file" class="form-control" id="photo-image" accept="image/*" required>
+                </div>
+                <div class="mb-3">
+                    <label for="user-email-photo" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="user-email-photo" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Tải lên</button>
+                <button type="button" class="btn btn-secondary" onclick="toggleUploadForm()">Hủy</button>
+            </form>
+            <form class="upload-profile-form" id="upload-profile-form" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="profile-image" class="form-label">Chọn ảnh profile mới:</label>
+                    <input type="file" class="form-control" id="profile-image" accept="image/*" required>
+                </div>
+                <div class="mb-3">
+                    <label for="user-email-profile" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="user-email-profile" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Tải lên</button>
+                <button type="button" class="btn btn-secondary" onclick="toggleUploadProfileForm()">Hủy</button>
+            </form>
         </div>
-        <div class="profile-info" id="profile-details">
-            <p><strong>Email:</strong> <span id="profile-email">Đang tải...</span></p>
-            <p><strong>Số điện thoại:</strong> <span id="profile-phone">Đang tải...</span></p>
-            <p><strong>Giới tính:</strong> <span id="profile-gender">Đang tải...</span></p>
-            <p><strong>Bio:</strong> <span id="profile-bio">Đang tải...</span></p>
-            <p><strong>Chiều cao:</strong> <span id="profile-height">Đang tải...</span></p>
-            <p><strong>Địa điểm:</strong> <span id="profile-location">Đang tải...</span></p>
-            <p><strong>Nghề nghiệp:</strong> <span id="profile-job">Đang tải...</span></p>
-            <p><strong>Công ty:</strong> <span id="profile-company">Đang tải...</span></p>
-            <p><strong>Trường học:</strong> <span id="profile-education">Đang tải...</span></p>
+        <div class="profile-right">
+            <div class="photo-grid" id="photo-grid"></div>
         </div>
-        <button class="edit-btn" onclick="toggleUploadForm()">Chỉnh sửa hồ sơ</button>
-        <form class="upload-form" id="upload-form" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="photo-image" class="form-label">Chọn ảnh để thêm:</label>
-                <input type="file" class="form-control" id="photo-image" accept="image/*" required>
-            </div>
-            <div class="mb-3">
-                <label for="user-email-photo" class="form-label">Email:</label>
-                <input type="email" class="form-control" id="user-email-photo" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Tải lên</button>
-            <button type="button" class="btn btn-secondary" onclick="toggleUploadForm()">Hủy</button>
-        </form>
-        <form class="upload-profile-form" id="upload-profile-form" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="profile-image" class="form-label">Chọn ảnh profile mới:</label>
-                <input type="file" class="form-control" id="profile-image" accept="image/*" required>
-            </div>
-            <div class="mb-3">
-                <label for="user-email-profile" class="form-label">Email:</label>
-                <input type="email" class="form-control" id="user-email-profile" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Tải lên</button>
-            <button type="button" class="btn btn-secondary" onclick="toggleUploadProfileForm()">Hủy</button>
-        </form>
-        <div class="photo-grid" id="photo-grid"></div>
+    </div>
+    <div class="modal" id="image-modal">
+        <span class="close-modal" onclick="closeModal()">×</span>
+        <div class="modal-content">
+            <img id="zoomed-image" src="" alt="Zoomed Image">
+        </div>
+    </div>
+    <div class="update-modal" id="update-modal">
+        <div class="update-modal-content">
+            <span class="close-update-modal" onclick="closeUpdateModal()">×</span>
+            <h3>Cập nhật thông tin cá nhân</h3>
+            <form id="update-profile-form">
+                <div class="form-group">
+                    <label for="update-email">Email:</label>
+                    <input type="email" id="update-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="update-phone">Số điện thoại:</label>
+                    <input type="text" id="update-phone" name="phoneNumber">
+                </div>
+                <div class="form-group">
+                    <label for="update-fullname">Họ và tên:</label>
+                    <input type="text" id="update-fullname" name="fullName">
+                </div>
+                <div class="form-group">
+                    <label for="update-birthdate">Ngày sinh:</label>
+                    <input type="date" id="update-birthdate" name="birthDate">
+                </div>
+                <div class="form-group">
+                    <label for="update-gender">Giới tính:</label>
+                    <select id="update-gender" name="gender">
+                        <option value="">Chọn giới tính...</option>
+                        <option value="MALE">Nam</option>
+                        <option value="FEMALE">Nữ</option>
+                        <option value="OTHER">Khác</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="update-lookingfor">Tìm kiếm:</label>
+                    <select id="update-lookingfor" name="lookingFor">
+                        <option value="">Chọn...</option>
+                        <option value="MALE">Nam</option>
+                        <option value="FEMALE">Nữ</option>
+                        <option value="OTHER">Khác</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="update-bio">Bio:</label>
+                    <textarea id="update-bio" name="bio"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="update-height">Chiều cao (cm):</label>
+                    <input type="number" id="update-height" name="height">
+                </div>
+                <div class="form-group">
+                    <label for="update-weight">Cân nặng (kg):</label>
+                    <input type="number" id="update-weight" name="weight">
+                </div>
+                <div class="form-group">
+                    <label for="update-location">Địa điểm:</label>
+                    <input type="text" id="update-location" name="location">
+                </div>
+                <div class="form-group">
+                    <label for="update-job">Nghề nghiệp:</label>
+                    <input type="text" id="update-job" name="jobTitle">
+                </div>
+                <div class="form-group">
+                    <label for="update-company">Công ty:</label>
+                    <input type="text" id="update-company" name="company">
+                </div>
+                <div class="form-group">
+                    <label for="update-education">Trường học:</label>
+                    <input type="text" id="update-education" name="education">
+                </div>
+                <div class="form-group">
+                    <label for="update-description">Mô tả:</label>
+                    <textarea id="update-description" name="description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="update-interest-select">Sở thích:</label>
+                    <select id="update-interest-select" class="form-select">
+                        <option value="">Chọn sở thích...</option>
+                    </select>
+                    <button type="button" class="btn btn-primary mt-2" onclick="addInterestToList()">Thêm sở thích</button>
+                    <div class="interest-list" id="interest-list"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <button type="button" class="btn btn-secondary" onclick="closeUpdateModal()">Hủy</button>
+            </form>
+        </div>
     </div>
 
     <!-- Bootstrap JS -->
@@ -154,6 +367,9 @@
     <!-- JWT Decode -->
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     <script>
+        let userProfileData = {};
+        let selectedInterests = [];
+
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -173,16 +389,27 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    document.getElementById('profile-name').textContent = data.data.name || 'Không có tên';
+                    userProfileData = data.data;
+                    document.getElementById('profile-name').textContent = data.data.fullName || 'Không có tên';
+                    document.getElementById('profile-fullname').textContent = data.data.fullName || 'Không có tên';
                     document.getElementById('profile-email').textContent = data.data.email || 'Không có email';
                     document.getElementById('profile-phone').textContent = data.data.phoneNumber || 'Không có số điện thoại';
+                    document.getElementById('profile-birthdate').textContent = data.data.birthDate ? new Date(data.data.birthDate).toLocaleDateString('vi-VN') : 'Chưa cập nhật';
                     document.getElementById('profile-gender').textContent = data.data.gender || 'Không xác định';
+                    document.getElementById('profile-lookingfor').textContent = data.data.lookingFor || 'Chưa cập nhật';
                     document.getElementById('profile-bio').textContent = data.data.bio || 'Chưa cập nhật';
-                    document.getElementById('profile-height').textContent = data.data.height || 'Chưa cập nhật';
+                    document.getElementById('profile-height').textContent = data.data.height ? `${data.data.height} cm` : 'Chưa cập nhật';
+                    document.getElementById('profile-weight').textContent = data.data.weight ? `${data.data.weight} kg` : 'Chưa cập nhật';
                     document.getElementById('profile-location').textContent = data.data.location || 'Chưa cập nhật';
                     document.getElementById('profile-job').textContent = data.data.jobTitle || 'Chưa cập nhật';
                     document.getElementById('profile-company').textContent = data.data.company || 'Chưa cập nhật';
                     document.getElementById('profile-education').textContent = data.data.education || 'Chưa cập nhật';
+                    document.getElementById('profile-description').textContent = data.data.description || 'Chưa cập nhật';
+                    document.getElementById('profile-interest').textContent = data.data.interestName && data.data.interestName.length > 0 ? data.data.interestName.join(', ') : 'Chưa cập nhật';
+                    document.getElementById('profile-hobbies').textContent = data.data.hobbies || 'Chưa cập nhật';
+                    document.getElementById('profile-interests').textContent = data.data.interests || 'Chưa cập nhật';
+                    document.getElementById('profile-relationship').textContent = data.data.relationshipPreference || 'Chưa cập nhật';
+                    document.getElementById('profile-zodiac').textContent = data.data.zodiacSign || 'Chưa cập nhật';
                 } else {
                     alert('Lỗi khi tải thông tin: ' + data.message);
                 }
@@ -219,11 +446,12 @@
             .then(data => {
                 if (data.success) {
                     const photoGrid = document.getElementById('photo-grid');
-                    photoGrid.innerHTML = ''; // Clear existing photos
+                    photoGrid.innerHTML = '';
                     data.data.forEach(url => {
                         const img = document.createElement('img');
                         img.src = url;
                         img.alt = 'User Photo';
+                        img.onclick = () => openModal(url);
                         photoGrid.appendChild(img);
                     });
                 } else {
@@ -256,7 +484,7 @@
                     const data = await response.json();
                     if (data.success) {
                         alert('Tải ảnh thành công!');
-                        toggleUploadForm(); // Hide form after success
+                        toggleUploadForm();
                         // Reload photos
                         fetch(`http://localhost:8080/api/photos?idUser=${userId}`, {
                             headers: {
@@ -272,6 +500,7 @@
                                     const img = document.createElement('img');
                                     img.src = url;
                                     img.alt = 'User Photo';
+                                    img.onclick = () => openModal(url);
                                     photoGrid.appendChild(img);
                                 });
                             }
@@ -296,7 +525,7 @@
                 formData.append('userEmail', emailInput.value);
 
                 try {
-                    const response = await fetch('http://localhost:8080/api/prifile-photo/upload', {
+                    const response = await fetch('http://localhost:8080/api/profile-photo/upload', {
                         method: 'POST',
                         headers: {
                             'Authorization': `Bearer ${token}`
@@ -307,13 +536,92 @@
                     if (data.success) {
                         alert('Tải ảnh profile thành công!');
                         document.getElementById('profile-avatar').src = data.data;
-                        toggleUploadProfileForm(); // Hide form after success
+                        toggleUploadProfileForm();
                     } else {
                         alert('Lỗi khi tải ảnh profile: ' + data.message);
                     }
                 } catch (error) {
                     console.error('Error uploading profile photo:', error);
                     alert('Có lỗi xảy ra khi tải ảnh profile');
+                }
+            });
+
+            // Handle update profile form submission
+            const updateProfileForm = document.getElementById('update-profile-form');
+            updateProfileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const token = localStorage.getItem('token');
+                const userId = jwt_decode(token).sub;
+
+                const profileDetailRequest = {
+                    email: document.getElementById('update-email').value,
+                    phoneNumber: document.getElementById('update-phone').value,
+                    fullName: document.getElementById('update-fullname').value,
+                    birthDate: document.getElementById('update-birthdate').value ? new Date(document.getElementById('update-birthdate').value) : null,
+                    gender: document.getElementById('update-gender').value || null,
+                    lookingFor: document.getElementById('update-lookingfor').value || null,
+                    bio: document.getElementById('update-bio').value,
+                    height: document.getElementById('update-height').value ? parseInt(document.getElementById('update-height').value) : null,
+                    weight: document.getElementById('update-weight').value ? parseInt(document.getElementById('update-weight').value) : null,
+                    location: document.getElementById('update-location').value,
+                    jobTitle: document.getElementById('update-job').value,
+                    company: document.getElementById('update-company').value,
+                    education: document.getElementById('update-education').value,
+                    description: document.getElementById('update-description').value,
+                    interestName: selectedInterests
+                };
+
+                try {
+                    const response = await fetch(`http://localhost:8080/api/user-profile/${userId}/update`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(profileDetailRequest)
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        alert('Cập nhật thông tin thành công!');
+                        closeUpdateModal();
+                        // Reload profile details
+                        fetch(`http://localhost:8080/api/user-profile/${userId}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                userProfileData = data.data;
+                                document.getElementById('profile-name').textContent = data.data.fullName || 'Không có tên';
+                                document.getElementById('profile-fullname').textContent = data.data.fullName || 'Không có tên';
+                                document.getElementById('profile-email').textContent = data.data.email || 'Không có email';
+                                document.getElementById('profile-phone').textContent = data.data.phoneNumber || 'Không có số điện thoại';
+                                document.getElementById('profile-birthdate').textContent = data.data.birthDate ? new Date(data.data.birthDate).toLocaleDateString('vi-VN') : 'Chưa cập nhật';
+                                document.getElementById('profile-gender').textContent = data.data.gender || 'Không xác định';
+                                document.getElementById('profile-lookingfor').textContent = data.data.lookingFor || 'Chưa cập nhật';
+                                document.getElementById('profile-bio').textContent = data.data.bio || 'Chưa cập nhật';
+                                document.getElementById('profile-height').textContent = data.data.height ? `${data.data.height} cm` : 'Chưa cập nhật';
+                                document.getElementById('profile-weight').textContent = data.data.weight ? `${data.data.weight} kg` : 'Chưa cập nhật';
+                                document.getElementById('profile-location').textContent = data.data.location || 'Chưa cập nhật';
+                                document.getElementById('profile-job').textContent = data.data.jobTitle || 'Chưa cập nhật';
+                                document.getElementById('profile-company').textContent = data.data.company || 'Chưa cập nhật';
+                                document.getElementById('profile-education').textContent = data.data.education || 'Chưa cập nhật';
+                                document.getElementById('profile-description').textContent = data.data.description || 'Chưa cập nhật';
+                                document.getElementById('profile-interest').textContent = data.data.interestName && data.data.interestName.length > 0 ? data.data.interestName.join(', ') : 'Chưa cập nhật';
+                                document.getElementById('profile-hobbies').textContent = data.data.hobbies || 'Chưa cập nhật';
+                                document.getElementById('profile-interests').textContent = data.data.interests || 'Chưa cập nhật';
+                                document.getElementById('profile-relationship').textContent = data.data.relationshipPreference || 'Chưa cập nhật';
+                                document.getElementById('profile-zodiac').textContent = data.data.zodiacSign || 'Chưa cập nhật';
+                            }
+                        });
+                    } else {
+                        alert('Lỗi khi cập nhật thông tin: ' + data.message);
+                    }
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                    alert('Có lỗi xảy ra khi cập nhật thông tin');
                 }
             });
         });
@@ -334,6 +642,113 @@
                 const email = document.getElementById('profile-email').textContent;
                 document.getElementById('user-email-profile').value = email;
             }
+        }
+
+        function openModal(imageUrl) {
+            const modal = document.getElementById('image-modal');
+            const zoomedImage = document.getElementById('zoomed-image');
+            zoomedImage.src = imageUrl;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('image-modal');
+            modal.style.display = 'none';
+        }
+
+        function openUpdateModal() {
+            const modal = document.getElementById('update-modal');
+            modal.style.display = 'flex';
+
+            // Fill form with current profile data
+            document.getElementById('update-email').value = userProfileData.email || '';
+            document.getElementById('update-phone').value = userProfileData.phoneNumber || '';
+            document.getElementById('update-fullname').value = userProfileData.fullName || '';
+            document.getElementById('update-birthdate').value = userProfileData.birthDate ? new Date(userProfileData.birthDate).toISOString().split('T')[0] : '';
+            document.getElementById('update-gender').value = userProfileData.gender || '';
+            document.getElementById('update-lookingfor').value = userProfileData.lookingFor || '';
+            document.getElementById('update-bio').value = userProfileData.bio || '';
+            document.getElementById('update-height').value = userProfileData.height || '';
+            document.getElementById('update-weight').value = userProfileData.weight || '';
+            document.getElementById('update-location').value = userProfileData.location || '';
+            document.getElementById('update-job').value = userProfileData.jobTitle || '';
+            document.getElementById('update-company').value = userProfileData.company || '';
+            document.getElementById('update-education').value = userProfileData.education || '';
+            document.getElementById('update-description').value = userProfileData.description || '';
+
+            // Load current interests
+            selectedInterests = userProfileData.interestName ? [...userProfileData.interestName] : [];
+            updateInterestList();
+
+            // Load interest names from API
+            const token = localStorage.getItem('token');
+            fetch(`http://localhost:8080/api/interests-name`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const select = document.getElementById('update-interest-select');
+                    select.innerHTML = '<option value="">Chọn sở thích...</option>';
+                    data.data.forEach(interest => {
+                        const option = document.createElement('option');
+                        option.value = interest;
+                        option.textContent = interest;
+                        select.appendChild(option);
+                    });
+                } else {
+                    alert('Lỗi khi tải danh sách sở thích: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching interests:', error);
+                alert('Có lỗi xảy ra khi tải danh sách sở thích');
+            });
+        }
+
+        function closeUpdateModal() {
+            const modal = document.getElementById('update-modal');
+            modal.style.display = 'none';
+            selectedInterests = [];
+        }
+
+        function addInterestToList() {
+            const select = document.getElementById('update-interest-select');
+            const selectedInterest = select.value;
+
+            if (!selectedInterest) {
+                alert('Vui lòng chọn một sở thích!');
+                return;
+            }
+
+            if (!selectedInterests.includes(selectedInterest)) {
+                selectedInterests.push(selectedInterest);
+                updateInterestList();
+            } else {
+                alert('Sở thích đã tồn tại!');
+            }
+            select.value = '';
+        }
+
+        function removeInterest(interest) {
+            selectedInterests = selectedInterests.filter(item => item !== interest);
+            updateInterestList();
+        }
+
+        function updateInterestList() {
+            const interestList = document.getElementById('interest-list');
+            interestList.innerHTML = '';
+            selectedInterests.forEach(interest => {
+                const span = document.createElement('span');
+                span.textContent = interest;
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'x';
+                removeBtn.onclick = () => removeInterest(interest);
+                span.appendChild(removeBtn);
+                interestList.appendChild(span);
+            });
         }
     </script>
 </body>
