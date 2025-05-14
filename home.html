@@ -230,8 +230,8 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header" onclick="window.location.href='profile.html'">
-                <img src="https://via.placeholder.com/40" alt="Avatar">
-                <span>Admin</span>
+                <img src="https://via.placeholder.com/40" alt="Avatar" id="sidebar-avatar">
+                <span id="sidebar-name">Đang tải...</span>
             </div>
             <div class="sidebar-menu">
                 <a href="#" class="sidebar-item active">
@@ -320,6 +320,30 @@
                 alert('Token không chứa userId hợp lệ');
                 return;
             }
+
+            // Load thông tin sidebar (tên và ảnh profile)
+            fetch(`http://localhost:8080/api/user-name-profile-photo?userId=${currentUserId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data) {
+                    document.getElementById('sidebar-name').textContent = data.data.fullName || 'Không có tên';
+                    document.getElementById('sidebar-avatar').src = data.data.profileUrl || 'https://via.placeholder.com/40';
+                } else {
+                    console.error('Lỗi khi tải thông tin sidebar:', data.message);
+                    document.getElementById('sidebar-name').textContent = 'Không có tên';
+                    document.getElementById('sidebar-avatar').src = 'https://via.placeholder.com/40';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching sidebar data:', error);
+                document.getElementById('sidebar-name').textContent = 'Không có tên';
+                document.getElementById('sidebar-avatar').src = 'https://via.placeholder.com/40';
+            });
+
             loadUsers(token, currentPage);
         });
 
