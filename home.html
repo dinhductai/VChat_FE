@@ -120,7 +120,7 @@
             width: 100%;
             max-width: 500px;
             margin-bottom: 20px;
-            padding: 0; /* Bỏ padding để ảnh chiếm toàn bộ */
+            padding: 0;
             text-align: center;
             position: relative;
         }
@@ -128,7 +128,7 @@
         .photo-container {
             position: relative;
             width: 100%;
-            height: 400px; /* Chiều cao cố định cho ảnh */
+            height: 400px;
         }
 
         .photo-container img {
@@ -142,7 +142,7 @@
             position: absolute;
             bottom: 20px;
             left: 20px;
-            background: rgba(0, 0, 0, 0.6); /* Nền mờ để dễ đọc */
+            background: rgba(0, 0, 0, 0.6);
             color: #fff;
             padding: 10px 15px;
             border-radius: 5px;
@@ -221,8 +221,8 @@
         .dislike-btn { color: #ff4d4d; border-color: #ff4d4d; }
         .superlike-btn { color: #22d3ee; border-color: #22d3ee; }
         .like-btn { color: #00ff00; border-color: #00ff00; }
-        .boost-btn { color: #d946ef; border-color: #d946ef; }
         .next-page-btn { color: #4dabf7; border-color: #4dabf7; display: none; }
+        .boost-btn { color: #d946ef; border-color: #d946ef; }
     </style>
 </head>
 <body>
@@ -276,7 +276,7 @@
             <div class="user-actions">
                 <button class="action-btn rewind-btn" onclick="rewindUser()"><i class="fa-solid fa-rotate-left"></i></button>
                 <button class="action-btn dislike-btn" onclick="nextUser()"><i class="fa-solid fa-times"></i></button>
-                <button class="action-btn superlike-btn"><i class="fa-solid fa-star"></i></button>
+                <button class="action-btn superlike-btn" onclick="viewProfile()"><i class="fa-solid fa-star"></i></button>
                 <button class="action-btn like-btn"><i class="fa-solid fa-heart"></i></button>
                 <button class="action-btn next-page-btn" id="next-page-btn" onclick="loadNextPage()">
                     <i class="fa-solid fa-angle-right"></i>
@@ -291,13 +291,13 @@
     <!-- JWT Decode -->
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     <script>
-        let userHistory = []; // Lưu người dùng của trang hiện tại
+        let userHistory = [];
         let currentIndex = -1;
         let currentPage = 0;
         let pageSize = 10;
         let totalPages = 0;
         let currentUserId = null;
-        let currentPhotoIndex = 0; // Chỉ số ảnh hiện tại của người dùng
+        let currentPhotoIndex = 0;
         const nextPageBtn = document.getElementById('next-page-btn');
         const prevPhotoBtn = document.getElementById('prev-photo-btn');
         const nextPhotoBtn = document.getElementById('next-photo-btn');
@@ -369,7 +369,7 @@
 
                 const pageData = result.data;
                 totalPages = pageData.totalPages || 0;
-                userHistory = pageData.content || []; // Làm mới userHistory với dữ liệu trang mới
+                userHistory = pageData.content || [];
                 console.log(`Tổng số trang: ${totalPages}, Số người dùng trong trang ${page}: ${userHistory.length}`);
 
                 if (userHistory.length === 0) {
@@ -378,7 +378,7 @@
                     return false;
                 }
 
-                currentIndex = 0; // Bắt đầu từ người dùng đầu tiên của trang mới
+                currentIndex = 0;
                 console.log(`Đã tải ${userHistory.length} người dùng. Chỉ số hiện tại: ${currentIndex}`);
                 displayUser();
                 return true;
@@ -398,7 +398,6 @@
                 userPhoto.alt = 'Không có dữ liệu';
                 prevPhotoBtn.style.display = 'none';
                 nextPhotoBtn.style.display = 'none';
-                // Hiển thị nút Next khi đến người dùng cuối cùng
                 nextPageBtn.style.display = 'flex';
                 return;
             }
@@ -407,8 +406,8 @@
             document.getElementById('user-name').textContent = userData.fullName || 'Không có tên';
             document.getElementById('user-details').textContent = `${userData.gender || 'Không xác định'}, ${userData.location || 'Không có địa điểm'}`;
 
-            const photos = userData.listPhotoUrl || []; // Sử dụng listPhotoUrl thay vì photos
-            currentPhotoIndex = 0; // Đặt lại chỉ số ảnh khi chuyển người dùng
+            const photos = userData.listPhotoUrl || [];
+            currentPhotoIndex = 0;
             console.log(`URL ảnh cho người dùng ${userData.fullName}:`, photos);
 
             if (photos.length === 0) {
@@ -423,12 +422,10 @@
                     console.error('Không tải được ảnh:', photos[currentPhotoIndex]);
                     userPhoto.src = 'https://via.placeholder.com/500x400?text=Image+Failed';
                 };
-                // Hiển thị nút điều hướng ảnh
                 prevPhotoBtn.style.display = currentPhotoIndex > 0 ? 'flex' : 'none';
                 nextPhotoBtn.style.display = currentPhotoIndex < photos.length - 1 ? 'flex' : 'none';
             }
 
-            // Ẩn nút Next khi chưa đến người dùng cuối cùng
             nextPageBtn.style.display = 'none';
         }
 
@@ -490,6 +487,16 @@
             if (!loaded) {
                 currentPage--;
                 console.log('Không tải được trang tiếp theo, quay lại trang:', currentPage);
+            }
+        }
+
+        function viewProfile() {
+            if (currentIndex >= 0 && currentIndex < userHistory.length) {
+                const userData = userHistory[currentIndex];
+                const userId = userData.userId; // Giả sử userId có trong userData
+                window.location.href = `otherprofile.html?userId=${userId}`;
+            } else {
+                alert('Không có người dùng nào được chọn');
             }
         }
     </script>
