@@ -218,11 +218,10 @@
         }
 
         .rewind-btn { color: #facc15; border-color: #facc15; }
-        .dislike-btn { color: #ff4d4d; border-color: #ff4d4d; }
+        .dislike-btn { color: #ff0000; border-color: #ff0000; }
         .superlike-btn { color: #22d3ee; border-color: #22d3ee; }
-        .like-btn { color: #00ff00; border-color: #00ff00; }
+        .like-btn { color: #0000ff; border-color: #0000ff; }
         .next-page-btn { color: #4dabf7; border-color: #4dabf7; display: none; }
-        .boost-btn { color: #d946ef; border-color: #d946ef; }
     </style>
 </head>
 <body>
@@ -277,11 +276,11 @@
                 <button class="action-btn rewind-btn" onclick="rewindUser()"><i class="fa-solid fa-rotate-left"></i></button>
                 <button class="action-btn dislike-btn" onclick="nextUser()"><i class="fa-solid fa-times"></i></button>
                 <button class="action-btn superlike-btn" onclick="viewProfile()"><i class="fa-solid fa-star"></i></button>
-                <button class="action-btn like-btn"><i class="fa-solid fa-heart"></i></button>
+                <button class="action-btn like-btn" onclick="likeUser()"><i class="fa-solid fa-thumbs-up"></i></button>
                 <button class="action-btn next-page-btn" id="next-page-btn" onclick="loadNextPage()">
                     <i class="fa-solid fa-angle-right"></i>
                 </button>
-                <button class="action-btn boost-btn"><i class="fa-solid fa-bolt"></i></button>
+                <button class="action-btn dislike-btn" onclick="dislikeUser()"><i class="fa-solid fa-thumbs-down"></i></button>
             </div>
         </div>
     </div>
@@ -495,6 +494,63 @@
                 const userData = userHistory[currentIndex];
                 const userId = userData.userId; // Giả sử userId có trong userData
                 window.location.href = `otherprofile.html?userId=${userId}`;
+            } else {
+                alert('Không có người dùng nào được chọn');
+            }
+        }
+
+        async function likeUser() {
+            if (currentIndex >= 0 && currentIndex < userHistory.length) {
+                const userData = userHistory[currentIndex];
+                const receivedId = userData.userId; // Giả sử userId có trong userData
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await fetch(`http://localhost:8080/api/user-profile/${currentUserId}/like/${receivedId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Like user successful!');
+                    } else {
+                        alert('Lỗi khi like: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error liking user:', error);
+                    alert('Có lỗi xảy ra khi like user');
+                }
+            } else {
+                alert('Không có người dùng nào được chọn');
+            }
+        }
+
+        async function dislikeUser() {
+            if (currentIndex >= 0 && currentIndex < userHistory.length) {
+                const userData = userHistory[currentIndex];
+                const receivedId = userData.userId; // Giả sử userId có trong userData
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await fetch(`http://localhost:8080/api/user-profile/${currentUserId}/dislike/${receivedId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Dislike user successful!');
+                        nextUser(); // Chuyển sang người dùng tiếp theo sau khi dislike
+                    } else {
+                        alert('Lỗi khi dislike: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error disliking user:', error);
+                    alert('Có lỗi xảy ra khi dislike user');
+                }
             } else {
                 alert('Không có người dùng nào được chọn');
             }
