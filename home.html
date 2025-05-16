@@ -20,7 +20,7 @@
             overflow: hidden;
         }
 
-        /* Sidebar */
+        /* Sidebar (Left) */
         .sidebar {
             background-color: #fff;
             width: 280px;
@@ -102,9 +102,10 @@
             text-decoration: underline;
         }
 
-        /* Main Content */
+        /* Main Content (Center) */
         .main-content {
             margin-left: 280px;
+            margin-right: 280px; /* Để dành không gian cho right-sidebar */
             padding: 20px;
             height: 100vh;
             overflow-y: auto;
@@ -222,11 +223,60 @@
         .superlike-btn { color: #22d3ee; border-color: #22d3ee; }
         .like-btn { color: #0000ff; border-color: #0000ff; }
         .next-page-btn { color: #4dabf7; border-color: #4dabf7; display: none; }
+
+        /* Right Sidebar (Matches) */
+        .right-sidebar {
+            background-color: #fff;
+            width: 280px;
+            height: 100vh;
+            padding: 20px 15px;
+            border-left: 1px solid #ddd;
+            position: fixed;
+            top: 0;
+            right: 0;
+            overflow-y: auto;
+        }
+
+        .right-sidebar h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .match-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .match-item:hover {
+            background-color: #e7f3ff;
+        }
+
+        .match-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        .match-item span {
+            font-size: 14px;
+            color: #1a1a1a;
+            flex-grow: 1;
+        }
     </style>
 </head>
 <body>
     <div class="row" style="height: 100vh; margin: 0;">
-        <!-- Sidebar -->
+        <!-- Sidebar (Left) -->
         <div class="sidebar">
             <div class="sidebar-header" onclick="window.location.href='profile.html'">
                 <img src="https://via.placeholder.com/40" alt="Avatar" id="sidebar-avatar">
@@ -255,7 +305,7 @@
             </div>
         </div>
 
-        <!-- Main Content -->
+        <!-- Main Content (Center) -->
         <div class="main-content">
             <div class="user-card" id="user-card">
                 <div class="photo-container" id="photo-container">
@@ -283,6 +333,14 @@
                 <button class="action-btn dislike-btn" onclick="dislikeUser()"><i class="fa-solid fa-thumbs-down"></i></button>
             </div>
         </div>
+
+        <!-- Right Sidebar (Matches) -->
+        <div class="right-sidebar">
+            <h4>Người đã ghép đôi</h4>
+            <div id="match-list">
+                <!-- Danh sách match sẽ được thêm động bằng JavaScript -->
+            </div>
+        </div>
     </div>
 
     <!-- Bootstrap JS -->
@@ -301,6 +359,7 @@
         const prevPhotoBtn = document.getElementById('prev-photo-btn');
         const nextPhotoBtn = document.getElementById('next-photo-btn');
         const userPhoto = document.getElementById('user-photo');
+        const matchList = document.getElementById('match-list');
 
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
@@ -343,8 +402,48 @@
                 document.getElementById('sidebar-avatar').src = 'https://via.placeholder.com/40';
             });
 
+            // Load danh sách người đã match
+            loadMatches(token, currentUserId);
+
+            // Load danh sách người dùng để hiển thị ở khu vực chính
             loadUsers(token, currentPage);
         });
+
+        async function loadMatches(token, userId) {
+            try {
+                const response = await fetch(`http://localhost:8080/api/user-matches?userId=${userId}&page=0&size=20`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const result = await response.json();
+                console.log('Phản hồi API Matches:', result);
+
+                if (!result.success || !result.data) {
+                    matchList.innerHTML = '<p>Không có người ghép đôi nào.</p>';
+                    return;
+                }
+
+                const matches = result.data;
+                if (matches.length === 0) {
+                    matchList.innerHTML = '<p>Không có người ghép đôi nào.</p>';
+                    return;
+                }
+
+                matchList.innerHTML = matches.map(match => `
+                    <div class="match-item" onclick="viewMatchProfile(${match.receiverId})">
+                        <img src="${match.photoUrl || 'https://via.placeholder.com/40'}" alt="Ảnh profile">
+                        <span>${match.fullName || 'Không có tên'}</span>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Lỗi khi tải danh sách match:', error);
+                matchList.innerHTML = '<p>Có lỗi xảy ra khi tải danh sách ghép đôi.</p>';
+            }
+        }
 
         async function loadUsers(token, page) {
             try {
@@ -499,6 +598,10 @@
             }
         }
 
+        function viewMatchProfile(userId) {
+            window.location.href = `otherprofile.html?userId=${userId}`;
+        }
+
         async function likeUser() {
             if (currentIndex >= 0 && currentIndex < userHistory.length) {
                 const userData = userHistory[currentIndex];
@@ -515,6 +618,8 @@
                     const result = await response.json();
                     if (result.success) {
                         alert('Like user successful!');
+                        // Sau khi like thành công, tải lại danh sách match
+                        loadMatches(token, currentUserId);
                     } else {
                         alert('Lỗi khi like: ' + result.message);
                     }
