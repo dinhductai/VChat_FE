@@ -26,3 +26,5 @@ This is the **frontend** for a Facebook-like social networking platform, built w
 - ✅ Responsive UI using Bootstrap
 ...
 
+
+Link Figma: https://www.figma.com/design/TmCz7p8DMLfrewWBQMKHiR/Untitled?node-id=0-1&p=f&t=1jNO9Pnke0VRoDPi-0
