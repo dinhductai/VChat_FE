@@ -1,755 +1,417 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoveConnect | Trang Cá Nhân</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <style>
-        body {
-            background-color: #f0f2f5;
-            font-family: 'Montserrat', sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            overflow: auto;
-        }
-
-        .profile-container {
-            max-width: 1200px;
-            margin: 20px auto;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .profile-left {
-            flex: 1;
-            margin-right: 20px;
-        }
-
-        .profile-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-header img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: opacity 0.3s;
-        }
-
-        .profile-header img:hover {
-            opacity: 0.8;
-        }
-
-        .profile-header h2 {
-            color: #1a1a1a;
-            margin: 0;
-        }
-
-        .profile-info {
-            margin-bottom: 20px;
-        }
-
-        .profile-info p {
-            color: #606770;
-            margin: 5px 0;
-        }
-
-        .profile-info strong {
-            color: #1a1a1a;
-        }
-
-        .edit-btn, .upload-photo-btn {
-            background-color: #1877f2;
-            color: #fff;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-            margin-right: 10px;
-        }
-
-        .edit-btn:hover, .upload-photo-btn:hover {
-            background-color: #166fe5;
-        }
-
-        .upload-form, .upload-profile-form {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .upload-form.active, .upload-profile-form.active {
-            display: block;
-        }
-
-        .profile-right {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin-top: 0;
-        }
-
-        .photo-grid img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .photo-grid img:hover {
-            transform: scale(1.05);
-        }
-
-        .modal, .update-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            max-width: 90%;
-            max-height: 90%;
-        }
-
-        .modal-content img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-
-        .close-modal, .close-update-modal {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: #fff;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .update-modal-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .update-modal-content h3 {
-            margin-top: 0;
-        }
-
-        .update-modal-content .form-group {
-            margin-bottom: 15px;
-        }
-
-        .update-modal-content label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .update-modal-content input, .update-modal-content select, .update-modal-content textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .update-modal-content .interest-list {
-            margin-top: 10px;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            min-height: 50px;
-        }
-
-        .update-modal-content .interest-list span {
-            background: #e0e0e0;
-            padding: 5px 10px;
-            margin: 5px;
-            border-radius: 5px;
-            display: inline-block;
-        }
-
-        .update-modal-content .interest-list span button {
-            margin-left: 5px;
-            color: red;
-            border: none;
-            background: none;
-            cursor: pointer;
-        }
-
-        .update-modal-content .btn {
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vu Duc Thiep | Facebook</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600&display=swap" rel="stylesheet">
+  <!-- <link href="profile.css" rel="stylesheet"> -->
+  <!-- Font Awesome for beautiful icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #232526 0%, #414345 100%);
+      color: white;
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(90deg, #242526 60%, #1877F2 100%);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: 0 2px 8px rgba(24,119,242,0.08);
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #1877F2;
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .search-box input {
+      background-color: #3A3B3C;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 15px;
+      color: white;
+      width: 250px;
+    }
+    .fb-topbar {
+      background: linear-gradient(90deg, #242526 60%, #1877F2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 20px;
+      box-shadow: 0 2px 8px rgba(24,119,242,0.08);
+    }
+    .fb-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .fb-logo i {
+      color: #1877F2;
+      font-size: 32px;
+      filter: drop-shadow(0 0 6px #1877f2aa);
+    }
+    .fb-logo span {
+      text-shadow: 0 2px 8px #1877f244;
+    }
+    .fb-search input {
+      background: linear-gradient(90deg, #3A3B3C 60%, #1877F2 100%);
+      border: none;
+      border-radius: 20px;
+      padding: 7px 15px;
+      color: white;
+      width: 220px;
+      box-shadow: 0 2px 8px #1877f222;
+      transition: background 0.3s;
+    }
+    .fb-search input:focus {
+      background: #fff;
+      color: #242526;
+      outline: 2px solid #1877F2;
+    }
+    .fb-icons, .fb-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .fb-icons i, .fb-right i {
+      font-size: 22px;
+      color: #b0b3b8;
+      background: #242526;
+      border-radius: 50%;
+      padding: 8px;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #1877f211;
+    }
+    .fb-icons i:hover, .fb-right i:hover {
+      background: #1877F2;
+      color: #fff;
+      box-shadow: 0 2px 12px #1877f288;
+    }
+    .fb-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #1877F2;
+      box-shadow: 0 2px 8px #1877f244;
+    }
+    .profile-header {
+      display: flex;
+      align-items: center;
+      padding: 30px 20px 10px 20px;
+      background: linear-gradient(90deg, #242526 60%, #1877F2 100%);
+      border-bottom: 1px solid #3E4042;
+      box-shadow: 0 2px 8px #1877f211;
+    }
+    .avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 4px solid #18191A;
+      object-fit: cover;
+      box-shadow: 0 4px 16px #1877f244;
+    }
+    .profile-info {
+      margin-left: 25px;
+    }
+    .profile-info h1 {
+      margin: 0;
+      font-size: 28px;
+      text-shadow: 0 2px 8px #1877f244;
+    }
+    .profile-info p {
+      color: #B0B3B8;
+      margin: 4px 0;
+      text-shadow: 0 1px 4px #0004;
+    }
+    nav {
+      display: flex;
+      justify-content: start;
+      gap: 25px;
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #242526 60%, #1877F2 100%);
+      border-bottom: 1px solid #3E4042;
+      box-shadow: 0 2px 8px #1877f211;
+    }
+    nav a {
+      padding: 8px 0;
+      color: #B0B3B8;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s, border-bottom 0.2s;
+    }
+    nav a:hover, nav a.active {
+      border-bottom: 2px solid #fff;
+      color: #fff;
+    }
+    .main {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      background: linear-gradient(135deg, #232526 0%, #414345 100%);
+      min-height: 600px;
+    }
+    .left-panel {
+      flex: 1;
+    }
+    .right-panel {
+      flex: 2;
+    }
+    .intro-box, .post-box {
+      background: linear-gradient(120deg, #242526 80%, #1877F2 100%);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px #1877f211;
+    }
+    .intro-box button, .post-box button {
+      margin-top: 10px;
+      background: linear-gradient(90deg, #3A3B3C 60%, #1877F2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      box-shadow: 0 2px 8px #1877f211;
+    }
+    .intro-box button:hover, .post-box button:hover {
+      background: #1877F2;
+      color: #fff;
+    }
+    .post-box input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #3A3B3C 60%, #1877F2 100%);
+      color: white;
+      box-shadow: 0 2px 8px #1877f211;
+      margin-bottom: 8px;
+      transition: background 0.3s;
+    }
+    .post-box input:focus {
+      background: #fff;
+      color: #242526;
+      outline: 2px solid #1877F2;
+    }
+    .user-details {
+      font-family: 'Roboto Slab', serif;
+      line-height: 1.8;
+      color: #E4E6EB;
+      margin-top: 10px;
+      text-shadow: 0 1px 4px #0004;
+    }
+    .user-details strong {
+      color: #FFFFFF;
+    }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .photo-grid img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 8px #1877f211;
+    }
+    .photo-grid img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 16px #1877f288;
+    }
+    .friend-list {
+      background: linear-gradient(120deg, #242526 80%, #1877F2 100%);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+      box-shadow: 0 2px 8px #1877f211;
+    }
+    .friend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .friend-item img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+      box-shadow: 0 2px 8px #1877f211;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(24, 119, 242, 0.25);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+    }
+    .modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      background: #242526;
+      border-radius: 10px;
+      box-shadow: 0 4px 32px #1877f288;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 16px #1877f244;
+    }
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+      text-shadow: 0 2px 8px #1877f288;
+    }
+  </style>
 </head>
 <body>
-    <div class="profile-container">
-        <div class="profile-left">
-            <div class="profile-header">
-                <img src="https://via.placeholder.com/120" alt="Profile Avatar" id="profile-avatar" onclick="toggleUploadProfileForm()">
-                <h2 id="profile-name">Đang tải...</h2>
-            </div>
-            <div class="profile-info" id="profile-details">
-                <p><strong>Email:</strong> <span id="profile-email">Đang tải...</span></p>
-                <p><strong>Số điện thoại:</strong> <span id="profile-phone">Đang tải...</span></p>
-                <p><strong>Họ và tên:</strong> <span id="profile-fullname">Đang tải...</span></p>
-                <p><strong>Ngày sinh:</strong> <span id="profile-birthdate">Đang tải...</span></p>
-                <p><strong>Giới tính:</strong> <span id="profile-gender">Đang tải...</span></p>
-                <p><strong>Tìm kiếm:</strong> <span id="profile-lookingfor">Đang tải...</span></p>
-                <p><strong>Bio:</strong> <span id="profile-bio">Đang tải...</span></p>
-                <p><strong>Chiều cao:</strong> <span id="profile-height">Đang tải...</span></p>
-                <p><strong>Cân nặng:</strong> <span id="profile-weight">Đang tải...</span></p>
-                <p><strong>Địa điểm:</strong> <span id="profile-location">Đang tải...</span></p>
-                <p><strong>Nghề nghiệp:</strong> <span id="profile-job">Đang tải...</span></p>
-                <p><strong>Công ty:</strong> <span id="profile-company">Đang tải...</span></p>
-                <p><strong>Trường học:</strong> <span id="profile-education">Đang tải...</span></p>
-                <p><strong>Mô tả:</strong> <span id="profile-description">Đang tải...</span></p>
-                <p><strong>Sở thích (API):</strong> <span id="profile-interest">Đang tải...</span></p>
-                <p><strong>Sở thích:</strong> <span id="profile-hobbies">Đang tải...</span></p>
-                <p><strong>Quan tâm:</strong> <span id="profile-interests">Đang tải...</span></p>
-                <p><strong>Ưu tiên mối quan hệ:</strong> <span id="profile-relationship">Đang tải...</span></p>
-                <p><strong>Cung hoàng đạo:</strong> <span id="profile-zodiac">Đang tải...</span></p>
-            </div>
-            <button class="edit-btn" onclick="openUpdateModal()">Chỉnh sửa hồ sơ</button>
-            <button class="upload-photo-btn" onclick="toggleUploadForm()">Tải ảnh lên</button>
-            <form class="upload-form" id="upload-form" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="photo-image" class="form-label">Chọn ảnh để thêm:</label>
-                    <input type="file" class="form-control" id="photo-image" accept="image/*" required>
-                </div>
-                <div class="mb-3">
-                    <label for="user-email-photo" class="form-label">Email:</label>
-                    <input type="email" class="form-control" id="user-email-photo" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Tải lên</button>
-                <button type="button" class="btn btn-secondary" onclick="toggleUploadForm()">Hủy</button>
-            </form>
-            <form class="upload-profile-form" id="upload-profile-form" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="profile-image" class="form-label">Chọn ảnh profile mới:</label>
-                    <input type="file" class="form-control" id="profile-image" accept="image/*" required>
-                </div>
-                <div class="mb-3">
-                    <label for="user-email-profile" class="form-label">Email:</label>
-                    <input type="email" class="form-control" id="user-email-profile" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Tải lên</button>
-                <button type="button" class="btn btn-secondary" onclick="toggleUploadProfileForm()">Hủy</button>
-            </form>
-        </div>
-        <div class="profile-right">
-            <div class="photo-grid" id="photo-grid"></div>
-        </div>
+  <div class="fb-topbar">
+    <div class="fb-logo">
+      <i class="fab fa-facebook"></i>
+      <span style="font-size:20px;font-weight:bold;color:#1877F2;">Facebook</span>
     </div>
-    <div class="modal" id="image-modal">
-        <span class="close-modal" onclick="closeModal()">×</span>
-        <div class="modal-content">
-            <img id="zoomed-image" src="" alt="Zoomed Image">
-        </div>
+    
+    <div class="fb-icons">
+      <i class="fas fa-home" title="Trang chủ"></i>
+      <i class="fas fa-tv" title="Watch"></i>
+      <i class="fas fa-store" title="Marketplace"></i>
+      <i class="fas fa-users" title="Groups"></i>
+      <i class="fas fa-gamepad" title="Games"></i>
     </div>
-    <div class="update-modal" id="update-modal">
-        <div class="update-modal-content">
-            <span class="close-update-modal" onclick="closeUpdateModal()">×</span>
-            <h3>Cập nhật thông tin cá nhân</h3>
-            <form id="update-profile-form">
-                <div class="form-group">
-                    <label for="update-email">Email:</label>
-                    <input type="email" id="update-email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="update-phone">Số điện thoại:</label>
-                    <input type="text" id="update-phone" name="phoneNumber">
-                </div>
-                <div class="form-group">
-                    <label for="update-fullname">Họ và tên:</label>
-                    <input type="text" id="update-fullname" name="fullName">
-                </div>
-                <div class="form-group">
-                    <label for="update-birthdate">Ngày sinh:</label>
-                    <input type="date" id="update-birthdate" name="birthDate">
-                </div>
-                <div class="form-group">
-                    <label for="update-gender">Giới tính:</label>
-                    <select id="update-gender" name="gender">
-                        <option value="">Chọn giới tính...</option>
-                        <option value="MALE">Nam</option>
-                        <option value="FEMALE">Nữ</option>
-                        <option value="OTHER">Khác</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="update-lookingfor">Tìm kiếm:</label>
-                    <select id="update-lookingfor" name="lookingFor">
-                        <option value="">Chọn...</option>
-                        <option value="MALE">Nam</option>
-                        <option value="FEMALE">Nữ</option>
-                        <option value="OTHER">Khác</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="update-bio">Bio:</label>
-                    <textarea id="update-bio" name="bio"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="update-height">Chiều cao (cm):</label>
-                    <input type="number" id="update-height" name="height">
-                </div>
-                <div class="form-group">
-                    <label for="update-weight">Cân nặng (kg):</label>
-                    <input type="number" id="update-weight" name="weight">
-                </div>
-                <div class="form-group">
-                    <label for="update-location">Địa điểm:</label>
-                    <input type="text" id="update-location" name="location">
-                </div>
-                <div class="form-group">
-                    <label for="update-job">Nghề nghiệp:</label>
-                    <input type="text" id="update-job" name="jobTitle">
-                </div>
-                <div class="form-group">
-                    <label for="update-company">Công ty:</label>
-                    <input type="text" id="update-company" name="company">
-                </div>
-                <div class="form-group">
-                    <label for="update-education">Trường học:</label>
-                    <input type="text" id="update-education" name="education">
-                </div>
-                <div class="form-group">
-                    <label for="update-description">Mô tả:</label>
-                    <textarea id="update-description" name="description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="update-interest-select">Sở thích:</label>
-                    <select id="update-interest-select" class="form-select">
-                        <option value="">Chọn sở thích...</option>
-                    </select>
-                    <button type="button" class="btn btn-primary mt-2" onclick="addInterestToList()">Thêm sở thích</button>
-                    <div class="interest-list" id="interest-list"></div>
-                </div>
-                <button type="submit" class="btn btn-primary">Cập nhật</button>
-                <button type="button" class="btn btn-secondary" onclick="closeUpdateModal()">Hủy</button>
-            </form>
-        </div>
+    
+    <div class="fb-right">
+      <i class="fas fa-bars" title="Menu"></i>
+      <i class="fab fa-facebook-messenger" title="Messenger"></i>
+      <i class="fas fa-bell" title="Thông báo"></i>
+      <img class="fb-avatar" src="https://thichtrangtri.com/wp-content/uploads/2025/05/hinh-anh-con-meo-cute-1.jpg" alt="User">
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- JWT Decode -->
-    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
-    <script>
-        let userProfileData = {};
-        let selectedInterests = [];
+  </div>
+  
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            const decodedToken = jwt_decode(token);
-            const userId = decodedToken.sub;
-
-            // Load profile details
-            fetch(`http://localhost:8080/api/user-profile/${userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    userProfileData = data.data;
-                    document.getElementById('profile-name').textContent = data.data.fullName || 'Không có tên';
-                    document.getElementById('profile-fullname').textContent = data.data.fullName || 'Không có tên';
-                    document.getElementById('profile-email').textContent = data.data.email || 'Không có email';
-                    document.getElementById('profile-phone').textContent = data.data.phoneNumber || 'Không có số điện thoại';
-                    document.getElementById('profile-birthdate').textContent = data.data.birthDate ? new Date(data.data.birthDate).toLocaleDateString('vi-VN') : 'Chưa cập nhật';
-                    document.getElementById('profile-gender').textContent = data.data.gender || 'Không xác định';
-                    document.getElementById('profile-lookingfor').textContent = data.data.lookingFor || 'Chưa cập nhật';
-                    document.getElementById('profile-bio').textContent = data.data.bio || 'Chưa cập nhật';
-                    document.getElementById('profile-height').textContent = data.data.height ? `${data.data.height} cm` : 'Chưa cập nhật';
-                    document.getElementById('profile-weight').textContent = data.data.weight ? `${data.data.weight} kg` : 'Chưa cập nhật';
-                    document.getElementById('profile-location').textContent = data.data.location || 'Chưa cập nhật';
-                    document.getElementById('profile-job').textContent = data.data.jobTitle || 'Chưa cập nhật';
-                    document.getElementById('profile-company').textContent = data.data.company || 'Chưa cập nhật';
-                    document.getElementById('profile-education').textContent = data.data.education || 'Chưa cập nhật';
-                    document.getElementById('profile-description').textContent = data.data.description || 'Chưa cập nhật';
-                    document.getElementById('profile-interest').textContent = data.data.interestName && data.data.interestName.length > 0 ? data.data.interestName.join(', ') : 'Chưa cập nhật';
-                    document.getElementById('profile-hobbies').textContent = data.data.hobbies || 'Chưa cập nhật';
-                    document.getElementById('profile-interests').textContent = data.data.interests || 'Chưa cập nhật';
-                    document.getElementById('profile-relationship').textContent = data.data.relationshipPreference || 'Chưa cập nhật';
-                    document.getElementById('profile-zodiac').textContent = data.data.zodiacSign || 'Chưa cập nhật';
-                } else {
-                    alert('Lỗi khi tải thông tin: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching profile:', error);
-                alert('Có lỗi xảy ra khi tải thông tin');
-            });
-
-            // Load profile image
-            fetch(`http://localhost:8080/api/profile-photo?userid=${userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.data) {
-                    document.getElementById('profile-avatar').src = data.data;
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching profile image:', error);
-                alert('Có lỗi xảy ra khi tải ảnh profile');
-            });
-
-            // Load all photos
-            fetch(`http://localhost:8080/api/photos?idUser=${userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const photoGrid = document.getElementById('photo-grid');
-                    photoGrid.innerHTML = '';
-                    data.data.forEach(url => {
-                        const img = document.createElement('img');
-                        img.src = url;
-                        img.alt = 'User Photo';
-                        img.onclick = () => openModal(url);
-                        photoGrid.appendChild(img);
-                    });
-                } else {
-                    alert('Lỗi khi tải ảnh: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching photos:', error);
-                alert('Có lỗi xảy ra khi tải ảnh');
-            });
-
-            // Handle upload photo form submission (normal photo)
-            const uploadForm = document.getElementById('upload-form');
-            uploadForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData();
-                const fileInput = document.getElementById('photo-image');
-                const emailInput = document.getElementById('user-email-photo');
-                formData.append('file', fileInput.files[0]);
-                formData.append('userEmail', emailInput.value);
-
-                try {
-                    const response = await fetch('http://localhost:8080/api/photo/upload', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: formData
-                    });
-                    const data = await response.json();
-                    if (data.success) {
-                        alert('Tải ảnh thành công!');
-                        toggleUploadForm();
-                        // Reload photos
-                        fetch(`http://localhost:8080/api/photos?idUser=${userId}`, {
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                const photoGrid = document.getElementById('photo-grid');
-                                photoGrid.innerHTML = '';
-                                data.data.forEach(url => {
-                                    const img = document.createElement('img');
-                                    img.src = url;
-                                    img.alt = 'User Photo';
-                                    img.onclick = () => openModal(url);
-                                    photoGrid.appendChild(img);
-                                });
-                            }
-                        });
-                    } else {
-                        alert('Lỗi khi tải ảnh: ' + data.message);
-                    }
-                } catch (error) {
-                    console.error('Error uploading photo:', error);
-                    alert('Có lỗi xảy ra khi tải ảnh');
-                }
-            });
-
-            // Handle upload profile photo form submission
-            const uploadProfileForm = document.getElementById('upload-profile-form');
-            uploadProfileForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData();
-                const fileInput = document.getElementById('profile-image');
-                const emailInput = document.getElementById('user-email-profile');
-                formData.append('file', fileInput.files[0]);
-                formData.append('userEmail', emailInput.value);
-
-                try {
-                    const response = await fetch('http://localhost:8080/api/profile-photo/upload', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: formData
-                    });
-                    const data = await response.json();
-                    if (data.success) {
-                        alert('Tải ảnh profile thành công!');
-                        document.getElementById('profile-avatar').src = data.data;
-                        toggleUploadProfileForm();
-                    } else {
-                        alert('Lỗi khi tải ảnh profile: ' + data.message);
-                    }
-                } catch (error) {
-                    console.error('Error uploading profile photo:', error);
-                    alert('Có lỗi xảy ra khi tải ảnh profile');
-                }
-            });
-
-            // Handle update profile form submission
-            const updateProfileForm = document.getElementById('update-profile-form');
-            updateProfileForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const token = localStorage.getItem('token');
-                const userId = jwt_decode(token).sub;
-
-                const profileDetailRequest = {
-                    email: document.getElementById('update-email').value,
-                    phoneNumber: document.getElementById('update-phone').value,
-                    fullName: document.getElementById('update-fullname').value,
-                    birthDate: document.getElementById('update-birthdate').value ? new Date(document.getElementById('update-birthdate').value) : null,
-                    gender: document.getElementById('update-gender').value || null,
-                    lookingFor: document.getElementById('update-lookingfor').value || null,
-                    bio: document.getElementById('update-bio').value,
-                    height: document.getElementById('update-height').value ? parseInt(document.getElementById('update-height').value) : null,
-                    weight: document.getElementById('update-weight').value ? parseInt(document.getElementById('update-weight').value) : null,
-                    location: document.getElementById('update-location').value,
-                    jobTitle: document.getElementById('update-job').value,
-                    company: document.getElementById('update-company').value,
-                    education: document.getElementById('update-education').value,
-                    description: document.getElementById('update-description').value,
-                    interestName: selectedInterests
-                };
-
-                try {
-                    const response = await fetch(`http://localhost:8080/api/user-profile/${userId}/update`, {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(profileDetailRequest)
-                    });
-                    const data = await response.json();
-                    if (data.success) {
-                        alert('Cập nhật thông tin thành công!');
-                        closeUpdateModal();
-                        // Reload profile details
-                        fetch(`http://localhost:8080/api/user-profile/${userId}`, {
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                userProfileData = data.data;
-                                document.getElementById('profile-name').textContent = data.data.fullName || 'Không có tên';
-                                document.getElementById('profile-fullname').textContent = data.data.fullName || 'Không có tên';
-                                document.getElementById('profile-email').textContent = data.data.email || 'Không có email';
-                                document.getElementById('profile-phone').textContent = data.data.phoneNumber || 'Không có số điện thoại';
-                                document.getElementById('profile-birthdate').textContent = data.data.birthDate ? new Date(data.data.birthDate).toLocaleDateString('vi-VN') : 'Chưa cập nhật';
-                                document.getElementById('profile-gender').textContent = data.data.gender || 'Không xác định';
-                                document.getElementById('profile-lookingfor').textContent = data.data.lookingFor || 'Chưa cập nhật';
-                                document.getElementById('profile-bio').textContent = data.data.bio || 'Chưa cập nhật';
-                                document.getElementById('profile-height').textContent = data.data.height ? `${data.data.height} cm` : 'Chưa cập nhật';
-                                document.getElementById('profile-weight').textContent = data.data.weight ? `${data.data.weight} kg` : 'Chưa cập nhật';
-                                document.getElementById('profile-location').textContent = data.data.location || 'Chưa cập nhật';
-                                document.getElementById('profile-job').textContent = data.data.jobTitle || 'Chưa cập nhật';
-                                document.getElementById('profile-company').textContent = data.data.company || 'Chưa cập nhật';
-                                document.getElementById('profile-education').textContent = data.data.education || 'Chưa cập nhật';
-                                document.getElementById('profile-description').textContent = data.data.description || 'Chưa cập nhật';
-                                document.getElementById('profile-interest').textContent = data.data.interestName && data.data.interestName.length > 0 ? data.data.interestName.join(', ') : 'Chưa cập nhật';
-                                document.getElementById('profile-hobbies').textContent = data.data.hobbies || 'Chưa cập nhật';
-                                document.getElementById('profile-interests').textContent = data.data.interests || 'Chưa cập nhật';
-                                document.getElementById('profile-relationship').textContent = data.data.relationshipPreference || 'Chưa cập nhật';
-                                document.getElementById('profile-zodiac').textContent = data.data.zodiacSign || 'Chưa cập nhật';
-                            }
-                        });
-                    } else {
-                        alert('Lỗi khi cập nhật thông tin: ' + data.message);
-                    }
-                } catch (error) {
-                    console.error('Error updating profile:', error);
-                    alert('Có lỗi xảy ra khi cập nhật thông tin');
-                }
-            });
-        });
-
-        function toggleUploadForm() {
-            const uploadForm = document.getElementById('upload-form');
-            uploadForm.classList.toggle('active');
-            if (uploadForm.classList.contains('active')) {
-                const email = document.getElementById('profile-email').textContent;
-                document.getElementById('user-email-photo').value = email;
-            }
-        }
-
-        function toggleUploadProfileForm() {
-            const uploadProfileForm = document.getElementById('upload-profile-form');
-            uploadProfileForm.classList.toggle('active');
-            if (uploadProfileForm.classList.contains('active')) {
-                const email = document.getElementById('profile-email').textContent;
-                document.getElementById('user-email-profile').value = email;
-            }
-        }
-
-        function openModal(imageUrl) {
-            const modal = document.getElementById('image-modal');
-            const zoomedImage = document.getElementById('zoomed-image');
-            zoomedImage.src = imageUrl;
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('image-modal');
-            modal.style.display = 'none';
-        }
-
-        function openUpdateModal() {
-            const modal = document.getElementById('update-modal');
-            modal.style.display = 'flex';
-
-            // Fill form with current profile data
-            document.getElementById('update-email').value = userProfileData.email || '';
-            document.getElementById('update-phone').value = userProfileData.phoneNumber || '';
-            document.getElementById('update-fullname').value = userProfileData.fullName || '';
-            document.getElementById('update-birthdate').value = userProfileData.birthDate ? new Date(userProfileData.birthDate).toISOString().split('T')[0] : '';
-            document.getElementById('update-gender').value = userProfileData.gender || '';
-            document.getElementById('update-lookingfor').value = userProfileData.lookingFor || '';
-            document.getElementById('update-bio').value = userProfileData.bio || '';
-            document.getElementById('update-height').value = userProfileData.height || '';
-            document.getElementById('update-weight').value = userProfileData.weight || '';
-            document.getElementById('update-location').value = userProfileData.location || '';
-            document.getElementById('update-job').value = userProfileData.jobTitle || '';
-            document.getElementById('update-company').value = userProfileData.company || '';
-            document.getElementById('update-education').value = userProfileData.education || '';
-            document.getElementById('update-description').value = userProfileData.description || '';
-
-            // Load current interests
-            selectedInterests = userProfileData.interestName ? [...userProfileData.interestName] : [];
-            updateInterestList();
-
-            // Load interest names from API
-            const token = localStorage.getItem('token');
-            fetch(`http://localhost:8080/api/interests-name`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const select = document.getElementById('update-interest-select');
-                    select.innerHTML = '<option value="">Chọn sở thích...</option>';
-                    data.data.forEach(interest => {
-                        const option = document.createElement('option');
-                        option.value = interest;
-                        option.textContent = interest;
-                        select.appendChild(option);
-                    });
-                } else {
-                    alert('Lỗi khi tải danh sách sở thích: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching interests:', error);
-                alert('Có lỗi xảy ra khi tải danh sách sở thích');
-            });
-        }
-
-        function closeUpdateModal() {
-            const modal = document.getElementById('update-modal');
-            modal.style.display = 'none';
-            selectedInterests = [];
-        }
-
-        function addInterestToList() {
-            const select = document.getElementById('update-interest-select');
-            const selectedInterest = select.value;
-
-            if (!selectedInterest) {
-                alert('Vui lòng chọn một sở thích!');
-                return;
-            }
-
-            if (!selectedInterests.includes(selectedInterest)) {
-                selectedInterests.push(selectedInterest);
-                updateInterestList();
-            } else {
-                alert('Sở thích đã tồn tại!');
-            }
-            select.value = '';
-        }
-
-        function removeInterest(interest) {
-            selectedInterests = selectedInterests.filter(item => item !== interest);
-            updateInterestList();
-        }
-
-        function updateInterestList() {
-            const interestList = document.getElementById('interest-list');
-            interestList.innerHTML = '';
-            selectedInterests.forEach(interest => {
-                const span = document.createElement('span');
-                span.textContent = interest;
-                const removeBtn = document.createElement('button');
-                removeBtn.textContent = 'x';
-                removeBtn.onclick = () => removeInterest(interest);
-                span.appendChild(removeBtn);
-                interestList.appendChild(span);
-            });
-        }
-    </script>
+  
+  <div class="profile-header">
+    <img src="https://thichtrangtri.com/wp-content/uploads/2025/05/hinh-anh-con-meo-cute-1.jpg" alt="avatar" class="avatar" id="profile-avatar">
+    <div class="profile-info">
+      <h1>Vu Duc Thiep</h1>
+      <p><i class="fas fa-user-friends"></i> 438 người bạn</p>
+      <p id="profile-bio"><i class="fas fa-quote-left"></i> Thích cà phê, đam mê công nghệ.</p>
+    </div>
+  </div>
+  <nav>
+    <a class="active" href="#"><i class="fas fa-newspaper"></i> Bài viết</a>
+    <a href="#"><i class="fas fa-info-circle"></i> Giới thiệu</a>
+    <a href="#"><i class="fas fa-user-friends"></i> Bạn bè</a>
+    <a href="#"><i class="fas fa-image"></i> Ảnh</a>
+    <a href="#"><i class="fas fa-video"></i> Video</a>
+    <a href="#"><i class="fas fa-map-marker-alt"></i> Check in</a>
+  </nav>
+  <div class="main">
+    <div class="left-panel">
+      <div class="intro-box">
+        <h3><i class="fas fa-user"></i> Giới thiệu</h3>
+        <div class="user-details">
+          <p><strong><i class="fas fa-user"></i> Họ tên:</strong> Vu Duc Thiep</p>
+          <p><strong><i class="fas fa-birthday-cake"></i> Ngày sinh:</strong> 1996-10-12</p>
+          <p><strong><i class="fas fa-mars"></i> Giới tính:</strong> Nam</p>
+          <p><strong><i class="fas fa-search"></i> Đang tìm kiếm:</strong> Bạn bè, Cơ hội nghề nghiệp</p>
+          <p><strong><i class="fas fa-pen"></i> Tiểu sử:</strong> Một lập trình viên </p>
+          <p><strong><i class="fas fa-ruler-vertical"></i> Chiều cao:</strong> 1m52</p>
+          <p><strong><i class="fas fa-weight"></i> Cân nặng:</strong> 69kg</p>
+          <p><strong><i class="fas fa-map-marker-alt"></i> Địa chỉ:</strong> Hà Nội, Việt Nam</p>
+          <p><strong><i class="fas fa-briefcase"></i> Vị trí:</strong> Backend Developer</p>
+          <p><strong><i class="fas fa-building"></i> Công ty:</strong> ABC Tech Co.</p>
+          <p><strong><i class="fas fa-graduation-cap"></i> Học vấn:</strong> Đại học Công nghiệp Hà Nội</p>
+          <p><strong><i class="fas fa-check-circle"></i> Hoàn thành hồ sơ:</strong> Chưa</p>
+        </div>
+        <button><i class="fas fa-edit"></i> Chỉnh sửa tiểu sử</button>
+        <button><i class="fas fa-user-cog"></i> Chỉnh sửa chi tiết</button>
+        <button><i class="fas fa-plus-circle"></i> Thêm nội dung đáng chú ý</button>
+      </div>
+      <div class="friend-list">
+        <h3><i class="fas fa-user-friends"></i> Bạn bè</h3>
+        <div class="friend-item">
+          <img src="https://i.pravatar.cc/50?img=1" alt="Friend 1">
+          <span>Nguyen Van A</span>
+        </div>
+        <div class="friend-item">
+          <img src="https://i.pravatar.cc/50?img=2" alt="Friend 2">
+          <span>Le Thi B</span>
+        </div>
+        <div class="friend-item">
+          <img src="https://i.pravatar.cc/50?img=3" alt="Friend 3">
+          <span>Tran Van C</span>
+        </div>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="post-box">
+        <input type="text" placeholder="Bạn đang nghĩ gì?">
+        <button><i class="fas fa-image"></i> Ảnh/video</button>
+        <button><i class="fas fa-star"></i> Sự kiện trong đời</button>
+      </div>
+      <div class="intro-box">
+        <h3><i class="fas fa-images"></i> Ảnh của bạn</h3>
+        <div class="photo-grid" id="photo-grid">
+          <img src="https://images.entertainment.ie/person/w780_x7uMR88ANVPbkCXUXlvRUz6J9e1.jpg" alt="Ảnh 1" onclick="openModal(this.src)">
+          <img src="https://images.entertainment.ie/person/w780_x7uMR88ANVPbkCXUXlvRUz6J9e1.jpg" alt="Ảnh 2" onclick="openModal(this.src)">
+          <img src="https://images.entertainment.ie/person/w780_x7uMR88ANVPbkCXUXlvRUz6J9e1.jpg" alt="Ảnh 3" onclick="openModal(this.src)">
+          <img src="https://images.entertainment.ie/person/w780_x7uMR88ANVPbkCXUXlvRUz6J9e1.jpg" alt="Ảnh 4" onclick="openModal(this.src)">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="image-modal">
+    <span class="close-modal" onclick="closeModal()">×</span>
+    <div class="modal-content">
+      <img id="zoomed-image" src="" alt="Zoomed Image">
+    </div>
+  </div>
+  <script>
+    function openModal(imageUrl) {
+      const modal = document.getElementById('image-modal');
+      const zoomedImage = document.getElementById('zoomed-image');
+      zoomedImage.src = imageUrl;
+      modal.style.display = 'flex';
+    }
+    function closeModal() {
+      document.getElementById('image-modal').style.display = 'none';
+    }
+  </script>
 </body>
 </html>
