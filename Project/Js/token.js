@@ -1,0 +1,5 @@
+token =
+  eyJhbGciOiJIUzUxMiJ9
+    .eyJzdWIiOiIxNiIsInNjb3BlIjoiQURNSU4gbnVsbCIsImlzcyI6IndlYnNpdGUuY29tIiwiZXhwIjoxNzUxODc2OTE0LCJpYXQiOjE3NTE4NzMzMTQsImp0aSI6IjUxNDdkNzdlLWJlMGItNDU2Yi1iM2U5LTA5ODQ2OWM5NmZmNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIn0
+    .FTMaSTezxEA5SiTwxpIg6_vGhePNXWFcqyxrJQr7KYbcfnIaa1Si25ZT14_g9OPtDRD_PDzzAtJG2SiJebCCPw;
+localStorage.setItem("accessToken", token);

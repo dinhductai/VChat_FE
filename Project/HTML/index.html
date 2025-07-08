@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facebook Trang chủ - Dark Mode</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="../CSS/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../CSS/darkmode.css" />
+    <style>
+      body {
+        background-color: #f2f4f7;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .dark-mode {
+        background-color: #18191a !important;
+        color: #e4e6eb !important;
+      }
+      .dark-mode .bg-white {
+        background-color: #242526 !important;
+      }
+      .dark-mode .list-group-item {
+        background-color: #1c1c1d;
+        color: #e4e6eb;
+      }
+      .dark-mode .navbar {
+        background-color: #242526 !important;
+      }
+      .post {
+        background-color: white;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        transition: background-color 0.3s;
+      }
+      .dark-mode .post {
+        background-color: #252728;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <nav
+      class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top row"
+      style="margin: 0 auto"
+    >
+      <div class="container-fluid align-items-center">
+        <!-- Logo -->
+        <div class="d-flex col-3">
+          <div class="border-0 overflow-hidden">
+            <a href="index.html"
+              ><img
+                class="rounded-circle"
+                style="width: 40px; height: 40px"
+                src="../images/OIP.jpg"
+                alt=""
+            /></a>
+          </div>
+
+          <!-- Tìm kiếm -->
+          <form
+            class="d-none d-md-block ms-3 d-flex"
+            style="position: relative; width: 250px"
+          >
+            <i
+              class="bi bi-search text-secondary position-absolute top-50 start-0 translate-middle-y ms-3"
+            ></i>
+            <input
+              type="search"
+              class="form-control form-control-sm rounded-5 border-0 ps-5 shadow-sm search-input"
+              placeholder="Search"
+              style="background-color: #f0f2f5; height: 35px; width: 240px"
+            />
+          </form>
+        </div>
+        <div class="col-5">
+          <div class="d-flex justify-content-between text-center" id="menuTabs">
+            <div class="menu-item flex-fill">
+              <a href="#"><i class="bi bi-house fs-4 active"></i></a>
+              <div class="indicator"></div>
+            </div>
+            <div class="menu-item flex-fill">
+              <a href="#"><i class="bi bi-person fs-4"></i></a>
+              <div class="indicator"></div>
+            </div>
+            <div class="menu-item flex-fill">
+              <a href="#"><i class="bi bi-tv fs-4"></i></a>
+              <div class="indicator"></div>
+            </div>
+            <div class="menu-item flex-fill">
+              <a href="#"><i class="bi bi-bell fs-4"></i></a>
+              <div class="indicator"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dark Mode Button -->
+        <div
+          class="d-flex col-3 align-items-center gap-3"
+          style="justify-content: end"
+        >
+          <div
+            class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
+            style="width: 40px; height: 40px; cursor: pointer"
+          >
+            <i class="bi bi-grid-3x3-gap-fill fs-5 text-dark"></i>
+          </div>
+
+          <!-- Messenger -->
+          <div
+            class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
+            style="width: 40px; height: 40px; cursor: pointer"
+          >
+            <i class="bi bi-messenger fs-5 text-dark"></i>
+          </div>
+
+          <!-- Thông báo -->
+          <div
+            class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
+            style="width: 40px; height: 40px; cursor: pointer"
+          >
+            <i class="bi bi-bell fs-5 text-dark"></i>
+          </div>
+
+          <!-- Avatar + menu -->
+          <div
+            class="rounded-circle d-flex align-items-center justify-content-center position-relative"
+            style="width: 40px; height: 40px; overflow: hidden; cursor: pointer"
+          >
+            <img
+              src="../images/OIP.jpg"
+              class="rounded-circle"
+              alt="avatar"
+              style="width: 40px; height: 40px"
+            />
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" id="toggleDarkBtn">
+            🌙 Dark Mode
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="container-fluid mt-3">
+      <div class="row">
+        <!-- Sidebar trái -->
+        <div class="col-md-3">
+          <div
+            class="left-sidebar bg-white shadow-sm p-3 rounded full-height-sidebar"
+          >
+            <a href="#" class="mb-2 d-block text-decoration-none text-dark"
+              >🏠 Trang chủ</a
+            >
+            <a href="#" class="mb-2 d-block text-decoration-none text-dark"
+              >👥 Bạn bè</a
+            >
+            <a href="#" class="mb-2 d-block text-decoration-none text-dark"
+              >👨‍👩‍👧‍👦 Nhóm</a
+            >
+            <a href="#" class="d-block text-decoration-none text-dark"
+              >🛒 Marketplace</a
+            >
+          </div>
+        </div>
+
+        <!-- News Feed -->
+        <div class="col-md-6">
+          <div class="row justify-content-center">
+            <!-- Khung nhập bài đăng -->
+            <div
+              class="post shadow-sm p-3 rounded mb-3 bg-white dark-mode-bg col-10"
+            >
+              <div class="d-flex align-items-center mb-2">
+                <img
+                  src="../images/OIP.jpg"
+                  class="rounded-circle me-2"
+                  style="width: 40px; height: 40px"
+                  alt="Avatar"
+                />
+                <button
+                  class="form-control rounded-5 text-start"
+                  style="background-color: #f0f2f5; height: 40px"
+                  onclick="openPostModal()"
+                >
+                  What's on your mind
+                </button>
+              </div>
+              <div class="d-flex justify-content-around mt-3 border-top pt-2">
+                <button class="btn btn-light w-100 me-1 btn-action">
+                  <i
+                    class="bi bi-camera-reels-fill"
+                    class="bi bi-emoji-heart-eyes-fill"
+                    style="font-size: 20px; color: #e74c3c"
+                  ></i>
+                  Live video
+                </button>
+                <!-- Nút chọn ảnh/video -->
+                <button
+                  class="btn btn-light w-100 me-1 btn-action"
+                  onclick="triggerFileInputAndOpenModal()"
+                >
+                  <i
+                    class="bi bi-images"
+                    style="font-size: 20px; color: #27ae60"
+                  ></i>
+                  Photo/video
+                </button>
+
+                <!-- File input ẩn -->
+
+                <!-- Khung hiển thị ảnh sau khi chọn -->
+
+                <button class="btn btn-light w-100 btn-action">
+                  <i
+                    class="bi bi-emoji-heart-eyes-fill"
+                    style="font-size: 20px; color: #f39c12"
+                  ></i>
+                  Activity
+                </button>
+              </div>
+            </div>
+
+            <!-- story-->
+            <!-- Story -->
+            <!-- Story Wrapper -->
+            <div
+              class="position-relative col-10 mb-3 rounded-3 story-wrapper"
+              style="background-color: #e4e6eb"
+            >
+              <!-- Nút cuộn trái -->
+              <button
+                class="btn btn-dark position-absolute top-50 start-1 translate-middle-y z-1"
+                id="scrollLeftBtn"
+                style="
+                  border-radius: 50%;
+                  width: 40px;
+                  height: 40px;
+                  display: none;
+                  color: #3b3c3e;
+                "
+              >
+                <i class="bi bi-chevron-left" style="color: white"></i>
+              </button>
+
+              <!-- Story Container Cuộn -->
+              <div
+                id="storyContainer"
+                class="story-container d-flex gap-2 rounded-3 story-item-wrapper"
+                style="
+                  overflow-x: auto;
+                  white-space: nowrap;
+                  scroll-behavior: smooth;
+                  margin-top: 10px;
+                "
+              >
+                <!-- Từng Story Item -->
+                <div
+                  class="rounded-3 text-center story-item-wrapper pter"
+                  style="
+                    width: 120px;
+                    height: 200px;
+                    background-color: #252728;
+                    flex: 0 0 auto;
+                  "
+                  onclick="makeStory()"
+                >
+                  <img
+                    class="rounded-top-2"
+                    src="../images/OIP.jpg"
+                    alt=""
+                    style="width: 100%; height: 150px; object-fit: cover"
+                  />
+                  <div
+                    class="d-flex flex-column align-items-center justify-content-center"
+                    style="height: 50px; margin-top: -10px"
+                  >
+                    <div
+                      class="d-flex align-items-center justify-content-center bg-primary rounded-circle mb-1"
+                      style="
+                        width: 35px;
+                        height: 35px;
+                        border: 4px solid #242526;
+                        box-shadow: 0 0 0 2px white;
+                      "
+                    >
+                      <span
+                        class="text-white fw-bold fs-3"
+                        style="margin-bottom: 5px"
+                        >+</span
+                      >
+                    </div>
+                    <p class="mb-0 text-white" style="font-size: 13px">
+                      Create Story
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Các story khác tương tự -->
+                <div
+                  class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden pter"
+                  style="width: 120px; height: 200px; flex: 0 0 auto"
+                  onclick="goStory()"
+                >
+                  <!-- Ảnh nền -->
+                  <img
+                    src="../images/planet9_Wallpaper_5000x2813.jpg"
+                    alt=""
+                    style="width: 100%; height: 100%; object-fit: cover"
+                    class="story-image"
+                  />
+                  <!-- Overlay chữ -->
+                  <div
+                    class="story-overlay position-absolute bottom-0 start-0 w-100 px-1 py-1"
+                    style="text-align: left"
+                  >
+                    <p
+                      class="mb-0 text-white fw-semibold"
+                      style="font-size: 13px"
+                    >
+                      Nguyễn A
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden"
+                  style="width: 120px; height: 200px; flex: 0 0 auto"
+                >
+                  <!-- Ảnh nền -->
+                  <img
+                    src="../images/OIP.jpg"
+                    alt=""
+                    style="width: 100%; height: 100%; object-fit: cover"
+                    class="story-image"
+                  />
+                  <!-- Overlay chữ -->
+                  <div
+                    class="story-overlay position-absolute bottom-0 start-0 w-100 px-1 py-1"
+                    style="text-align: left"
+                  >
+                    <p
+                      class="mb-0 text-white fw-semibold"
+                      style="font-size: 13px"
+                    >
+                      Nguyễn A
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden"
+                  style="width: 120px; height: 200px; flex: 0 0 auto"
+                >
+                  <!-- Ảnh nền -->
+                  <img
+                    src="../images/Nitro_Wallpaper_5000x2813.jpg"
+                    alt=""
+                    style="width: 100%; height: 100%; object-fit: cover"
+                    class="story-image"
+                  />
+                  <!-- Overlay chữ -->
+                  <div
+                    class="story-overlay position-absolute bottom-0 start-0 w-100 px-1 py-1"
+                    style="text-align: left"
+                  >
+                    <p
+                      class="mb-0 text-white fw-semibold"
+                      style="font-size: 13px"
+                    >
+                      Nguyễn A
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden"
+                  style="width: 120px; height: 200px; flex: 0 0 auto"
+                >
+                  <!-- Ảnh nền -->
+                  <img
+                    src="../images/OIP.jpg"
+                    alt=""
+                    style="width: 100%; height: 100%; object-fit: cover"
+                    class="story-image"
+                  />
+                  <!-- Overlay chữ -->
+                  <div
+                    class="story-overlay position-absolute bottom-0 start-0 w-100 px-1 py-1"
+                    style="text-align: left"
+                  >
+                    <p
+                      class="mb-0 text-white fw-semibold"
+                      style="font-size: 13px"
+                    >
+                      Nguyễn B
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden"
+                  style="width: 120px; height: 200px; flex: 0 0 auto"
+                >
+                  <!-- Ảnh nền -->
+                  <img
+                    src="../images/Nitro_Wallpaper_5000x2813.jpg"
+                    alt=""
+                    style="width: 100%; height: 100%; object-fit: cover"
+                    class="story-image"
+                  />
+                  <!-- Overlay chữ -->
+                  <div
+                    class="story-overlay position-absolute bottom-0 start-0 w-100 px-1 py-1"
+                    style="text-align: left"
+                  >
+                    <p
+                      class="mb-0 text-white fw-semibold"
+                      style="font-size: 13px"
+                    >
+                      Nguyễn C
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden"
+                  style="width: 120px; height: 200px; flex: 0 0 auto"
+                >
+                  <!-- Ảnh nền -->
+                  <img
+                    src="../images/planet9_Wallpaper_5000x2813.jpg"
+                    alt=""
+                    style="width: 100%; height: 100%; object-fit: cover"
+                    class="story-image"
+                  />
+                  <!-- Overlay chữ -->
+                  <div
+                    class="story-overlay position-absolute bottom-0 start-0 w-100 px-1 py-1"
+                    style="text-align: left"
+                  >
+                    <p
+                      class="mb-0 text-white fw-semibold"
+                      style="font-size: 13px"
+                    >
+                      Nguyễn D
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden"
+                  style="width: 120px; height: 200px; flex: 0 0 auto"
+                >
+                  <!-- Ảnh nền -->
+                  <img
+                    src="../images/OIP.jpg"
+                    alt=""
+                    style="width: 100%; height: 100%; object-fit: cover"
+                    class="story-image"
+                  />
+                  <!-- Overlay chữ -->
+                  <div
+                    class="story-overlay position-absolute bottom-0 start-0 w-100 px-1 py-1"
+                    style="text-align: left"
+                  >
+                    <p
+                      class="mb-0 text-white fw-semibold"
+                      style="font-size: 13px"
+                    >
+                      Nguyễn A
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden"
+                  style="width: 120px; height: 200px; flex: 0 0 auto"
+                >
+                  <!-- Ảnh nền -->
+                  <img
+                    src="../images/OIP.jpg"
+                    alt=""
+                    style="width: 100%; height: 100%; object-fit: cover"
+                    class="story-image"
+                  />
+                  <!-- Overlay chữ -->
+                  <div
+                    class="story-overlay position-absolute bottom-0 start-0 w-100 px-1 py-1"
+                    style="text-align: left"
+                  >
+                    <p
+                      class="mb-0 text-white fw-semibold"
+                      style="font-size: 13px"
+                    >
+                      Nguyễn A
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden"
+                  style="width: 120px; height: 200px; flex: 0 0 auto"
+                >
+                  <!-- Ảnh nền -->
+                  <img
+                    src="../images/OIP.jpg"
+                    alt=""
+                    style="width: 100%; height: 100%; object-fit: cover"
+                    class="story-image"
+                  />
+                  <!-- Overlay chữ -->
+                  <div
+                    class="story-overlay position-absolute bottom-0 start-0 w-100 px-1 py-1"
+                    style="text-align: left"
+                  >
+                    <p
+                      class="mb-0 text-white fw-semibold"
+                      style="font-size: 13px"
+                    >
+                      Nguyễn A
+                    </p>
+                  </div>
+                </div>
+
+                <!-- ... -->
+              </div>
+              <!-- Nút cuộn phải -->
+              <button
+                class="btn btn-dark position-absolute top-50 end-0 translate-middle-y z-1"
+                id="scrollRightBtn"
+                style="border-radius: 50%; width: 40px; height: 40px"
+              >
+                <i class="bi bi-chevron-right" style="color: white"></i>
+              </button>
+            </div>
+
+            <!-- Bài đăng 1 -->
+            <div
+              id="postContainer"
+              class="d-flex flex-column align-items-center w-100"
+            ></div>
+            <div id="loading" class="text-center py-3 d-none">
+              <div class="spinner-border text-primary" role="status"></div>
+            </div>
+
+            <!-- Bài đăng 2 -->
+            <!-- Bài đăng 3 -->
+            <!-- Bài đăng 4 -->
+            <!-- Bài đăng 5 -->
+          </div>
+        </div>
+
+        <!-- Sidebar phải -->
+        <div class="col-md-3">
+          <div class="right-sidebar full-height-sidebar shadow-sm">
+            <div class="d-flex justify-content-between contact-header mb-2">
+              <div><strong>Contacts</strong></div>
+              <div class="d-flex">
+                <div
+                  class="rounded-circle contact-icon d-flex justify-content-center align-items-center"
+                >
+                  <i class="bi bi-search"></i>
+                </div>
+                <div
+                  class="rounded-circle contact-icon d-flex justify-content-center align-items-center ms-2"
+                >
+                  <i class="bi bi-three-dots"></i>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="d-flex user-hover px-2 py-2 rounded">
+              <img
+                src="../images/OIP.jpg"
+                alt=""
+                style="height: 40px; width: 40px; margin-right: 10px"
+                class="rounded-circle"
+              />
+              <p class="my-auto mx-0">Nguyên sáng</p>
+            </div>
+
+            <div class="d-flex user-hover px-2 py-2 rounded">
+              <img
+                src="../images/OIP.jpg"
+                alt=""
+                style="height: 40px; width: 40px; margin-right: 10px"
+                class="rounded-circle"
+              />
+              <p class="my-auto mx-0">Nguyên sáng</p>
+            </div>
+            <div class="d-flex user-hover px-2 py-2 rounded">
+              <img
+                src="../images/OIP.jpg"
+                alt=""
+                style="height: 40px; width: 40px; margin-right: 10px"
+                class="rounded-circle"
+              />
+              <p class="my-auto mx-0">Nguyên sáng</p>
+            </div>
+            <div class="d-flex user-hover px-2 py-2 rounded">
+              <img
+                src="../images/OIP.jpg"
+                alt=""
+                style="height: 40px; width: 40px; margin-right: 10px"
+                class="rounded-circle"
+              />
+              <p class="my-auto mx-0">Nguyên sáng</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap & Dark Mode JS -->
+    <script>
+      const btn = document.getElementById("toggleDarkBtn");
+
+      // Khi bấm nút
+      btn.addEventListener("click", () => {
+        const isDark = document.body.classList.toggle("dark-mode");
+        localStorage.setItem("darkMode", isDark ? "on" : "off");
+        btn.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+      });
+
+      // Khi tải trang
+      window.addEventListener("DOMContentLoaded", () => {
+        if (localStorage.getItem("darkMode") === "on") {
+          document.body.classList.add("dark-mode");
+          btn.textContent = "☀️ Light Mode";
+        } else {
+          btn.textContent = "🌙 Dark Mode";
+        }
+      });
+    </script>
+
+    <script>
+      document.querySelectorAll(".like-wrapper").forEach((wrapper) => {
+        const popup = wrapper.querySelector(".reaction-popup");
+        const button = wrapper.querySelector(".like-btn");
+
+        wrapper.addEventListener("mouseenter", () => {
+          popup.style.display = "flex";
+        });
+
+        wrapper.addEventListener("mouseleave", () => {
+          popup.style.display = "none";
+        });
+
+        popup.querySelectorAll(".icon").forEach((icon) => {
+          icon.addEventListener("click", () => {
+            button.innerHTML = icon.textContent + " Đã thích";
+            popup.style.display = "none";
+          });
+        });
+      });
+    </script>
+
+    <script>
+      const menuItems = document.querySelectorAll("#menuTabs .menu-item");
+
+      menuItems.forEach((item) => {
+        item.addEventListener("click", () => {
+          // Xoá active ở tất cả
+          menuItems.forEach((el) => el.classList.remove("active"));
+          // Thêm active vào phần tử vừa click
+          item.classList.add("active");
+        });
+      });
+    </script>
+    <script>
+      document.querySelectorAll(".toggle-comment").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const commentSection = btn
+            .closest(".post")
+            .querySelector(".comment-section");
+          commentSection.classList.toggle("d-none");
+        });
+      });
+      function autoResize(textarea) {
+        textarea.style.height = "auto"; // Reset chiều cao
+        textarea.style.height = textarea.scrollHeight + "px"; // Cập nhật chiều cao theo nội dung
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../Js/model.js"></script>
+
+    <div class="modal fade" id="postModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" style="max-width: 500px">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title w-100 text-center" style="font-weight: bold">
+              Create post
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex align-items-center">
+              <img
+                src="../images/OIP.jpg"
+                alt="Avatar"
+                class="rounded-circle me-2"
+                style="width: 40px; height: 40px"
+              />
+              <div>
+                <strong>Nguyễn Văn A</strong>
+                <!-- Dropdown chọn chế độ hiển thị -->
+                <div class="dropdown">
+                  <button
+                    class="btn btn-light border dropdown-toggle d-flex align-items-center px-2 py-1 mt-1"
+                    type="button"
+                    id="privacyDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    style="font-size: 10px; border-radius: 15px"
+                  >
+                    <i class="bi bi-globe me-1"></i>
+                    <span id="privacyLabel">Public</span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="privacyDropdown">
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="#"
+                        onclick="setPrivacy('public')"
+                      >
+                        <i class="bi bi-globe me-2"></i> Public
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="#"
+                        onclick="setPrivacy('private')"
+                      >
+                        <i class="bi bi-lock-fill me-2"></i>Private
+                      </a>
+                    </li>
+                  </ul>
+                  <input
+                    type="hidden"
+                    id="privacyValue"
+                    name="privacy"
+                    value="public"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Nội dung bài viết -->
+            <div style="overflow-y: auto; max-height: 450px">
+              <div style="margin: 20px 0">
+                <textarea
+                  id="postContent"
+                  class="form-control"
+                  placeholder="What's on your mind?"
+                  style="
+                    overflow: hidden;
+                    resize: none;
+                    min-height: 38px;
+                    line-height: 1.5;
+                    border-radius: 8px;
+                    padding: 8px;
+                    font-size: 16px;
+                    background-color: #f8f9fa;
+                  "
+                  oninput="autoResize(this)"
+                ></textarea>
+              </div>
+
+              <!-- Khu vực preview ảnh -->
+              <div
+                id="imagePreviewContainer"
+                class="d-none d-flex flex-wrap gap-2 mt-3 rounded-3"
+                style="height: 350px"
+              ></div>
+            </div>
+
+            <!-- nhập -->
+            <div>
+              <div></div>
+              <div></div>
+            </div>
+            <!-- Input bị ẩn Ảnh hoặc video-->
+            <div
+              class="rounded-3 d-flex"
+              style="
+                background-color: #f8f9fa;
+                height: 50px;
+                border: 0.5px solid #bdc3c7;
+                margin-top: 5px;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 10p;
+              "
+            >
+              <p style="margin: auto 10px">Add to your post</p>
+              <input
+                type="file"
+                id="fileInput"
+                class="d-none"
+                accept="image/*,video/*"
+                multiple
+                onchange="handleMultipleImages(this)"
+              />
+
+              <!-- Label hiển thị icon -->
+              <label for="fileInput" style="cursor: pointer; margin: 0 10px">
+                <i class="bi bi-image fs-4" style="color: #2ecc71"></i>
+                <!-- Icon hình ảnh Bootstrap -->
+              </label>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              id="postBtn"
+              class="btn btn-primary w-100"
+              onclick="submitPost()"
+            >
+              <span id="postBtnText">Post</span>
+              <span
+                id="postBtnSpinner"
+                class="spinner-border spinner-border-sm d-none ms-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="successToast"
+      class="toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-4"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+      style="z-index: 9999"
+    >
+      <div class="d-flex">
+        <div class="toast-body">
+          <i class="bi bi-check-circle-fill me-2"></i> Đăng bài viết thành công!
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+    </div>
+    <div id="customSuccessModal" class="success-modal d-none">
+      <div class="success-modal-content">
+        <div class="success-icon">
+          <i class="bi bi-check-lg"></i>
+        </div>
+        <h3 class="mt-3">Thành công!</h3>
+        <p>Bài viết của bạn đã được đăng.</p>
+        <button onclick="closeSuccessModal()">OK</button>
+      </div>
+    </div>
+
+    <!-- Modal xem ảnh -->
+    <!-- Modal toàn màn hình -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content border-0">
+          <div class="modal-body p-0 d-flex" style="height: 100vh">
+            <!-- Cột ảnh -->
+            <div
+              class="d-flex justify-content-center align-items-center position-relative flex-grow-1"
+              style="width: 75%; background-color: #000"
+            >
+              <!-- Nút đóng -->
+              <button
+                type="button"
+                class="btn-close btn-close-white position-absolute top-0 end-0 m-3 rounded-circle btn-light"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                style="background-color: #bdc3c7; width: 30px; height: 30px"
+              ></button>
+
+              <!-- Ảnh lớn -->
+              <img
+                id="modalImage"
+                src=""
+                alt="Ảnh phóng to"
+                class="img-fluid"
+                style="max-height: 100vh; object-fit: contain"
+              />
+            </div>
+
+            <!-- Cột thông tin -->
+            <div
+              class="modal-info flex-shrink-0"
+              style="width: 25%; overflow-y: auto"
+            >
+              <div class="post shadow-sm p-3 rounded mb-3">
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex align-items-center mb-2">
+                    <img
+                      src="../images/planet9_Wallpaper_5000x2813.jpg"
+                      class="rounded-circle me-2"
+                      style="width: 40px; height: 40px"
+                      alt="Avatar"
+                    />
+                    <div>
+                      <strong>Nguyễn Văn A</strong><br />
+                      <small class="text-muted">2 giờ trước</small>
+                    </div>
+                  </div>
+                  <div
+                    class="action-icon d-flex justify-content-center align-items-center rounded-circle"
+                    style="width: 30px; height: 30px; cursor: pointer"
+                    title="Tùy chọn"
+                  >
+                    <i class="bi bi-three-dots"></i>
+                  </div>
+                </div>
+                <p class="post-text">
+                  Hôm nay trời đẹp quá ☀️. Đi dạo công viên thôi!
+                </p>
+
+                <div
+                  class="d-flex justify-content-around mt-5 border-top pt-2 position-relative"
+                >
+                  <div class="like-wrapper position-relative w-100 me-1">
+                    <button class="btn btn-light w-100 btn-action like-btn">
+                      <i class="bi bi-hand-thumbs-up"></i> Thích
+                    </button>
+
+                    <div
+                      class="reaction-popup d-flex gap-2 rounded-5 shadow border"
+                    >
+                      <span class="icon">❤️</span>
+                      <span class="icon">😍</span>
+                      <span class="icon">😆</span>
+                      <span class="icon">😮</span>
+                      <span class="icon">😢</span>
+                      <span class="icon">😡</span>
+                    </div>
+                  </div>
+
+                  <button
+                    class="btn btn-light w-100 me-1 btn-action toggle-comment"
+                    data-bs-target="#commentModal"
+                    onclick="openCommentModal('Nguyễn Văn A', '2 giờ trước', 'Hôm nay trời đẹp quá ☀️. Đi dạo công viên thôi!', '../images/post1.jpg')"
+                  >
+                    <i class="bi bi-chat-left"></i> Bình luận
+                  </button>
+
+                  <button class="btn btn-light w-100 btn-action">
+                    <i class="bi bi-share"></i> Chia sẻ
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="../Js/api-post.js"></script>
+  <script>
+    function openImageModal(src) {
+      const modalImg = document.getElementById("modalImage");
+      modalImg.src = src;
+
+      // Mở modal
+      const imageModal = new bootstrap.Modal(
+        document.getElementById("imageModal")
+      );
+      imageModal.show();
+    }
+  </script>
+</html>

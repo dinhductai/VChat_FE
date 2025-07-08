@@ -1,0 +1,328 @@
+/* Menu tab */
+.menu-item {
+  position: relative;
+  padding: 10px 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.menu-item:hover {
+  background-color: #f0f2f5;
+  border-radius: 8px;
+}
+
+.menu-item i {
+  color: #606770;
+  transition: color 0.3s;
+}
+
+.menu-item.active i {
+  color: #0866ff;
+}
+
+.indicator {
+  height: 3px;
+  width: 100%;
+  background-color: transparent;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transition: background-color 0.3s;
+}
+
+.menu-item.active .indicator {
+  background-color: #0866ff;
+}
+
+/* Sidebar trái và phải */
+.left-sidebar,
+.right-sidebar {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+/* Sidebar sticky */
+.full-height-sidebar {
+  position: sticky;
+  top: calc(70px + 1rem);
+  height: calc(100vh - (70px + 1rem));
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Scrollbar đẹp */
+.full-height-sidebar::-webkit-scrollbar,
+.right-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.full-height-sidebar::-webkit-scrollbar-thumb,
+.right-sidebar::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+/* Contact icon */
+.contact-icon {
+  width: 30px;
+  height: 30px;
+  background-color: #e4e6eb;
+  color: #050505;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.contact-header {
+  color: #050505;
+}
+
+/* Story layout */
+.story-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-bottom: 10px;
+}
+
+.story-list {
+  display: flex;
+  gap: 10px;
+}
+
+.story-item {
+  width: 110px;
+  flex: 0 0 auto;
+  text-align: center;
+  cursor: pointer;
+}
+
+.story-img {
+  width: 110px;
+  height: 180px;
+  border-radius: 15px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.story-item p {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #333;
+}
+
+.add-story .story-img {
+  background: #e4e6eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-story .plus-icon {
+  font-size: 40px;
+  color: #1877f2;
+}
+
+#storyContainer {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#storyContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.story-item-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.story-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  color: white;
+}
+
+.pter {
+  cursor: pointer;
+}
+
+/* Preview ảnh */
+#imagePreviewContainer {
+  display: grid;
+  gap: 5px;
+  width: 100%;
+  aspect-ratio: 1/1;
+  padding: 5px;
+}
+
+#imagePreviewContainer.grid-1 {
+  grid-template-columns: 1fr;
+}
+
+#imagePreviewContainer.grid-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+#imagePreviewContainer.grid-3 {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+#imagePreviewContainer.grid-4,
+#imagePreviewContainer.grid-5,
+#imagePreviewContainer.grid-6 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+#imagePreviewContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Reaction popup */
+.reaction-popup {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background-color: #fff;
+  z-index: 1000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.like-wrapper:hover .reaction-popup {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.reaction-popup .icon {
+  font-size: 32px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.reaction-popup .icon:hover {
+  transform: scale(1.5) translateY(-5px);
+}
+
+/* Post image */
+.post-image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+/* Post text */
+.post-text {
+  color: #050505;
+}
+
+/* Hover user */
+.user-hover {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.user-hover:hover {
+  background-color: #f0f2f5;
+}
+
+/* Ẩn scrollbar mặc định */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Toàn bộ overlay xám mờ */
+.success-modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Khối trắng bên trong */
+.success-modal-content {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+/* Icon tròn xanh */
+.success-icon {
+  width: 70px;
+  height: 70px;
+  background-color: #28a745;
+  color: white;
+  font-size: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+/* Nút OK */
+.success-modal-content button {
+  margin-top: 20px;
+  padding: 8px 24px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.success-modal-content button:hover {
+  background-color: #218838;
+}
+
+.action-icon {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.action-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* nền xám nhạt nhẹ */
+  transform: scale(1.1); /* hơi phóng to nhẹ khi hover */
+}
+
+.post-images-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 600px;
+}
+
+.row-grid {
+  display: flex;
+  gap: 5px;
+}
+
+.row-grid img {
+  flex: 1;
+  height: 290px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.single-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  object-fit: contain;
+}
