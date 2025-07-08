@@ -1,0 +1,24 @@
+.chat-sidebar.show {
+  transform: translateX(0%) !important;
+}
+
+.chat-hover {
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 8px;
+  transition: background-color 0.2s;
+}
+
+.chat-hover:hover {
+  background-color: #f0f2f5;
+}
+
+body.dark-mode .chat-hover:hover {
+  background-color: #3a3b3c;
+}
+
+.search-input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}

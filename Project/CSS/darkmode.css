@@ -78,6 +78,23 @@
   border-color: #555 !important;
 }
 
+.dark-mode {
+  background-color: #18191a !important;
+  color: #e4e6eb !important;
+}
+.dark-mode .bg-white {
+  background-color: #242526 !important;
+}
+.dark-mode .list-group-item {
+  background-color: #1c1c1d;
+  color: #e4e6eb;
+}
+.dark-mode .navbar {
+  background-color: #242526 !important;
+}
+.dark-mode .post {
+  background-color: #252728;
+}
 .dark-mode .bi-search.text-secondary {
   color: #b0b3b8 !important;
 }
