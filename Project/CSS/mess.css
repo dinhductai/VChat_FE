@@ -22,3 +22,26 @@ body.dark-mode .chat-hover:hover {
   outline: none !important;
   box-shadow: none !important;
 }
+/* Màu nền hover chung */
+.icon-wrapper:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Nút btn-close tùy chỉnh nhỏ hơn và căn chỉnh đẹp */
+.btn-close-custom {
+  filter: var(--btn-close-filter);
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+/* Light mode */
+/* Hover nền khi dark mode */
+.dark-mode .icon-wrapper:hover {
+  background-color: #3a3b3c;
+}
+
+/* Màu icon khi dark mode */
+.dark-mode .icon-wrapper i,
+.dark-mode .icon-wrapper .bi {
+  color: #e4e6eb;
+}

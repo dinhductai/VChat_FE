@@ -1,3 +1,4 @@
+token = localStorage.getItem("accessToken");
 // gửi bài viết
 function submitPost() {
   const content = document.getElementById("postContent").value;
@@ -32,8 +33,7 @@ function submitPost() {
     method: "POST",
     body: formData,
     headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNiIsInNjb3BlIjoiQURNSU4gbnVsbCIsImlzcyI6IndlYnNpdGUuY29tIiwiZXhwIjoxNzUxOTAyNjE3LCJpYXQiOjE3NTE4OTkwMTcsImp0aSI6ImEzODcxNmI3LTQ4ZjYtNDlkOS04YWU1LTY0OTE0MmY0YjQxOCIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIn0.RM0MbiAseMQ4zVoXbnDjhAfg2wgba8NyzAllUGZHTQEJLm2m7ClROTANaoTTl_r9nydT52d2nNGBc3sTs6HuSA",
+      Authorization: "Bearer " + token,
     },
   })
     .then((response) => {
@@ -91,7 +91,7 @@ async function loadPosts() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNiIsInNjb3BlIjoiQURNSU4gbnVsbCIsImlzcyI6IndlYnNpdGUuY29tIiwiZXhwIjoxNzUxOTAyMDA0LCJpYXQiOjE3NTE4OTg0MDQsImp0aSI6ImE3MTE2YmQ2LWJkYzAtNDIxYy1iY2FlLThkY2U3MzFjODU0ZSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIn0.t6dvGhVh8ttw7um2zbM6UHOfhwD1TbI8eD4q6kw0SfU3qNTBj5j9Hiur29CS7aXs5HLqKuvs-U_K4tDbNPyMRw`, // JWT của bạn
+          Authorization: "Bearer " + token,
         },
       }
     );
@@ -238,19 +238,24 @@ function renderPost(post) {
   // Khung bài đăng
   const html = `
     <div class="post shadow-sm p-3 rounded mb-3 bg-white dark-mode-bg col-10">
-      <div class="d-flex align-items-center mb-2">
-        <img
-          src="${post.profilePicture || "../images/OIP.jpg"}"
-          class="rounded-circle me-2"
-          style="width: 40px; height: 40px"
-          alt="Avatar"
-        />
-        <div>
-          <strong>${post.fullName}</strong><br />
-          <small class="text-muted">${formatTimeAgo(post.uploadDate)}</small>
-        </div>
-      </div>
-
+       <div class="d-flex justify-content-between">
+              <div class="d-flex align-items-center mb-2">
+                <img src="${post.profilePicture || "../images/OIP.jpg"}"
+                class="rounded-circle me-2" style="width: 40px; height:
+                40px;cursor: pointer" alt="Avatar" />
+                <div>
+                  <strong style="cursor: pointer">${post.fullName}</strong
+                  ><br />
+                  <small class="text-muted"
+                    >${formatTimeAgo(post.uploadDate)}</small
+                  >
+                </div>
+              </div>
+            <div class="d-flex icon-hover rounded-circle" 
+                  style="width: 35px; height: 35px; align-items: center; justify-content: center;">
+              <i class="bi bi-three-dots"></i>
+            </div>
+            </div>
       <p class="post-text">${post.content}</p>
 
       ${renderImages(post.photosUrl || [])}

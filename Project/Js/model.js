@@ -7,59 +7,7 @@ function openCommentModal(author, time, content, imageSrc) {
   modal.show();
 }
 
-document.querySelectorAll(".story-item:not(.add-story)").forEach((item) => {
-  item.addEventListener("click", () => {
-    alert("Đang mở story của " + item.querySelector("p").innerText);
-    // Bạn có thể mở modal hoặc chuyển trang ở đây
-  });
-});
 
-const storyContainer = document.getElementById("storyContainer");
-const scrollLeftBtn = document.getElementById("scrollLeftBtn");
-const scrollRightBtn = document.getElementById("scrollRightBtn");
-
-const updateScrollButtons = () => {
-  // Nếu đang ở đầu thì ẩn nút trái
-  if (storyContainer.scrollLeft === 0) {
-    scrollLeftBtn.style.display = "none";
-  } else {
-    scrollLeftBtn.style.display = "block";
-  }
-};
-
-// Cuộn sang phải
-scrollRightBtn.addEventListener("click", () => {
-  storyContainer.scrollBy({ left: 150, behavior: "smooth" });
-  setTimeout(updateScrollButtons, 300); // Đợi scroll xong
-});
-
-// ✅ Bấm nút trái thì về đầu luôn
-scrollLeftBtn.addEventListener("click", () => {
-  storyContainer.scrollTo({ left: 0, behavior: "smooth" });
-  setTimeout(updateScrollButtons, 300);
-});
-
-// Cập nhật nút khi scroll thủ công
-storyContainer.addEventListener("scroll", updateScrollButtons);
-
-// Ban đầu ẩn nút trái
-updateScrollButtons();
-
-const storyItem = document.querySelector(".story-item-wrapper"); // class bao quanh 1 story
-const scrollAmount = storyItem.offsetWidth * 4;
-
-scrollRightBtn.addEventListener("click", () => {
-  storyContainer.scrollBy({ left: scrollAmount, behavior: "smooth" });
-  setTimeout(updateScrollButtons, 300);
-});
-
-function goStory() {
-  window.location.href = "story.html"; // hoặc '/index.html' nếu cần
-}
-
-function makeStory() {
-  window.location.href = "tao_tin.html"; // hoặc '/index.html' nếu cần
-}
 
 // Mở modal đăng bài không có ảnh
 function openPostModal() {

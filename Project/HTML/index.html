@@ -122,8 +122,29 @@
           >
             <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <h5 class="mb-0 fw-bold">Chats</h5>
-              <button class="btn-close" onclick="toggleChatSidebar()"></button>
+              <h4 class="mb-0 fw-bold">Chats</h4>
+              <div class="d-flex align-items-center">
+                <div
+                  class="rounded-circle icon-wrapper d-flex"
+                  style="
+                    transition: background-color 0.3s;
+                    width: 30px;
+                    height: 30px;
+                    justify-content: center;
+                    align-items: center;
+                    margin-right: 10px;
+                    cursor: pointer;
+                  "
+                >
+                  <i class="bi bi-arrows-fullscreen"></i>
+                </div>
+
+                <button
+                  class="btn-close btn-close-custom rounded-circle"
+                  onclick="toggleChatSidebar()"
+                  style="transition: background-color 0.3s"
+                ></button>
+              </div>
             </div>
 
             <!-- Tìm kiếm -->
@@ -253,7 +274,7 @@
                 </div>
               </div>
               <a
-                href="#"
+                href="chatbot.html"
                 class="d-block text-decoration-none text-dark ms-2"
                 style="font-weight: bold"
                 >Meta AI</a
@@ -416,7 +437,7 @@
                 <div
                   class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden pter"
                   style="width: 120px; height: 200px; flex: 0 0 auto"
-                  onclick="goStory()"
+                  onclick="goStory(this)"
                 >
                   <!-- Ảnh nền -->
                   <img
@@ -425,6 +446,15 @@
                     style="width: 100%; height: 100%; object-fit: cover"
                     class="story-image"
                   />
+
+                  <!-- ✅ Avatar góc trên trái -->
+                  <img
+                    src="../images/IMG_2007.JPG"
+                    alt="Avatar"
+                    class="position-absolute top-0 start-0 m-1 rounded-circle border border-4 border-primary story-avatar"
+                    style="width: 45px; height: 45px; object-fit: cover"
+                  />
+
                   <!-- Overlay chữ -->
                   <div
                     class="story-overlay position-absolute bottom-0 start-0 w-100 px-1 py-1"
@@ -440,8 +470,9 @@
                 </div>
 
                 <div
-                  class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden"
+                  class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden pter"
                   style="width: 120px; height: 200px; flex: 0 0 auto"
+                  onclick="goStory(this)"
                 >
                   <!-- Ảnh nền -->
                   <img
@@ -449,6 +480,12 @@
                     alt=""
                     style="width: 100%; height: 100%; object-fit: cover"
                     class="story-image"
+                  />
+                  <img
+                    src="../images/planet9_Wallpaper_5000x2813.jpg"
+                    alt="Avatar"
+                    class="position-absolute top-0 start-0 m-1 rounded-circle border border-4 border-primary story-avatar"
+                    style="width: 45px; height: 45px; object-fit: cover"
                   />
                   <!-- Overlay chữ -->
                   <div
@@ -1094,7 +1131,7 @@
         z-index: 9999;
         cursor: pointer;
       "
-      onclick="window.location.href='/chatbot.html'"
+      onclick="window.location.href='chatbot.html'"
     >
       <div
         style="
@@ -1134,4 +1171,6 @@
     }
   </script>
   <script src="../Js/mess.js"></script>
+  <script src="../Js/token.js"></script>
+  <script src="../Js/story.js"></script>
 </html>
