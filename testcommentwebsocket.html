@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Comment Test</title>
+   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .controls, .send-form { margin-bottom: 15px; display: flex; gap: 10px; align-items: center; }
+        input[type="text"], input[type="password"] { padding: 8px; border: 1px solid #ccc; border-radius: 4px; flex-grow: 1; }
+        button { padding: 8px 15px; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        button:disabled { background-color: #cccccc; cursor: not-allowed; }
+        #logs { white-space: pre-wrap; background-color: #eee; padding: 10px; border-radius: 4px; max-height: 200px; overflow-y: auto; }
+        
+        .comment { border: 1px solid #e1e1e1; border-radius: 5px; padding: 10px; margin-top: 10px; }
+        .comment-header { display: flex; align-items: center; margin-bottom: 5px; }
+        .comment-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px; background-color: #ccc; }
+        .comment-author { font-weight: bold; }
+        .comment-content { margin-bottom: 10px; }
+        .comment-actions button { font-size: 12px; padding: 4px 8px; background-color: #6c757d; }
+        .replies { margin-left: 40px; border-left: 2px solid #e1e1e1; padding-left: 10px; }
+        .reply-form { margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>WebSocket Comment Tester</h2>
+
+    <div class="controls">
+        <input type="password" id="jwtToken" placeholder="Dán JWT Token của bạn vào đây">
+        <input type="text" id="postId" value="1" placeholder="Post ID">
+        <button id="connectBtn" onclick="connect()">Connect</button>
+        <button id="disconnectBtn" onclick="disconnect()" disabled>Disconnect</button>
+    </div>
+    
+    <div class="controls">
+        <button id="fetchBtn" onclick="fetchComments()" disabled>Fetch Comments</button>
+    </div>
+
+    <hr>
+
+    <div id="comments-container"></div>
+    
+    <div id="comment-template" style="display: none;">
+        <div class="comment">
+            <div class="comment-header">
+                <img class="comment-avatar" src="" alt="avatar">
+                <span class="comment-author"></span>
+            </div>
+            <div class="comment-content"></div>
+            <div class="comment-actions">
+                <button class="reply-btn">Reply</button>
+            </div>
+            <div class="reply-form">
+                <input type="text" placeholder="Viết trả lời...">
+                <button class="send-reply-btn">Gửi</button>
+            </div>
+            <div class="replies"></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let stompClient = null;
+    let currentPostId = null;
+    const connectBtn = document.getElementById('connectBtn');
+    const disconnectBtn = document.getElementById('disconnectBtn');
+    const fetchBtn = document.getElementById('fetchBtn');
+
+    function connect() {
+        const jwtToken = document.getElementById('jwtToken').value;
+        if (!jwtToken) {
+            alert('Vui lòng nhập JWT Token!');
+            return;
+        }
+
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({ 'Authorization': 'Bearer ' + jwtToken }, onConnected, onError);
+        
+        connectBtn.disabled = true;
+        connectBtn.textContent = 'Connecting...';
+    }
+
+    function onConnected(frame) {
+        console.log('Connected: ' + frame);
+        connectBtn.textContent = 'Connected';
+        disconnectBtn.disabled = false;
+        fetchBtn.disabled = false;
+        
+        // Subscribe to receive the initial full comment tree
+        stompClient.subscribe('/user/queue/comments', (message) => {
+            const commentTree = JSON.parse(message.body);
+            renderCommentTree(commentTree);
+        });
+    }
+    
+    function subscribeToPostTopic(postId) {
+        // Subscribe to receive new comments in real-time
+        stompClient.subscribe(`/topic/posts/${postId}/comments`, (message) => {
+            const newComment = JSON.parse(message.body);
+            addCommentToUI(newComment);
+        });
+    }
+
+    function onError(error) {
+        console.error('Connection error: ' + error);
+        connectBtn.disabled = false;
+        connectBtn.textContent = 'Connect';
+        alert('Không thể kết nối. Vui lòng kiểm tra console log (F12).');
+    }
+
+    function disconnect() {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+        }
+        console.log("Disconnected");
+        connectBtn.disabled = false;
+        disconnectBtn.disabled = true;
+        fetchBtn.disabled = true;
+        document.getElementById('comments-container').innerHTML = '';
+    }
+
+    function fetchComments() {
+        currentPostId = document.getElementById('postId').value;
+        if (!currentPostId || !stompClient) {
+            alert('Vui lòng kết nối và nhập Post ID!');
+            return;
+        }
+        document.getElementById('comments-container').innerHTML = 'Loading comments...';
+        subscribeToPostTopic(currentPostId);
+        stompClient.send(`/app/comments.fetchAll/${currentPostId}`, {});
+    }
+
+    function sendComment(content, parentId) {
+        if (!content.trim()) return;
+        const commentRequest = {
+            postId: parseInt(currentPostId),
+            content: content,
+            parentCommentId: parentId
+        };
+        stompClient.send(`/app/comments.add/${currentPostId}`, {}, JSON.stringify(commentRequest));
+    }
+
+    function renderCommentTree(comments) {
+        const container = document.getElementById('comments-container');
+        container.innerHTML = '';
+        
+        // Add a top-level form to add new comments
+        const mainReplyForm = document.createElement('div');
+        mainReplyForm.className = 'send-form';
+        mainReplyForm.innerHTML = `
+            <input type="text" id="main-comment-input" placeholder="Viết bình luận...">
+            <button onclick="sendComment(document.getElementById('main-comment-input').value, null)">Gửi</button>
+        `;
+        container.appendChild(mainReplyForm);
+
+        comments.forEach(comment => {
+            createCommentElement(comment, container);
+        });
+    }
+    
+    function createCommentElement(commentData, parentElement) {
+        const template = document.getElementById('comment-template');
+        const newCommentNode = template.cloneNode(true);
+        newCommentNode.style.display = 'block';
+        newCommentNode.id = `comment-${commentData.commentId}`;
+
+        newCommentNode.querySelector('.comment-avatar').src = commentData.photoUrl || 'https://via.placeholder.com/40';
+        newCommentNode.querySelector('.comment-author').textContent = commentData.fullName || `User ${commentData.userId}`;
+        newCommentNode.querySelector('.comment-content').textContent = commentData.content;
+
+        const replyButton = newCommentNode.querySelector('.reply-btn');
+        const replyForm = newCommentNode.querySelector('.reply-form');
+        const sendReplyButton = newCommentNode.querySelector('.send-reply-btn');
+        const replyInput = newCommentNode.querySelector('.reply-form input');
+
+        replyButton.onclick = () => {
+            replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+        };
+
+        sendReplyButton.onclick = () => {
+            sendComment(replyInput.value, commentData.commentId);
+            replyInput.value = '';
+            replyForm.style.display = 'none';
+        };
+        
+        parentElement.appendChild(newCommentNode);
+        
+        if (commentData.replies && commentData.replies.length > 0) {
+            const repliesContainer = newCommentNode.querySelector('.replies');
+            commentData.replies.forEach(reply => {
+                createCommentElement(reply, repliesContainer);
+            });
+        }
+    }
+
+    function addCommentToUI(newComment) {
+        let parentElement;
+        if (newComment.parentCommentId) {
+            const parentNode = document.getElementById(`comment-${newComment.parentCommentId}`);
+            if(parentNode) {
+                 parentElement = parentNode.querySelector('.replies');
+            }
+        } else {
+             parentElement = document.getElementById('comments-container');
+        }
+        
+        if (parentElement) {
+             createCommentElement(newComment, parentElement);
+        }
+    }
+
+</script>
+
+</body>
+</html>
