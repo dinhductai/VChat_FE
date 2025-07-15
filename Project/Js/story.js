@@ -47,7 +47,8 @@ scrollRightBtn.addEventListener("click", () => {
 function goStory(el) {
   const postId = el.getAttribute("data-post-id");
   const avatar = el.querySelector(".story-avatar");
-
+  const index = el.getAttribute("data-index");
+  localStorage.setItem("currentStoryIndex", index);
   // Đổi border
   if (avatar) {
     avatar.classList.remove("border-primary");
@@ -90,3 +91,4 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+

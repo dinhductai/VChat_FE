@@ -132,40 +132,175 @@
     <div class="container-fluid">
       <div class="row h-100">
         <!-- Sidebar -->
-        <div class="col-3 sidebar p-3">
-          <div class="d-flex" style="justify-content: space-between">
-            <div>
-              <h2 class="gradient-text" style="font-weight: bold">
-                TIN CỦA BẠN
-              </h2>
+        <div class="d-none d-lg-flex col-lg-3 flex-column sidebar p-0">
+          <div class="sidebar-content p-3" style="flex: 1; overflow-y: auto">
+            <!-- Nội dung sidebar: Your Story, avatar, tên... -->
+            <div class="d-flex" style="justify-content: space-between">
+              <div>
+                <h2 class="gradient-text" style="font-weight: bold">
+                  Your Story
+                </h2>
+              </div>
+              <div
+                class="rounded-circle d-flex"
+                style="
+                  width: 35px;
+                  height: 35px;
+                  background-color: #bdc3c7;
+                  justify-content: center;
+                  align-items: center;
+                  cursor: pointer;
+                "
+              >
+                <i
+                  class="bi bi-gear-fill"
+                  style="font-size: 25px; color: #596275"
+                ></i>
+              </div>
             </div>
-            <div
-              class="rounded-circle d-flex"
-              style="
-                width: 35px;
-                height: 35px;
-                background-color: #bdc3c7;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-              "
-            >
-              <i
-                class="bi bi-gear-fill"
-                style="font-size: 25px; color: #596275"
-              ></i>
+
+            <div class="my-3 d-flex align-items-center">
+              <img
+                src=""
+                alt=""
+                style="
+                  width: 70px;
+                  height: 70px;
+                  border-radius: 50%;
+                  margin-right: 10px;
+                "
+                id="userAvatar"
+              />
+              <p style="font-size: 30px" id="userName"></p>
             </div>
           </div>
-          <div></div>
+
+          <!-- Nút dưới cùng -->
+          <div
+            id="storyActionButtons"
+            class="p-3 d-none d-flex border-top bg-white"
+          >
+            <button
+              class="btn btn-secondary w-50 mb-2 me-2"
+              onclick="discardStory()"
+            >
+              Discard
+            </button>
+            <button class="btn btn-primary w-50 mb-2" onclick="shareStory()">
+              Share to Story
+            </button>
+          </div>
         </div>
 
         <!-- Content -->
-        <div class="col-9 content-wrapper" style="background-color: #f0f2f5">
+        <div
+          class="col-md-12 col-lg-9 content-wrapper"
+          style="background-color: #f0f2f5"
+        >
+          <div id="storyBoxWrapper" class="position-relative">
+            <!-- Khung chọn ảnh -->
+            <div
+              id="storySelectBox"
+              class="rounded-3 d-flex align-items-center justify-content-center"
+              style="
+                width: 250px;
+                height: 350px;
+                background: linear-gradient(to right, #9980fa, #74b9ff);
+                cursor: pointer;
+              "
+              onclick="document.getElementById('fileInput').click()"
+            >
+              <div class="text-center d-flex flex-column align-items-center">
+                <div
+                  class="rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 50px; height: 50px; background-color: #3a3b3c"
+                >
+                  <i
+                    class="bi bi-images"
+                    style="font-size: 20px; color: white"
+                  ></i>
+                </div>
+                <p class="mt-2 mb-0 text-white" style="font-weight: bold">
+                  Create a photo story
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="d-none rounded-2 shadow"
+              id="storyPreviewBox"
+              style="padding: 20px; background-color: white"
+            >
+              <p style="color: #000; font-weight: bold">Preview</p>
+              <!-- Ảnh preview giống Facebook -->
+              <div
+                class="d-flex flex-column justify-content-center align-items-center"
+                style="width: 60vw; height: 80vh; background-color: #111"
+              >
+                <div
+                  class="rounded border"
+                  style="
+                    width: 270px;
+                    height: 480px;
+                    background-color: black;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    id="storyPreviewImg"
+                    src=""
+                    alt="preview"
+                    style="
+                      max-width: 100%;
+                      max-height: 100%;
+                      object-fit: contain;
+                      background-color: black;
+                    "
+                  />
+                </div>
+                <p
+                  class="text-light mt-2"
+                  style="font-size: 14px; font-weight: bold"
+                >
+                  Select photo to crop and rotate
+                </p>
+              </div>
+            </div>
+
+            <input
+              type="file"
+              id="fileInput"
+              style="display: none"
+              accept="image/*"
+              onchange="handleFile(this.files)"
+            />
+          </div>
+
           <button class="btn-close-story" onclick="goHome()">✖</button>
         </div>
       </div>
     </div>
     <style>
+      .content-wrapper {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f2f5;
+      }
+
+      .sidebar {
+        background-color: white;
+        height: 100vh;
+        color: #000;
+        display: flex;
+        flex-direction: column;
+      }
+
       .icon {
         font-size: 30px;
       }
@@ -221,5 +356,31 @@
         window.location.href = "index.html"; // hoặc '/index.html' nếu cần
       }
     </script>
+    <script>
+      function handleFile(files) {
+        const previewContainer = document.getElementById("previewContainer");
+        previewContainer.innerHTML = ""; // Xóa ảnh cũ nếu có
+
+        Array.from(files).forEach((file) => {
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.classList.add("rounded");
+            img.style.width = "150px";
+            img.style.height = "150px";
+            img.style.objectFit = "cover";
+            img.style.border = "2px solid #ccc";
+            img.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+            previewContainer.appendChild(img);
+          };
+
+          reader.readAsDataURL(file);
+        });
+      }
+    </script>
+
+    <script src="../Js/api-create-story.js"></script>
   </body>
 </html>

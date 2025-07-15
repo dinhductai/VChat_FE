@@ -210,7 +210,7 @@
       <div class="row h-100">
         <!-- Sidebar -->
         <div class="col-3 sidebar p-3">
-          <h5>Tin</h5>
+          <h5>Story</h5>
           <div
             class="mb-3 d-flex align-items-center gap-2"
             style="cursor: pointer"
@@ -224,7 +224,7 @@
                 >+</span
               >
             </div>
-            <span>Tạo tin</span>
+            <span>Create Story</span>
           </div>
           <div class="story-list">
             <div class="user bg-secondary-subtle rounded">
@@ -318,6 +318,49 @@
       window.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("darkMode") === "on") {
           document.body.classList.add("dark-mode");
+        }
+      });
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const stories = JSON.parse(localStorage.getItem("allStories") || "[]");
+        const index = parseInt(
+          localStorage.getItem("currentStoryIndex") || "0"
+        );
+
+        const story = stories[index];
+        if (!story) return;
+
+        document.querySelector(".story-header img").src = story.profileUrl;
+        document.querySelector(".story-header .info strong").textContent =
+          story.fullName;
+        document.querySelector(".story-header .info small").textContent =
+          formatTimeAgo(story.listDateUpload[0]);
+        document.querySelector(".story-box > img").src =
+          story.listStoryPhoto[0];
+
+        function formatTimeAgo(dateString) {
+          const now = new Date();
+          const postDate = new Date(dateString);
+          const diffInSeconds = Math.floor((now - postDate) / 1000);
+
+          if (diffInSeconds < 60) {
+            return "Vừa xong";
+          } else if (diffInSeconds < 3600) {
+            const minutes = Math.floor(diffInSeconds / 60);
+            return `${minutes} phút trước`;
+          } else if (diffInSeconds < 86400) {
+            const hours = Math.floor(diffInSeconds / 3600);
+            return `${hours} giờ trước`;
+          } else if (diffInSeconds < 604800) {
+            const days = Math.floor(diffInSeconds / 86400);
+            return `${days} ngày trước`;
+          } else {
+            return postDate.toLocaleDateString("vi-VN", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            });
+          }
         }
       });
     </script>

@@ -104,7 +104,7 @@ async function loadPosts() {
     }
 
     const data = await response.json(); // ✅ Không lỗi nữa
-
+    console.log(data);
     if (data?.data?.content && Array.isArray(data.data.content)) {
       data.data.content.forEach((post) => {
         renderPost(post); // 👈 Hàm hiển thị bài viết
@@ -135,13 +135,19 @@ function renderPost(post) {
   const postContainer = document.getElementById("postContainer");
 
   // Hàm xử lý hiển thị ảnh theo số lượng
-  function renderImages(photos) {
+  function renderImages(
+    photos,
+    user_name,
+    post_time,
+    post_content,
+    profile_picture
+  ) {
     if (!Array.isArray(photos) || photos.length === 0) return "";
 
     if (photos.length === 1) {
       return `
         <div class="post-images-grid single-image mb-2">
-          <img src="${photos[0]}" onclick="openImageModal('${photos[0]}')" />
+          <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
         </div>
       `;
     }
@@ -150,8 +156,8 @@ function renderPost(post) {
       return `
         <div class="post-images-grid mb-2">
           <div class="row-grid">
-           <img style="width: 50%;" src="${photos[0]}" onclick="openImageModal('${photos[0]}')" />
-          <img style="width: 50%;" src="${photos[1]}" onclick="openImageModal('${photos[1]}')" />
+           <img style="width: 50%;" src="${photos[0]}" onclick="openImageModal('${photos[0]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
+          <img style="width: 50%;" src="${photos[1]}" onclick="openImageModal('${photos[1]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
           </div>
         </div>
       `;
@@ -161,11 +167,11 @@ function renderPost(post) {
       return `
         <div class="post-images-grid mb-2">
           <div class="row-grid">
-            <img src="${photos[0]}" onclick="openImageModal('${photos[0]}')" />
+            <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
           </div>
           <div class="row-grid">
-            <img src="${photos[1]}" onclick="openImageModal('${photos[1]}')" />
-            <img src="${photos[2]}" onclick="openImageModal('${photos[2]}')" />
+            <img src="${photos[1]}" onclick="openImageModal('${photos[1]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
+            <img src="${photos[2]}" onclick="openImageModal('${photos[2]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
           </div>
         </div>
       `;
@@ -178,21 +184,27 @@ function renderPost(post) {
         <div class="row-grid">
           <img style="width: 50%;" src="${
             limitedPhotos[0]
-          }" onclick="openImageModal('${limitedPhotos[0]}')" />
+          }" onclick="openImageModal('${
+      limitedPhotos[0]
+    }','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
           <img style="width: 50%;" src="${
             limitedPhotos[1]
-          }" onclick="openImageModal('${limitedPhotos[1]}')" />
+          }" onclick="openImageModal('${
+      limitedPhotos[1]
+    }','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
         </div>
         <div class="row-grid">
           <img style="width: 50%;" src="${
             limitedPhotos[2]
-          }" onclick="openImageModal('${limitedPhotos[2]}')" />
+          }" onclick="openImageModal('${
+      limitedPhotos[2]
+    }','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
           <div style="position: relative; flex: 1">
             <img style="width: 100%; height: 100%" src="${
               limitedPhotos[3]
             }" onclick="openImageModal('${
       limitedPhotos[3]
-    }')" style="width: 50%; height: 100%; object-fit: cover; border-radius: 6px;" />
+    }','${user_name}','${post_time}','${post_content},'${profile_picture}'')" style="width: 50%; height: 100%; object-fit: cover; border-radius: 6px;" />
             ${
               photos.length > 4
                 ? `<div style="
@@ -237,10 +249,14 @@ function renderPost(post) {
 
   // Khung bài đăng
   const html = `
-    <div class="post shadow-sm p-3 rounded mb-3 bg-white dark-mode-bg col-10">
+    <div class="post shadow-sm rounded bg-white dark-mode-bg col-10" data-post-id='${
+      post.postId
+    }'>
        <div class="d-flex justify-content-between">
               <div class="d-flex align-items-center mb-2">
-                <img src="${post.profilePicture || "../images/OIP.jpg"}"
+                <img src="${
+                  post.profilePicture || "../images/user-default.webp"
+                }"
                 class="rounded-circle me-2" style="width: 40px; height:
                 40px;cursor: pointer" alt="Avatar" />
                 <div>
@@ -258,7 +274,13 @@ function renderPost(post) {
             </div>
       <p class="post-text">${post.content}</p>
 
-      ${renderImages(post.photosUrl || [])}
+      ${renderImages(
+        post.photosUrl,
+        post.fullName,
+        formatTimeAgo(post.uploadDate),
+        post.content,
+        post.profilePicture
+      )}
       ${videoHTML}
 
       <div class="d-flex justify-content-around mt-3 border-top pt-2 position-relative">
@@ -315,3 +337,42 @@ function formatTimeAgo(dateString) {
     });
   }
 }
+
+function openImageModal(
+  src,
+  user_name,
+  post_time,
+  post_content,
+  profile_picture
+) {
+  const profile_image = document.getElementById("profile_image");
+  const modalImg = document.getElementById("modalImage");
+  const userName = document.getElementById("post-userName");
+  const postTime = document.getElementById("postTime");
+  const postContent = document.getElementById("postContent");
+
+  // Cập nhật nội dung modal
+  modalImg.src = src;
+  userName.textContent = user_name;
+  postTime.textContent = post_time;
+  postContent.textContent = post_content;
+  profile_image.src = profile_picture;
+
+  // Ẩn icon AI nếu có
+  const aiIcon = document.getElementById("ai");
+  if (aiIcon) {
+    aiIcon.style.display = "none";
+  }
+
+  // Mở modal
+  const imageModal = new bootstrap.Modal(document.getElementById("imageModal"));
+  imageModal.show();
+}
+document
+  .getElementById("imageModal")
+  .addEventListener("hidden.bs.modal", function () {
+    const aiIcon = document.getElementById("ai");
+    if (aiIcon) {
+      aiIcon.style.display = "block";
+    }
+  });

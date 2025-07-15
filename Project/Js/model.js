@@ -1,3 +1,4 @@
+token = localStorage.getItem("accessToken");
 function openCommentModal(author, time, content, imageSrc) {
   document.getElementById("modal-author").textContent = author;
   document.getElementById("modal-time").textContent = time;
@@ -6,8 +7,6 @@ function openCommentModal(author, time, content, imageSrc) {
   const modal = new bootstrap.Modal(document.getElementById("commentModal"));
   modal.show();
 }
-
-
 
 // Mở modal đăng bài không có ảnh
 function openPostModal() {
@@ -130,3 +129,30 @@ function setPrivacy(value) {
     icon.className = "bi bi-lock-fill me-1";
   }
 }
+
+fetch("http://localhost:8080/api/user-name-profile", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    // Nếu cần token thì thêm:
+    Authorization: "Bearer " + token,
+  },
+})
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Lỗi khi lấy thông tin người dùng");
+    }
+    return response.json();
+  })
+  .then((data) => {
+    for (const el of document.getElementsByClassName("userAvatar")) {
+      el.src = data.data.profileUrl || "/images/user-default.webp";
+    }
+    document.getElementById("userName").textContent =
+      data.data.fullName || "Người dùng";
+    console.log(data.data.fullName);
+    console.log(data);
+  })
+  .catch((error) => {
+    console.error("Lỗi:", error);
+  });
