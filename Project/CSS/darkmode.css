@@ -1,0 +1,251 @@
+.dark-mode a.text-dark {
+  color: #e4e6eb !important;
+}
+
+.dark-mode .bg-white {
+  background-color: #242526 !important;
+}
+
+.dark-mode .menu-item:hover {
+  background-color: #3a3b3c;
+}
+
+.dark-mode .menu-item i {
+  color: #b0b3b8;
+}
+
+.dark-mode .menu-item.active i {
+  color: #ffffff;
+}
+
+.dark-mode .menu-item .indicator {
+  background-color: transparent;
+}
+
+.dark-mode .menu-item.active .indicator {
+  background-color: #ffffff;
+}
+
+.dark-mode .left-sidebar,
+.dark-mode .right-sidebar {
+  background-color: #242526 !important;
+}
+
+.dark-mode .full-height-sidebar::-webkit-scrollbar-thumb,
+.dark-mode .right-sidebar::-webkit-scrollbar-thumb {
+  background-color: #555;
+}
+
+.dark-mode .contact-icon {
+  background-color: #3a3b3c !important;
+  color: #e4e6eb !important;
+}
+
+.dark-mode .contact-header {
+  color: #e4e6eb;
+}
+
+.dark-mode .story-item p {
+  color: #e4e6eb;
+}
+
+.dark-mode .story-wrapper {
+  background-color: #3a3b3c !important;
+}
+
+.dark-mode .modal-content {
+  background-color: #242526;
+  color: #e4e6eb;
+}
+
+.dark-mode .modal-header,
+.dark-mode .modal-footer {
+  border-color: #3a3b3c;
+}
+
+.dark-mode .form-control {
+  background-color: #3a3b3c !important;
+  color: #e4e6eb !important;
+  border: none;
+}
+
+.dark-mode textarea::placeholder {
+  color: #b0b3b8;
+}
+
+.dark-mode .rounded-3 {
+  background-color: #3a3b3c !important;
+  border-color: #555 !important;
+}
+
+.dark-mode {
+  background-color: #18191a !important;
+  color: #e4e6eb !important;
+}
+.dark-mode .bg-white {
+  background-color: #242526 !important;
+}
+.dark-mode .list-group-item {
+  background-color: #1c1c1d;
+  color: #e4e6eb;
+}
+.dark-mode .navbar {
+  background-color: #242526 !important;
+}
+.dark-mode .post {
+  background-color: #252728;
+}
+.dark-mode .bi-search.text-secondary {
+  color: #b0b3b8 !important;
+}
+
+.dark-mode .btn-action {
+  background-color: #3a3b3c !important;
+  color: #e4e6eb !important;
+  border-color: #555 !important;
+}
+
+.dark-mode .btn-action i {
+  filter: brightness(0.9);
+}
+
+.dark-mode .btn-action:hover {
+  background-color: #4e4f50 !important;
+}
+
+.dark-mode .reaction-popup {
+  background-color: #333;
+  border-color: #444;
+}
+
+.dark-mode .reaction-popup .icon {
+  filter: brightness(1.2);
+}
+
+.dark-mode .post-text {
+  color: #e4e6eb;
+}
+
+.dark-mode .text-muted {
+  color: #b0b3b8 !important;
+}
+
+.dark-mode .user-hover:hover {
+  background-color: #3a3b3c;
+}
+
+/* Dark mode cho dropdown công khai */
+.dark-mode .dropdown-menu {
+  background-color: #3a3b3c;
+  color: #e4e6eb;
+  border: 1px solid #555;
+}
+
+.dark-mode .dropdown-item {
+  color: #e4e6eb;
+}
+
+.dark-mode .dropdown-item:hover {
+  background-color: #4e4f50;
+}
+
+.dark-mode .btn-light {
+  background-color: #3a3b3c;
+  color: #e4e6eb;
+  border-color: #555;
+}
+
+.dark-mode .btn-light:hover {
+  background-color: #4e4f50;
+}
+
+.dark-mode .dropdown-toggle i {
+  color: #e4e6eb;
+}
+/* ===== DARK MODE CHO MODAL THÀNH CÔNG ===== */
+.dark-mode .success-modal-content {
+  background-color: #242526;
+  color: #e4e6eb;
+}
+
+.dark-mode .success-icon {
+  background-color: #28a745; /* Giữ nguyên màu xanh */
+  color: white;
+}
+
+.dark-mode .success-modal-content button {
+  background-color: #28a745;
+  color: white;
+}
+
+.dark-mode .success-modal-content button:hover {
+  background-color: #218838;
+}
+
+/* Áp dụng khi body có dark-mode */
+body.dark-mode .btn-close {
+  filter: invert(1);
+}
+
+/* Giao diện sáng */
+.search-input {
+  background-color: #f0f2f5;
+  color: #000;
+  height: 35px;
+  width: 240px;
+}
+
+/* Giao diện tối */
+body.dark-mode .search-input {
+  background-color: #3a3b3c;
+  color: #fff;
+}
+
+/* Placeholder trong dark mode */
+body.dark-mode .search-input::placeholder {
+  color: #ccc;
+}
+/* Khi body có class dark-mode */
+/* === Dark Mode Styles === */
+.dark-mode .dark-mode-bg {
+  background-color: #2c2f33 !important;
+}
+
+.dark-mode .dark-mode-border {
+  border-top: 1px solid #444 !important;
+}
+
+.dark-mode .dark-mode-input-container {
+  background-color: #3b3c3e !important;
+}
+
+.dark-mode .dark-mode-textarea {
+  background-color: #3b3c3e;
+  color: white;
+  border: none;
+}
+
+.dark-mode .dark-mode-textarea::placeholder {
+  color: #bbb;
+}
+
+.dark-mode .dark-mode-icon {
+  color: white !important;
+}
+
+.dark-mode .icon-hover-dark:hover {
+  background-color: #636e72 !important;
+}
+
+.dark-mode .icon-hover-dark:hover i {
+  color: #00bcd4 !important; /* Màu xanh sáng khi hover icon trong dark mode */
+}
+
+/* === Light Mode Hover Styles === */
+.icon-hover-dark:hover {
+  background-color: #e4e6eb !important; /* Màu nền nhẹ khi hover trong light mode */
+}
+
+.icon-hover-dark:hover i {
+  color: #1877f2 !important; /* Màu xanh Facebook khi hover icon trong light mode */
+}
