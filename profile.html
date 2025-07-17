@@ -3,415 +3,522 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vu Duc Thiep | Facebook</title>
+  <title>Facebook | Trang cá nhân</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600&display=swap" rel="stylesheet">
-  <!-- <link href="profile.css" rel="stylesheet"> -->
+  <link href="profile.css" rel="stylesheet">
   <!-- Font Awesome for beautiful icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #232526 0%, #414345 100%);
-      color: white;
-      min-height: 100vh;
-    }
-    header {
-      background: linear-gradient(90deg, #242526 60%, #1877F2 100%);
-      padding: 10px 20px;
+  
+   
+    #form-edit-profile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: 'Roboto', sans-serif;
+}
+
+#form-edit-profile label {
+  margin-bottom: 6px;
+  display: inline-block;
+  color: #333;
+}
+
+.edit-input {
+
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+
+
+    .photo-row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 999;
-      box-shadow: 0 2px 8px rgba(24,119,242,0.08);
-    }
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: #1877F2;
-      font-family: Arial, Helvetica, sans-serif;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .search-box input {
-      background-color: #3A3B3C;
-      border: none;
-      border-radius: 20px;
-      padding: 8px 15px;
-      color: white;
-      width: 250px;
-    }
-    .fb-topbar {
-      background: linear-gradient(90deg, #242526 60%, #1877F2 100%);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 20px;
-      box-shadow: 0 2px 8px rgba(24,119,242,0.08);
-    }
-    .fb-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .fb-logo i {
-      color: #1877F2;
-      font-size: 32px;
-      filter: drop-shadow(0 0 6px #1877f2aa);
-    }
-    .fb-logo span {
-      text-shadow: 0 2px 8px #1877f244;
-    }
-    .fb-search input {
-      background: linear-gradient(90deg, #3A3B3C 60%, #1877F2 100%);
-      border: none;
-      border-radius: 20px;
-      padding: 7px 15px;
-      color: white;
-      width: 220px;
-      box-shadow: 0 2px 8px #1877f222;
-      transition: background 0.3s;
-    }
-    .fb-search input:focus {
-      background: #fff;
-      color: #242526;
-      outline: 2px solid #1877F2;
-    }
-    .fb-icons, .fb-right {
-      display: flex;
-      align-items: center;
+      flex-wrap: wrap;
       gap: 18px;
-    }
-    .fb-icons i, .fb-right i {
-      font-size: 22px;
-      color: #b0b3b8;
-      background: #242526;
-      border-radius: 50%;
-      padding: 8px;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #1877f211;
-    }
-    .fb-icons i:hover, .fb-right i:hover {
-      background: #1877F2;
-      color: #fff;
-      box-shadow: 0 2px 12px #1877f288;
-    }
-    .fb-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #1877F2;
-      box-shadow: 0 2px 8px #1877f244;
-    }
-    .profile-header {
-      display: flex;
+      justify-content: flex-start;
       align-items: center;
-      padding: 30px 20px 10px 20px;
-      background: linear-gradient(90deg, #242526 60%, #1877F2 100%);
-      border-bottom: 1px solid #3E4042;
-      box-shadow: 0 2px 8px #1877f211;
+      margin: 20px 0;
     }
-    .avatar {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      border: 4px solid #18191A;
+    .photo-row .photo-item {
+      flex: 0 0 calc(33.333% - 12px); /* 3 ảnh 1 hàng, trừ gap */
+      display: flex;
+      justify-content: center;
+    }
+    .photo-row img {
+      width: 240px;
+      height: 240px;
       object-fit: cover;
-      box-shadow: 0 4px 16px #1877f244;
-    }
-    .profile-info {
-      margin-left: 25px;
-    }
-    .profile-info h1 {
-      margin: 0;
-      font-size: 28px;
-      text-shadow: 0 2px 8px #1877f244;
-    }
-    .profile-info p {
-      color: #B0B3B8;
-      margin: 4px 0;
-      text-shadow: 0 1px 4px #0004;
-    }
-    nav {
-      display: flex;
-      justify-content: start;
-      gap: 25px;
-      padding: 10px 20px;
-      background: linear-gradient(90deg, #242526 60%, #1877F2 100%);
-      border-bottom: 1px solid #3E4042;
-      box-shadow: 0 2px 8px #1877f211;
-    }
-    nav a {
-      padding: 8px 0;
-      color: #B0B3B8;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s, border-bottom 0.2s;
-    }
-    nav a:hover, nav a.active {
-      border-bottom: 2px solid #fff;
-      color: #fff;
-    }
-    .main {
-      display: flex;
-      gap: 20px;
-      padding: 20px;
-      background: linear-gradient(135deg, #232526 0%, #414345 100%);
-      min-height: 600px;
-    }
-    .left-panel {
-      flex: 1;
-    }
-    .right-panel {
-      flex: 2;
-    }
-    .intro-box, .post-box {
-      background: linear-gradient(120deg, #242526 80%, #1877F2 100%);
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px #1877f211;
-    }
-    .intro-box button, .post-box button {
-      margin-top: 10px;
-      background: linear-gradient(90deg, #3A3B3C 60%, #1877F2 100%);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 8px 12px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-      box-shadow: 0 2px 8px #1877f211;
+      transition: transform 0.2s, border 0.2s, opacity 0.2s;
+      box-shadow: 0 2px 8px rgba(24,119,242,0.08);
     }
-    .intro-box button:hover, .post-box button:hover {
-      background: #1877F2;
-      color: #fff;
-    }
-    .post-box input {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      background: linear-gradient(90deg, #3A3B3C 60%, #1877F2 100%);
-      color: white;
-      box-shadow: 0 2px 8px #1877f211;
-      margin-bottom: 8px;
-      transition: background 0.3s;
-    }
-    .post-box input:focus {
-      background: #fff;
-      color: #242526;
-      outline: 2px solid #1877F2;
-    }
-    .user-details {
-      font-family: 'Roboto Slab', serif;
-      line-height: 1.8;
-      color: #E4E6EB;
-      margin-top: 10px;
-      text-shadow: 0 1px 4px #0004;
-    }
-    .user-details strong {
-      color: #FFFFFF;
-    }
-    .photo-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .photo-grid img {
-      width: 100%;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-      box-shadow: 0 2px 8px #1877f211;
-    }
-    .photo-grid img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 16px #1877f288;
-    }
-    .friend-list {
-      background: linear-gradient(120deg, #242526 80%, #1877F2 100%);
-      border-radius: 8px;
-      padding: 15px;
-      margin-top: 20px;
-      box-shadow: 0 2px 8px #1877f211;
-    }
-    .friend-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .friend-item img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin-right: 10px;
-      object-fit: cover;
-      box-shadow: 0 2px 8px #1877f211;
+    .photo-row img:hover {
+      transform: scale(1.04);
     }
     .modal {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(24, 119, 242, 0.25);
-      justify-content: center;
+      z-index: 2000;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.25);
       align-items: center;
-      z-index: 1000;
-      backdrop-filter: blur(2px);
+      justify-content: center;
+      transition: background 0.2s;
     }
-    .modal-content {
-      max-width: 90%;
-      max-height: 90%;
-      background: #242526;
-      border-radius: 10px;
-      box-shadow: 0 4px 32px #1877f288;
-      padding: 16px;
+    .modal-content.upload-modal {
+      background: #fff;
+      padding: 32px 36px 28px 36px;
+      border-radius: 16px;
+      min-width: 340px;
+      max-width: 95vw;
+      box-shadow: 0 12px 40px rgba(24,119,242,0.13), 0 2px 8px rgba(0,0,0,0.08);
+      position: relative;
+      margin: 40px auto;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      animation: modalFadeIn 0.25s;
     }
-    .modal-content img {
-      max-width: 100%;
-      max-height: 100%;
-      border-radius: 8px;
-      box-shadow: 0 2px 16px #1877f244;
+    @keyframes modalFadeIn {
+      from { transform: translateY(-40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
-    .close-modal {
+    #upload-photo-modal {
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+    }
+    #upload-photo-modal .close-modal {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      color: #fff;
+      top: 14px;
+      right: 20px;
       font-size: 28px;
+      color: #888;
       cursor: pointer;
-      text-shadow: 0 2px 8px #1877f288;
+      transition: color 0.2s;
+      z-index: 2;
+    }
+    #upload-photo-modal .close-modal:hover {
+      color: #1877F2;
+    }
+    #form-upload-photo-modal input[type="file"] {
+      border: 1px solid #e4e6eb;
+      border-radius: 8px;
+      padding: 10px;
+      background: #f0f2f5;
+      width: 250px;
+      margin-bottom: 18px;
+      font-size: 15px;
+    }
+    #form-upload-photo-modal .modal-btns {
+      display: flex;
+      gap: 14px;
+      margin-top: 8px;
+    }
+    #form-upload-photo-modal button[type="submit"] {
+      background: linear-gradient(90deg,#1877F2 60%,#42a5f5 100%);
+      color: #fff;
+      border: none;
+      padding: 9px 28px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+      box-shadow: 0 2px 8px rgba(24,119,242,0.08);
+      transition: background 0.2s;
+    }
+    #form-upload-photo-modal button[type="submit"]:hover {
+      background: #1456b8;
+    }
+    #btn-cancel-upload-modal {
+      background: #e4e6eb;
+      color: #050505;
+      border: none;
+      padding: 9px 28px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.2s;
+    }
+    #btn-cancel-upload-modal:hover {
+      background: #d0d2d6;
+    }
+    .loading-upload {
+      margin-top: 12px;
+      color: #1877F2;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+    }
+    .loading-upload .spinner {
+      width: 18px;
+      height: 18px;
+      border: 3px solid #e3eafc;
+      border-top: 3px solid #1877F2;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg);}
     }
   </style>
 </head>
 <body>
   <div class="fb-topbar">
-    <div class="fb-logo">
-      <i class="fab fa-facebook"></i>
-      <span style="font-size:20px;font-weight:bold;color:#1877F2;">Fuckbook</span>
-    </div>
-    
-    <div class="fb-icons">
-      <i class="fas fa-home" title="Trang chủ"></i>
-      <i class="fas fa-tv" title="Watch"></i>
-      <i class="fas fa-store" title="Marketplace"></i>
-      <i class="fas fa-users" title="Groups"></i>
-      <i class="fas fa-gamepad" title="Games"></i>
-    </div>
-    
-    <div class="fb-right">
-      <i class="fas fa-bars" title="Menu"></i>
-      <i class="fab fa-facebook-messenger" title="Messenger"></i>
-      <i class="fas fa-bell" title="Thông báo"></i>
-      <img class="fb-avatar" src="https://thichtrangtri.com/wp-content/uploads/2025/05/hinh-anh-con-meo-cute-1.jpg" alt="User">
-    </div>
-
+  <div class="fb-logo">
+    <i class="fab fa-facebook"></i>
+    <span style="font-size:20px;font-weight:bold;color:#1877F2;">Facebook</span>
   </div>
-  
+  <div class="fb-icons">
+    <a href="home.html" title="Trang chủ"><i class="fas fa-home"></i></a>
+    <a href="watch.html" title="Watch"><i class="fas fa-tv"></i></a>
+    <a href="marketplace.html" title="Marketplace"><i class="fas fa-store"></i></a>
+    <a href="groups.html" title="Groups"><i class="fas fa-users"></i></a>
+    <a href="games.html" title="Games"><i class="fas fa-gamepad"></i></a>
+  </div>
+  <div class="fb-right">
+    <i class="fas fa-bars" title="Menu"></i>
+    <i class="fab fa-facebook-messenger" title="Messenger"></i>
+    <i class="fas fa-bell" title="Thông báo"></i>
+    <img class="fb-avatar" src="" alt="User">
+  </div>
+</div>
 
-  
+
   <div class="profile-header">
-    <img src="https://thichtrangtri.com/wp-content/uploads/2025/05/hinh-anh-con-meo-cute-1.jpg" alt="avatar" class="avatar" id="profile-avatar">
+    <img src="" alt="avatar" class="avatar" id="profile-avatar">
     <div class="profile-info">
-      <h1>Vu Duc Thiep</h1>
-      <p><i class="fas fa-user-friends"></i> 438 người bạn</p>
-      <p id="profile-bio"><i class="fas fa-quote-left"></i> Thích cà phê, đam mê công nghệ.</p>
+      <h1 id="profile-fullname">Đang tải...</h1>
+      <p id="profile-bio"><i class="fas fa-quote-left"></i></p>
     </div>
   </div>
   <nav>
-    <a class="active" href="#"><i class="fas fa-newspaper"></i> Bài viết</a>
-    <a href="#"><i class="fas fa-info-circle"></i> Giới thiệu</a>
-    <a href="#"><i class="fas fa-user-friends"></i> Bạn bè</a>
-    <a href="#"><i class="fas fa-image"></i> Ảnh</a>
-    <a href="#"><i class="fas fa-video"></i> Video</a>
-    <a href="#"><i class="fas fa-map-marker-alt"></i> Check in</a>
+    <a class="active" id="tab-info" href="#"><i class="fas fa-info-circle"></i> Giới thiệu</a>
+    <a id="tab-photo" href="#"><i class="fas fa-image"></i> Ảnh</a>
+    <a id="tab-video" href="#"><i class="fas fa-video"></i> Video</a>
+    <a id="tab-story" href="#"><i class="fas fa-book-open"></i> Story</a>
+    <a id="tab-friends" href="#"><i class="fas fa-user-friends"></i> Bạn bè</a>
+    <a id="tab-checkin" href="#"><i class="fas fa-map-marker-alt"></i> Check in</a>
   </nav>
   <div class="main">
-    <div class="left-panel">
+    <div class="left-panel" id="left-panel">
       <div class="intro-box">
-        <h3><i class="fas fa-user"></i> Giới thiệu</h3>
         <div class="user-details">
-          <p><strong><i class="fas fa-user"></i> Họ tên:</strong> Vu Duc Thiep</p>
-          <p><strong><i class="fas fa-birthday-cake"></i> Ngày sinh:</strong> 1996-10-12</p>
-          <p><strong><i class="fas fa-mars"></i> Giới tính:</strong> Nam</p>
-          <p><strong><i class="fas fa-search"></i> Đang tìm kiếm:</strong> Bạn bè, Cơ hội nghề nghiệp</p>
-          <p><strong><i class="fas fa-pen"></i> Tiểu sử:</strong> Một lập trình viên </p>
-          <p><strong><i class="fas fa-ruler-vertical"></i> Chiều cao:</strong> 1m52</p>
-          <p><strong><i class="fas fa-weight"></i> Cân nặng:</strong> 69kg</p>
-          <p><strong><i class="fas fa-map-marker-alt"></i> Địa chỉ:</strong> Hà Nội, Việt Nam</p>
-          <p><strong><i class="fas fa-briefcase"></i> Vị trí:</strong> Backend Developer</p>
-          <p><strong><i class="fas fa-building"></i> Công ty:</strong> ABC Tech Co.</p>
-          <p><strong><i class="fas fa-graduation-cap"></i> Học vấn:</strong> Đại học Công nghiệp Hà Nội</p>
-          <p><strong><i class="fas fa-check-circle"></i> Hoàn thành hồ sơ:</strong> Chưa</p>
+          <!-- Thông tin user sẽ được JS cập nhật -->
         </div>
-        <button><i class="fas fa-edit"></i> Chỉnh sửa tiểu sử</button>
-        <button><i class="fas fa-user-cog"></i> Chỉnh sửa chi tiết</button>
-        <button><i class="fas fa-plus-circle"></i> Thêm nội dung đáng chú ý</button>
+        <button><i class="fas fa-edit"></i> Chỉnh sửa thông tin cá nhân</button>
+        
       </div>
-      <div class="friend-list">
-        <h3><i class="fas fa-user-friends"></i> Bạn bè</h3>
-        <div class="friend-item">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfmuwVSkLfs8PAkjs9QLxRWN2fEPpp8_BoLw&s" alt="Friend 1">
-          <span>Johnny Sins</span>
-        </div>
-        <div class="friend-item">
-          <img src="https://i.pravatar.cc/50?img=2" alt="Friend 2">
-          <span>Le Thi B</span>
-        </div>
-        <div class="friend-item">
-          <img src="https://i.pravatar.cc/50?img=3" alt="Friend 3">
-          <span>Tran Van C</span>
-        </div>
-      </div>
+      <!-- <div class="friend-list"> ... </div> -->
     </div>
     <div class="right-panel">
-      <div class="post-box">
-        <input type="text" placeholder="Bạn đang nghĩ gì?">
-        <button><i class="fas fa-image"></i> Ảnh/video</button>
-        <button><i class="fas fa-star"></i> Sự kiện trong đời</button>
+      <div class="intro-box" id="section-info">
+        <div class="post-box" style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
+          <button id="btn-create-post"><i class="fas fa-pen"></i> Tạo bài viết</button>
+          <button id="btn-add-profile-photo"><i class="fas fa-user-circle"></i> Thêm ảnh profile</button>
+          <button><i class="fas fa-image"></i> Thêm ảnh</button>
+          <button><i class="fas fa-video"></i> Thêm Video</button>
+          <button id="btn-create-story"><i class="fas fa-book-open"></i> Tạo story</button>
+        </div>
+        <h3><i class="fas fa-newspaper"></i> BÀI ĐĂNG</h3>
+        <!-- ...phần giới thiệu... -->
+        <div class="list-post" id="list-post"></div>
       </div>
-      <div class="intro-box">
-        <h3><i class="fas fa-images"></i> Ảnh của bạn</h3>
-        <div class="photo-grid" id="photo-grid">
-          <img src="https://images.entertainment.ie/person/w780_x7uMR88ANVPbkCXUXlvRUz6J9e1.jpg" alt="Ảnh 1" onclick="openModal(this.src)">
-          <img src="https://images.entertainment.ie/person/w780_x7uMR88ANVPbkCXUXlvRUz6J9e1.jpg" alt="Ảnh 2" onclick="openModal(this.src)">
-          <img src="https://images.entertainment.ie/person/w780_x7uMR88ANVPbkCXUXlvRUz6J9e1.jpg" alt="Ảnh 3" onclick="openModal(this.src)">
-          <img src="https://images.entertainment.ie/person/w780_x7uMR88ANVPbkCXUXlvRUz6J9e1.jpg" alt="Ảnh 4" onclick="openModal(this.src)">
+      <div id="section-photo" style="display:none;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <button id="btn-delete-photo" style="background:#ff4d4f;color:#fff;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Xóa ảnh</button>
+          <button id="btn-confirm-delete-photo" style="display:none;background:#1877F2;color:#fff;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Xác nhận xóa</button>
+          <button id="btn-cancel-delete-photo" style="display:none;background:#e4e6eb;color:#050505;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Hủy</button>
+        </div>
+        <div class="photo-row" id="photo-row">
+          <!-- Ảnh sẽ được JS render vào đây -->
+        </div>
+        <div id="photo-pagination" style="text-align:center; margin: 10px 0;">
+          <!-- Nút phân trang sẽ render ở đây -->
         </div>
       </div>
+      <div id="section-video" style="display: none;">
+  <div id="video-row" class="video-row" style="display:flex;flex-wrap:wrap;gap:18px;"></div>
+  <div id="video-pagination" style="text-align:center;margin-top:10px;"></div>
+</div>
+      <div class="intro-box" id="section-story" style="display:none;">
+        <div class="story-row" id="story-row" style="display:flex;flex-wrap:wrap;gap:18px;"></div>
+        <div id="story-pagination" style="text-align:center;margin-top:10px;"></div>
+      </div>
+      <div class="intro-box" id="section-friends" style="display:none;">
+        <h3><i class="fas fa-user-friends"></i> Danh sách bạn bè</h3>
+        <div class="friend-list" id="friend-list"></div>
+      </div>
+
+
     </div>
   </div>
-  <div class="modal" id="image-modal">
+  <div class="modal" id="image-modal" style="display:none;">
     <span class="close-modal" onclick="closeModal()">×</span>
     <div class="modal-content">
       <img id="zoomed-image" src="" alt="Zoomed Image">
     </div>
   </div>
+  <div class="modal" id="upload-photo-modal" style="display:none;">
+    <div class="modal-content upload-modal">
+      <span class="close-modal" id="close-upload-modal" title="Đóng">×</span>
+      <h3 style="margin-bottom:18px; text-align:center; color:#1877F2;">Thêm ảnh mới</h3>
+      <form id="form-upload-photo-modal" style="width:100%;display:flex;flex-direction:column;align-items:center;">
+        <input type="file" id="input-photo-file-modal" name="file" accept="image/*" required>
+        <div class="modal-btns">
+          <button type="submit">Tải lên</button>
+          <button type="button" id="btn-cancel-upload-modal">Hủy</button>
+        </div>
+        <div id="upload-loading" class="loading-upload" style="display:none;">
+          <span class="spinner"></span> Đang tải lên...
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal" id="upload-video-modal" style="display:none;">
+    <div class="modal-content upload-modal">
+      <span class="close-modal" id="close-upload-video-modal" title="Đóng">×</span>
+      <h3 style="margin-bottom:18px; text-align:center; color:#1877F2;">Thêm video mới</h3>
+      <form id="form-upload-video-modal" style="width:100%;display:flex;flex-direction:column;align-items:center;">
+        <input type="file" id="input-video-file-modal" name="file" accept="video/*" required style="border: 1px solid #e4e6eb; border-radius: 8px; padding: 10px; background: #f0f2f5; width: 250px; margin-bottom: 18px; font-size: 15px;">
+        <div class="modal-btns" style="display: flex; gap: 14px; margin-top: 8px;">
+          <button type="submit" style="background: linear-gradient(90deg,#1877F2 60%,#42a5f5 100%); color: #fff; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; box-shadow: 0 2px 8px rgba(24,119,242,0.08);">Tải lên</button>
+          <button type="button" id="btn-cancel-upload-video-modal" style="background: #e4e6eb; color: #050505; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px;">Hủy</button>
+        </div>
+        <div id="upload-video-loading" class="loading-upload" style="display:none;">
+          <span class="spinner"></span> Đang tải lên...
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal" id="edit-profile-modal" style="display:none;">
+  <div class="modal-content upload-modal" style=" overflow:auto;">
+    <span class="close-modal" id="close-edit-profile-modal" title="Đóng">×</span>
+    <h3 style="margin-bottom:20px; text-align:center; color:#1877F2;">Chỉnh sửa thông tin cá nhân</h3>
+    <form id="form-edit-profile" style="width:100%;display:flex;flex-direction:column;gap:14px;">
+      
+      <!-- Grouped field -->
+      <div>
+        <label><strong>Họ tên:</strong></label>
+        <input type="text" name="fullName" class="edit-input" required />
+      </div>
+
+      <div>
+        <label><strong>Email:</strong></label>
+        <input type="email" name="email" class="edit-input" required />
+      </div>
+
+      <div>
+        <label><strong>Số điện thoại:</strong></label>
+        <input type="text" name="phoneNumber" class="edit-input" />
+      </div>
+
+      <div>
+        <label><strong>Ngày sinh:</strong></label>
+        <input type="date" name="birthDate" class="edit-input" />
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <div style="flex:1;">
+          <label><strong>Giới tính:</strong></label>
+          <select name="gender" class="edit-input">
+            <option value="MALE">Nam</option>
+            <option value="FEMALE">Nữ</option>
+            <option value="OTHER">Khác</option>
+          </select>
+        </div>
+        <div style="flex:1;">
+          <label><strong>Đang tìm kiếm:</strong></label>
+          <select name="lookingFor" class="edit-input">
+            <option value="MALE">Nam</option>
+            <option value="FEMALE">Nữ</option>
+            <option value="OTHER">Khác</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label><strong>Tiểu sử:</strong></label>
+        <textarea name="bio" class="edit-input" rows="2"></textarea>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <div style="flex:1;">
+          <label><strong>Chiều cao (cm):</strong></label>
+          <input type="number" name="height" class="edit-input" />
+        </div>
+        <div style="flex:1;">
+          <label><strong>Cân nặng (kg):</strong></label>
+          <input type="number" name="weight" class="edit-input" />
+        </div>
+      </div>
+
+      <div>
+        <label><strong>Địa chỉ:</strong></label>
+        <input type="text" name="location" class="edit-input" />
+      </div>
+
+      <div>
+        <label><strong>Vị trí công việc:</strong></label>
+        <input type="text" name="jobTitle" class="edit-input" />
+      </div>
+
+      <div>
+        <label><strong>Công ty:</strong></label>
+        <input type="text" name="company" class="edit-input" />
+      </div>
+
+      <div>
+        <label><strong>Học vấn:</strong></label>
+        <input type="text" name="education" class="edit-input" />
+      </div>
+
+      <div>
+        <label><strong>Mô tả:</strong></label>
+        <textarea name="description" class="edit-input" rows="3"></textarea>
+      </div>
+
+      <div>
+        <label><strong>Sở thích (phân tách bằng dấu phẩy):</strong></label>
+        <input type="text" name="interestName" class="edit-input" />
+      </div>
+
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:12px;">
+        <button type="submit" style="background:#1877F2;color:#fff;padding:10px 28px;border:none;border-radius:8px;font-weight:bold;">Lưu</button>
+        <button type="button" id="btn-cancel-edit-profile" style="background:#e4e6eb;color:#050505;padding:10px 28px;border:none;border-radius:8px;font-weight:bold;">Hủy bỏ</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  <div class="modal" id="create-story-modal" style="display:none;">
+    <div class="modal-content upload-modal">
+      <span class="close-modal" id="close-create-story-modal" title="Đóng">×</span>
+      <h3 style="margin-bottom:18px; text-align:center; color:#1877F2;">Tạo story mới</h3>
+      <form id="form-create-story-modal" style="width:100%;display:flex;flex-direction:column;align-items:center;">
+        <input type="file" id="input-story-file-modal" name="file" accept="image/*,video/*" required style="border: 1px solid #e4e6eb; border-radius: 8px; padding: 10px; background: #f0f2f5; width: 250px; margin-bottom: 18px; font-size: 15px;">
+        <div class="modal-btns" style="display: flex; gap: 14px; margin-top: 8px;">
+          <button type="submit" style="background: linear-gradient(90deg,#1877F2 60%,#42a5f5 100%); color: #fff; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; box-shadow: 0 2px 8px rgba(24,119,242,0.08);">Tải lên</button>
+          <button type="button" id="btn-cancel-create-story-modal" style="background: #e4e6eb; color: #050505; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px;">Hủy</button>
+        </div>
+        <div id="create-story-loading" class="loading-upload" style="display:none;">
+          <span class="spinner"></span> Đang tải lên...
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="create-post-modal" style="display:none;">
+    <div class="modal-content upload-modal">
+      <span class="close-modal" id="close-create-post-modal" title="Đóng">×</span>
+      <h3 style="margin-bottom:18px; text-align:center; color:#1877F2;">Tạo bài viết mới</h3>
+      <form id="form-create-post-modal" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <textarea id="post-content" name="content" rows="3" placeholder="Bạn muốn chia sẻ điều gì?" style="width:100%;max-width:400px;border-radius:8px;padding:10px;"></textarea>
+        <input type="file" id="post-images" name="listImage" accept="image/*" multiple style="margin-bottom:8px;">
+        <input type="hidden" id="post-email" value="nguoix@example.com">
+
+        <input type="file" id="post-videos" name="listVideo" accept="video/*" multiple style="margin-bottom:8px;">
+        <label style="align-self:flex-start;margin-left:10px;"><input type="checkbox" id="post-public" name="isPublic" checked> Công khai</label>
+        <div class="modal-btns" style="display: flex; gap: 14px; margin-top: 8px;">
+          <button type="submit" style="background: linear-gradient(90deg,#1877F2 60%,#42a5f5 100%); color: #fff; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; box-shadow: 0 2px 8px rgba(24,119,242,0.08);">Tải lên</button>
+          <button type="button" id="btn-cancel-create-post-modal" style="background: #e4e6eb; color: #050505; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px;">Hủy</button>
+        </div>
+        <div id="create-post-loading" class="loading-upload" style="display:none;">
+          <span class="spinner"></span> Đang tải lên...
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
-    function openModal(imageUrl) {
-      const modal = document.getElementById('image-modal');
-      const zoomedImage = document.getElementById('zoomed-image');
-      zoomedImage.src = imageUrl;
-      modal.style.display = 'flex';
+  function openModal(imageUrl) {
+    const modal = document.getElementById('image-modal');
+    const zoomedImage = document.getElementById('zoomed-image');
+    zoomedImage.src = imageUrl;
+    modal.style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('image-modal').style.display = 'none';
+  }
+
+  // Tab switching logic
+  document.getElementById('tab-info').onclick = function(e) {
+    e.preventDefault();
+    showSection('info');
+  };
+  document.getElementById('tab-photo').onclick = function(e) {
+    e.preventDefault();
+    showSection('photo');
+  };
+  document.getElementById('tab-video').onclick = function(e) {
+    e.preventDefault();
+    showSection('video');
+  };
+  document.getElementById('tab-story').onclick = function(e) {
+    e.preventDefault();
+    showSection('story');
+  };
+  document.getElementById('tab-friends').onclick = function(e) {
+    e.preventDefault();
+    showSection('friends');
+  };
+  document.getElementById('tab-checkin').onclick = function(e) {
+    e.preventDefault();
+    showSection('checkin');
+  };
+
+  function showSection(section) {
+    // Ẩn tất cả section
+    const sectionIds = ['section-info', 'section-photo', 'section-video', 'section-story', 'section-friends', 'section-checkin'];
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    // Bỏ active tab
+    const tabIds = ['tab-info', 'tab-photo', 'tab-video', 'tab-story', 'tab-friends', 'tab-checkin'];
+    tabIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    });
+    // Hiện section được chọn
+    const showEl = document.getElementById('section-' + section);
+    if (showEl) showEl.style.display = 'block';
+    const tabEl = document.getElementById('tab-' + section);
+    if (tabEl) tabEl.classList.add('active');
+    // Xử lý hiển thị left-panel
+    const leftPanel = document.getElementById('left-panel');
+    const rightPanel = document.querySelector('.right-panel');
+    if (section === 'photo' || section === 'video' || section === 'story' || section === 'friends') {
+      if (leftPanel) leftPanel.style.display = 'none';
+      if (rightPanel) rightPanel.style.width = '100%';
+    } else {
+      if (leftPanel) leftPanel.style.display = 'block';
+      if (rightPanel) rightPanel.style.width = '';
     }
-    function closeModal() {
-      document.getElementById('image-modal').style.display = 'none';
-    }
-  </script>
+  }
+</script>
+
+  <script src="profile.js"></script>
+  <script>
+  // Kiểm tra token khi tải trang
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Vui lòng đăng nhập để tiếp tục!');
+    window.location.href = 'login.html';
+  }
+</script>
+
 </body>
 </html>
