@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook | Trang cá nhân người khác</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600&display=swap" rel="stylesheet">
+  <link href="profile.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+</head>
+<body>
+  <div class="fb-topbar">
+    <div class="fb-logo">
+      <i class="fab fa-facebook"></i>
+      <span style="font-size:20px;font-weight:bold;color:#1877F2;">Facebook</span>
+    </div>
+    <div class="fb-icons">
+      <a href="home.html" title="Trang chủ"><i class="fas fa-home"></i></a>
+      <a href="watch.html" title="Watch"><i class="fas fa-tv"></i></a>
+      <a href="marketplace.html" title="Marketplace"><i class="fas fa-store"></i></a>
+      <a href="groups.html" title="Groups"><i class="fas fa-users"></i></a>
+      <a href="games.html" title="Games"><i class="fas fa-gamepad"></i></a>
+    </div>
+    <div class="fb-right">
+      <i class="fas fa-bars" title="Menu"></i>
+      <i class="fab fa-facebook-messenger" title="Messenger"></i>
+      <i class="fas fa-bell" title="Thông báo"></i>
+      <img class="fb-avatar" src="" alt="User">
+    </div>
+  </div>
+  <div class="profile-header">
+    <img src="" alt="avatar" class="avatar" id="profile-avatar">
+    <div style="display:flex;flex-direction:column;justify-content:center;width:100%;">
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+        <h1 id="profile-fullname" style="margin:0;">Đang tải...</h1>
+        <button id="btn-add-friend" class="add-friend-btn">Kết bạn</button>
+      </div>
+      <p id="profile-bio"><i class="fas fa-quote-left"></i></p>
+    </div>
+  </div>
+  
+
+  <nav>
+    <a class="active" id="tab-info" href="#"><i class="fas fa-info-circle"></i> Giới thiệu</a>
+    <a id="tab-photo" href="#"><i class="fas fa-image"></i> Ảnh</a>
+    <a id="tab-video" href="#"><i class="fas fa-video"></i> Video</a>
+    <a id="tab-checkin" href="#"><i class="fas fa-map-marker-alt"></i> Check in</a>
+  </nav>
+  <div class="main">
+    <div class="left-panel" id="left-panel">
+      <div class="intro-box">
+        <h3><i class="fas fa-user"></i> Giới thiệu</h3>
+        <div class="user-details">
+          <!-- Thông tin user sẽ được JS cập nhật -->
+        </div>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="intro-box" id="section-info">
+        <h3><i class="fas fa-info-circle"></i> Thông tin cá nhân</h3>
+      </div>
+      <div class="intro-box" id="section-photo" style="display:none;">
+        <div class="photo-row" id="photo-row">
+          <!-- Ảnh sẽ được JS render vào đây -->
+        </div>
+        <div id="photo-pagination" style="text-align:center; margin: 10px 0;"></div>
+      </div>
+      <div class="intro-box" id="section-video" style="display: none;">
+        <div id="video-row" class="video-row" style="display:flex;flex-wrap:wrap;gap:18px;"></div>
+        <div id="video-pagination" style="text-align:center;margin-top:10px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="image-modal" style="display:none;">
+    <span class="close-modal" onclick="closeModal()">×</span>
+    <div class="modal-content">
+      <img id="zoomed-image" src="" alt="Zoomed Image">
+    </div>
+  </div>
+  <script src="other-profile.js"></script>
+</body>
+</html>
