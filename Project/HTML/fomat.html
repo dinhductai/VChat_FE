@@ -1,194 +1,49 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <title>Comment Facebook Style</title>
-    <style>
-      body {
-        background-color: #18191a;
-        color: #e4e6eb;
-        font-family: Arial, sans-serif;
-        padding: 20px;
-      }
-
-      .comment {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 10px;
-      }
-
-      .avatar {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        margin-right: 10px;
-      }
-
-      .comment-box {
-        background-color: #3a3b3c;
-        border-radius: 18px;
-        padding: 10px 14px;
-        max-width: 600px;
-      }
-
-      .username {
-        font-weight: bold;
-        color: #e4e6eb;
-      }
-
-      .comment-actions {
-        font-size: 13px;
-        margin-top: 4px;
-        color: #b0b3b8;
-      }
-
-      .comment-actions span {
-        margin-right: 10px;
-        cursor: pointer;
-      }
-
-      .children {
-        margin-left: 50px;
-        margin-top: 5px;
-      }
-
-      .reply-form {
-        margin-top: 8px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-
-      .reply-form input {
-        flex: 1;
-        background-color: #3a3b3c;
-        border: none;
-        border-radius: 999px;
-        padding: 8px 12px;
-        color: #e4e6eb;
-      }
-
-      .reply-form button {
-        padding: 6px 10px;
-        background-color: #2374e1;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-      }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
   </head>
   <body>
-    <h2>Bình luận</h2>
-    <div id="commentSection"></div>
-
-    <div class="reply-form" style="margin-top: 20px">
-      <img src="https://i.pravatar.cc/36" class="avatar" />
-      <input type="text" id="mainComment" placeholder="Viết bình luận..." />
-      <button onclick="submitReply(null)">Gửi</button>
-    </div>
+    <h2>Test WebSocket</h2>
+    <button onclick="connect()">Kết nối</button>
+    <button onclick="send()">Gửi yêu cầu lấy comment</button>
+    <pre id="messages"></pre>
 
     <script>
-      const comments = [
-        {
-          comment_id: 1,
-          user_name: "Trịnh Tiến Kiên",
-          content: "đớp ngập mồm rồi lại hút mỡ ,<br>vòng lặp",
-          parent_id: null,
-        },
-        {
-          comment_id: 2,
-          user_name: "An An",
-          content:
-            "<strong>Trịnh Tiến Kiên</strong> Đúng vậy. Đớp ngập mồm rồi lại hút. Nhưng liên quan gì tới người khác...",
-          parent_id: 1,
-        },
-        {
-          comment_id: 3,
-          user_name: "Hiển Real",
-          content: "<strong>Trịnh Tiến Kiên</strong> hút xong đớp ngập mồm",
-          parent_id: 1,
-        },
-      ];
+      let stompClient = null;
+      const token =
+        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNiIsInNjb3BlIjoiQURNSU4gbnVsbCIsImlzcyI6IndlYnNpdGUuY29tIiwiZXhwIjoxNzUyODUwNTA2LCJpYXQiOjE3NTI4NDY5MDYsImp0aSI6ImU3Mjc0NDU3LTcwZGItNGYxNC1iZDljLWY3OGIxNDUzYTZlNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIn0.D9bGG47aAQyXY8s73RExnBPuTN_zmnXzS0qoknzoNTCIAVL0wVTYwSVDC-PuzFcqPTXQ5H2W3xGgOt8w3p74SA";
+      const postId = 2;
 
-      function buildTree(list) {
-        const map = {};
-        const roots = [];
-        list.forEach((c) => {
-          c.children = [];
-          map[c.comment_id] = c;
-        });
-        list.forEach((c) => {
-          if (c.parent_id) {
-            map[c.parent_id]?.children.push(c);
-          } else {
-            roots.push(c);
+      function connect() {
+        const socket = new SockJS("http://localhost:8080/ws");
+        stompClient = Stomp.over(socket);
+
+        // Gửi token trong header Authorization
+        stompClient.connect(
+          { Authorization: "Bearer " + token }, // 👈 THÊM DÒNG NÀY
+          function (frame) {
+            console.log("✅ Connected: " + frame);
+
+            // Lắng nghe phản hồi từ server
+            stompClient.subscribe("/user/queue/comments", function (message) {
+              console.log("📥 Nhận comment:", message.body);
+              document.getElementById("messages").textContent = message.body;
+            });
+
+            // Gửi yêu cầu sau khi kết nối thành công
+            send();
+          },
+          function (error) {
+            console.error("❌ Kết nối thất bại:", error);
           }
-        });
-        return roots;
+        );
       }
 
-      function renderComments(comments, container) {
-        comments.forEach((comment) => {
-          const commentEl = document.createElement("div");
-          commentEl.className = "comment";
-          commentEl.innerHTML = `
-          <img src="https://i.pravatar.cc/150?u=${comment.user_name}" class="avatar" />
-          <div>
-            <div class="comment-box">
-              <span class="username">${comment.user_name}</span><br>
-              <span>${comment.content}</span>
-            </div>
-            <div class="comment-actions">
-              <span onclick="likeComment(${comment.comment_id})">👍 Like</span>
-              <span onclick="showReplyForm(${comment.comment_id})">Reply</span>
-              <span>1h</span>
-            </div>
-            <div class="reply-form" id="reply-form-${comment.comment_id}" style="display: none;">
-              <input type="text" id="reply-input-${comment.comment_id}" placeholder="Trả lời ${comment.user_name}...">
-              <button onclick="submitReply(${comment.comment_id})">Gửi</button>
-            </div>
-          </div>
-        `;
-          container.appendChild(commentEl);
-
-          if (comment.children.length > 0) {
-            const childDiv = document.createElement("div");
-            childDiv.className = "children";
-            renderComments(comment.children, childDiv);
-            container.appendChild(childDiv);
-          }
-        });
+      function send() {
+        stompClient.send(`/app/comments.fetchAll/${postId}`, {}, token);
       }
-
-      function showReplyForm(id) {
-        const form = document.getElementById(`reply-form-${id}`);
-        form.style.display = form.style.display === "none" ? "flex" : "none";
-      }
-
-      function submitReply(parentId) {
-        const input = parentId
-          ? document.getElementById(`reply-input-${parentId}`)
-          : document.getElementById("mainComment");
-        const content = input.value.trim();
-        if (!content) return;
-        const newComment = {
-          comment_id: Date.now(),
-          user_name: "Bạn",
-          content: content,
-          parent_id: parentId,
-          children: [],
-        };
-        comments.push(newComment);
-        input.value = "";
-
-        document.getElementById("commentSection").innerHTML = "";
-        const tree = buildTree(comments);
-        renderComments(tree, document.getElementById("commentSection"));
-      }
-
-      const tree = buildTree(comments);
-      renderComments(tree, document.getElementById("commentSection"));
     </script>
   </body>
 </html>

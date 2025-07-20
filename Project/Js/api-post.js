@@ -41,6 +41,14 @@ function submitPost() {
       return response.json();
     })
     .then((data) => {
+      console.log("thong tin post: ");
+      console.log(data.data);
+      const postContainer = document.getElementById("postContainer");
+
+      // ✅ Dòng cần viết ở đây:
+      const html = renderPost(data.data, false); // không tự chèn
+      postContainer.insertAdjacentHTML("afterbegin", html); // tự chèn vào đầu
+
       const modal = bootstrap.Modal.getInstance(
         document.getElementById("postModal")
       );
@@ -131,23 +139,17 @@ async function loadPosts() {
 }
 
 // Hàm hiển thị 1 bài post
-function renderPost(post) {
+function renderPost(post, insert = true) {
   const postContainer = document.getElementById("postContainer");
 
   // Hàm xử lý hiển thị ảnh theo số lượng
-  function renderImages(
-    photos,
-    user_name,
-    post_time,
-    post_content,
-    profile_picture
-  ) {
+  function renderImages(photos) {
     if (!Array.isArray(photos) || photos.length === 0) return "";
 
     if (photos.length === 1) {
       return `
         <div class="post-images-grid single-image mb-2">
-          <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
+          <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${post.postId}')" />
         </div>
       `;
     }
@@ -156,8 +158,8 @@ function renderPost(post) {
       return `
         <div class="post-images-grid mb-2">
           <div class="row-grid">
-           <img style="width: 50%;" src="${photos[0]}" onclick="openImageModal('${photos[0]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
-          <img style="width: 50%;" src="${photos[1]}" onclick="openImageModal('${photos[1]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
+           <img style="width: 50%;" src="${photos[0]}" onclick="openImageModal('${photos[0]}','${post.postId}')" />
+          <img style="width: 50%;" src="${photos[1]}" onclick="openImageModal('${photos[1]}','${post.postId}')" />
           </div>
         </div>
       `;
@@ -167,11 +169,11 @@ function renderPost(post) {
       return `
         <div class="post-images-grid mb-2">
           <div class="row-grid">
-            <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
+            <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${post.postId}')" />
           </div>
           <div class="row-grid">
-            <img src="${photos[1]}" onclick="openImageModal('${photos[1]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
-            <img src="${photos[2]}" onclick="openImageModal('${photos[2]}','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
+            <img src="${photos[1]}" onclick="openImageModal('${photos[1]}','${post.postId}')" />
+            <img src="${photos[2]}" onclick="openImageModal('${photos[2]}','${post.postId}')" />
           </div>
         </div>
       `;
@@ -184,27 +186,21 @@ function renderPost(post) {
         <div class="row-grid">
           <img style="width: 50%;" src="${
             limitedPhotos[0]
-          }" onclick="openImageModal('${
-      limitedPhotos[0]
-    }','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
+          }" onclick="openImageModal('${limitedPhotos[0]}','${post.postId}')" />
           <img style="width: 50%;" src="${
             limitedPhotos[1]
-          }" onclick="openImageModal('${
-      limitedPhotos[1]
-    }','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
+          }" onclick="openImageModal('${limitedPhotos[1]}','${post.postId}')" />
         </div>
         <div class="row-grid">
           <img style="width: 50%;" src="${
             limitedPhotos[2]
-          }" onclick="openImageModal('${
-      limitedPhotos[2]
-    }','${user_name}','${post_time}','${post_content}','${profile_picture}')" />
+          }" onclick="openImageModal('${limitedPhotos[2]}','${post.postId}')" />
           <div style="position: relative; flex: 1">
             <img style="width: 100%; height: 100%" src="${
               limitedPhotos[3]
             }" onclick="openImageModal('${
       limitedPhotos[3]
-    }','${user_name}','${post_time}','${post_content},'${profile_picture}'')" style="width: 50%; height: 100%; object-fit: cover; border-radius: 6px;" />
+    }','${user_name}')" style="width: 50%; height: 100%; object-fit: cover; border-radius: 6px;" />
             ${
               photos.length > 4
                 ? `<div style="
@@ -248,6 +244,9 @@ function renderPost(post) {
     : "";
 
   // Khung bài đăng
+  if (post.profilePicture == null) {
+    post.profilePicture = "../images/user-default.webp";
+  }
   const html = `
     <div class="post shadow-sm rounded bg-white dark-mode-bg col-10" data-post-id='${
       post.postId
@@ -258,7 +257,7 @@ function renderPost(post) {
                   post.profilePicture || "../images/user-default.webp"
                 }"
                 class="rounded-circle me-2" style="width: 40px; height:
-                40px;cursor: pointer" alt="Avatar" />
+                40px;cursor: pointer; border: 1px solid #bdc3c7" alt="Avatar" />
                 <div>
                   <strong style="cursor: pointer">${post.fullName}</strong
                   ><br />
@@ -274,18 +273,12 @@ function renderPost(post) {
             </div>
       <p class="post-text">${post.content}</p>
 
-      ${renderImages(
-        post.photosUrl,
-        post.fullName,
-        formatTimeAgo(post.uploadDate),
-        post.content,
-        post.profilePicture
-      )}
+      ${renderImages(post.photosUrl, post.postId)}
       ${videoHTML}
 
       <div class="d-flex justify-content-around mt-3 border-top pt-2 position-relative">
         <div class="like-wrapper position-relative w-100 me-1">
-          <button class="btn btn-light w-100 btn-action like-btn">
+          <button class="btn btn-light w-100 btn-action">
             <i class="bi bi-hand-thumbs-up"></i> Thích
           </button>
         </div>
@@ -298,8 +291,10 @@ function renderPost(post) {
       </div>
     </div>
   `;
-
-  postContainer.insertAdjacentHTML("beforeend", html);
+  if (insert) {
+    postContainer.insertAdjacentHTML("beforeend", html);
+  }
+  return html;
 }
 
 // Gọi lần đầu
@@ -338,25 +333,63 @@ function formatTimeAgo(dateString) {
   }
 }
 
-function openImageModal(
-  src,
-  user_name,
-  post_time,
-  post_content,
-  profile_picture
-) {
+// openImageModal
+async function openImageModal(srcImg, postId) {
+  try {
+    const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    });
+    if (!response.ok) throw new Error("Lỗi khi gọi API");
+
+    const post = await response.json();
+    resetModalState(); // Reset UI
+    renderPostToModal(srcImg, post); // Hiển thị
+
+    // 👉 Logic xử lý kết nối WebSocket
+    if (stompClient && stompClient.connected) {
+      stompClient.disconnect(() => {
+        console.log("🔌 Ngắt kết nối cũ để kết nối lại với postId mới");
+        connect(postId);
+      });
+    } else {
+      connect(postId);
+    }
+  } catch (error) {
+    console.error("Lỗi load chi tiết bài viết:", error);
+    alert("Không thể tải nội dung bài viết");
+  }
+}
+
+function renderPostToModal(srcImg, post) {
+  console.log(post);
   const profile_image = document.getElementById("profile_image");
   const modalImg = document.getElementById("modalImage");
   const userName = document.getElementById("post-userName");
   const postTime = document.getElementById("postTime");
-  const postContent = document.getElementById("postContent");
+  const postContent = document.getElementById("postContentID");
 
   // Cập nhật nội dung modal
-  modalImg.src = src;
-  userName.textContent = user_name;
-  postTime.textContent = post_time;
-  postContent.textContent = post_content;
-  profile_image.src = profile_picture;
+  modalImg.src = srcImg;
+  userName.textContent = post.data.fullName || "Ẩn danh";
+  postTime.textContent = formatTimeAgo(post.data.uploadDate);
+  postContent.textContent = post.data.content;
+
+  // Avatar người đăng
+  const avatar =
+    post.data.profilePicture?.trim() && post.data.profilePicture !== "null"
+      ? post.data.profilePicture
+      : "../images/user-default.webp";
+  profile_image.src = avatar;
+
+  // Lưu postId và userId nếu cần cho like/comment
+  const modal = document.getElementById("imageModal");
+  modal.setAttribute("data-post-id", post.data.postId);
+  modal.setAttribute("data-user-id", post.data.userId);
+  modal.querySelector(".like-btn").id = `like-btn-${post.data.postId}`;
 
   // Ẩn icon AI nếu có
   const aiIcon = document.getElementById("ai");
@@ -364,8 +397,8 @@ function openImageModal(
     aiIcon.style.display = "none";
   }
 
-  // Mở modal
-  const imageModal = new bootstrap.Modal(document.getElementById("imageModal"));
+  // Hiển thị modal
+  const imageModal = new bootstrap.Modal(modal);
   imageModal.show();
 }
 document
@@ -376,3 +409,37 @@ document
       aiIcon.style.display = "block";
     }
   });
+
+document.addEventListener("DOMContentLoaded", function () {
+  document
+    .getElementById("sendCommentBtn")
+    .addEventListener("click", sendComment);
+});
+
+function resetModalState() {
+  // Reset ảnh
+  document.getElementById("modalImage").src = "";
+
+  // Reset user info
+  document.getElementById("profile_image").src = "../images/user-default.webp";
+  document.getElementById("post-userName").textContent = "";
+  document.getElementById("postTime").textContent = "";
+
+  // Reset nội dung bài viết
+  document.getElementById("postContentID").textContent = "";
+
+  // Reset comment list
+  document.getElementById("commentList").innerHTML = "";
+
+  // Reset ô nhập comment
+  document.getElementById("commentInput").value = "";
+
+  // Reset nút cảm xúc
+  const likeBtn = document.querySelector(".like-btn");
+  if (likeBtn) {
+    likeBtn.innerHTML = `<i class="bi bi-hand-thumbs-up"></i> Like`;
+    likeBtn.classList.remove("active");
+  }
+
+  // Nếu có popup cảm xúc/emoji khác thì cũng reset ở đây
+}
