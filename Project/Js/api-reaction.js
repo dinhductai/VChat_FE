@@ -1,10 +1,34 @@
 const emotionMap = {
-  LIKE: { icon: "👍", label: "Like", color: "#0d6efd" },
-  LOVE: { icon: "❤️", label: "Love", color: "#dc3545" },
-  HAHA: { icon: "😆", label: "Haha", color: "#ffc107" },
-  WOW: { icon: "😮", label: "Wow", color: "#ffc107" },
-  SAD: { icon: "😢", label: "Sad", color: "#6c757d" },
-  ANGRY: { icon: "😡", label: "Angry", color: "#fd7e14" },
+  LIKE: {
+    icon: '<i class="fa-solid fa-thumbs-up"></i>',
+    label: "Like",
+    color: "#0d6efd",
+  },
+  LOVE: {
+    icon: '<i class="fa-solid fa-heart"></i>',
+    label: "Love",
+    color: "#dc3545",
+  },
+  HAHA: {
+    icon: '<i class="fa-solid fa-face-laugh-squint"></i>',
+    label: "Haha",
+    color: "#ffc107",
+  },
+  WOW: {
+    icon: '<i class="fa-solid fa-face-surprise"></i>',
+    label: "Wow",
+    color: "#ffc107",
+  },
+  SAD: {
+    icon: '<i class="fa-solid fa-face-sad-tear"></i>',
+    label: "Sad",
+    color: "#6c757d",
+  },
+  ANGRY: {
+    icon: '<i class="fa-solid fa-face-angry"></i>',
+    label: "Angry",
+    color: "#fd7e14",
+  },
 };
 
 let currentReaction = null;
@@ -15,13 +39,13 @@ document.querySelectorAll(".icon").forEach((icon) => {
     const modal = document.getElementById("imageModal");
     const postId = modal.getAttribute("data-post-id");
     const token = localStorage.getItem("accessToken");
-    const likeBtn = modal.querySelector(`like-btn-${postId}`);
+    const likeBtn = modal.querySelector(`#like-btn-${postId}`);
 
     try {
       if (currentReaction === emotion) {
         // Gỡ cảm xúc
         await fetch(
-          `http://localhost:8080/api/reaction/delete?postId=${postId}`,
+          `http://localhost:8080/api/reaction/delete?postId=${postId}&contentType=POST`,
           {
             method: "DELETE",
             headers: {

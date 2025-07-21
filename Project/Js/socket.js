@@ -54,7 +54,8 @@ function appendSingleComment(comment) {
 
 function sendComment() {
   const modal = document.getElementById("imageModal");
-  const content = document.getElementById("commentInput").value;
+  const commentInput = document.getElementById("commentInput");
+  const content = commentInput.value;
   const postId = modal.getAttribute("data-post-id");
 
   const commentRequest = {
@@ -72,7 +73,8 @@ function sendComment() {
     {},
     JSON.stringify(commentRequest)
   );
-  document.getElementById("commentInput").value = "";
+  commentInput.value = ""; // Reset nội dung
+  commentInput.style.height = "auto"; // Reset chiều cao nếu có autoGrow
 }
 
 function renderComment(comment, level = 1) {

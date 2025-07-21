@@ -350,6 +350,7 @@ async function openImageModal(srcImg, postId) {
     renderPostToModal(srcImg, post); // Hiển thị
 
     // 👉 Logic xử lý kết nối WebSocket
+
     if (stompClient && stompClient.connected) {
       stompClient.disconnect(() => {
         console.log("🔌 Ngắt kết nối cũ để kết nối lại với postId mới");

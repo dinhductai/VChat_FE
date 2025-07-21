@@ -26,11 +26,6 @@
   background-color: #ffffff;
 }
 
-.dark-mode .left-sidebar,
-.dark-mode .right-sidebar {
-  background-color: #242526 !important;
-}
-
 .dark-mode .full-height-sidebar::-webkit-scrollbar-thumb,
 .dark-mode .right-sidebar::-webkit-scrollbar-thumb {
   background-color: #555;
@@ -257,7 +252,7 @@ body.dark-mode .search-input::placeholder {
 }
 
 .friend-hover-item:hover {
-  background-color: #f0f0f0;
+  background-color: #bdc3c7;
 }
 
 /* Dark mode hỗ trợ */
