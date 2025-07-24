@@ -205,17 +205,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  // --- XÓA ẢNH ---
   window.isPhotoDeleteMode = false;
   window.selectedPhotoUrls = [];
-
   document.getElementById('btn-delete-photo').onclick = function() {
     window.isPhotoDeleteMode = true;
-    window.selectedPhotoUrls = []; // Không chọn ảnh nào mặc định
+    window.selectedPhotoUrls = [];
     document.getElementById('btn-confirm-delete-photo').style.display = 'inline-block';
     document.getElementById('btn-cancel-delete-photo').style.display = 'inline-block';
     renderPhotos(window.lastPhotoUrls || []);
   };
-
   document.getElementById('btn-cancel-delete-photo').onclick = function() {
     window.isPhotoDeleteMode = false;
     window.selectedPhotoUrls = [];
@@ -322,46 +321,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  // --- PHÂN TRANG STORY TAB STORY ---
-  const STORY_PAGE_SIZE = 4;
-  async function loadStories(page = 0, size = STORY_PAGE_SIZE) {
-    try {
-      const res = await fetch(`http://localhost:8080/api/story?page=${page}&size=${size}`, {
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
-      const json = await res.json();
-      if (json.success && json.data && Array.isArray(json.data.content)) {
-        renderStories(json.data.content);
-        renderStoryPagination(json.data, size);
-      } else {
-        document.getElementById('story-row').innerHTML = '<p>Không có story.</p>';
-        document.getElementById('story-pagination').innerHTML = '';
-      }
-    } catch (err) {
-      document.getElementById('story-row').innerHTML = '<p style="color:red">Không tải được story!</p>';
-      document.getElementById('story-pagination').innerHTML = '';
-    }
-  }
-  function renderStories(storyList) {
-    const row = document.getElementById('story-row');
-    row.innerHTML = storyList.reverse().map(story => {
-      if (story.videoUrl && (story.videoUrl.endsWith('.mp4') || story.videoUrl.endsWith('.webm') || story.videoUrl.endsWith('.mov')))
-        return `<div class="video-item"><video src="${story.videoUrl}" controls style="width:100%;height:320px;object-fit:cover;border-radius:10px;"></video><p>Ngày đăng: ${new Date(story.uploadDate).toLocaleDateString('vi-VN')}</p></div>`;
-      else
-        return `<div class="photo-item"><img src="${story.videoUrl}" alt="Story" style="width:240px;height:240px;object-fit:cover;border-radius:12px;"><p>Ngày đăng: ${new Date(story.uploadDate).toLocaleDateString('vi-VN')}</p></div>`;
-    }).join('');
-  }
-  function renderStoryPagination(pageInfo, size) {
-    const pag = document.getElementById('story-pagination');
-    let html = '';
-    for (let i = 0; i < pageInfo.totalPages; i++) {
-      html += `<button onclick="loadStories(${i},${size})" ${i === pageInfo.number ? 'style=\"background:#1877F2;color:#fff;\"' : ''}>${i + 1}</button> `;
-    }
-    pag.innerHTML = html;
-  }
-  document.getElementById('tab-story').addEventListener('click', function () {
-    loadStories();
-  });
+  
+
+
 
   // Xử lý nút "Tạo bài viết"
 document.getElementById('btn-create-post').onclick = function() {
@@ -610,18 +572,49 @@ async function loadVideos(page = 0, size = VIDEO_PAGE_SIZE) {
 }
 
 function renderVideos(videoList) {
+  window.lastVideoList = videoList;
   const row = document.getElementById('video-row');
   if (!row) {
     console.warn('Không tìm thấy phần tử video-row!');
     return;
   }
-  row.innerHTML = videoList.reverse().map(v => `
-    <div class="video-item">
-      <video src="${v.videoUrl}" controls style="max-width:100%;height:auto;"></video>
-      <p>Ngày đăng: ${new Date(v.uploadDate).toLocaleDateString('vi-VN')}</p>
-    </div>
-  `).join('');
+  const isDeleteMode = window.isVideoDeleteMode;
+  // Sắp xếp ngược lại: mới nhất lên trước
+  const reversed = [...videoList].reverse();
+  row.innerHTML = reversed.map(v => {
+    const selected = (window.selectedVideoUrls || []).includes(v.videoUrl);
+    return `
+      <div class="video-item" style="position:relative;">
+        <video src="${v.videoUrl}" controls data-url="${v.videoUrl}"
+          ${isDeleteMode ? 'style="opacity:0.7;cursor:pointer;border:2px solid #ff4d4f;"' : ''}
+          onclick="${isDeleteMode ? 'toggleSelectVideo(this)' : ''}"></video>
+      </div>
+    `;
+  }).join('');
+  if (isDeleteMode) {
+    // Chỉ làm nổi bật các video đã chọn
+    (window.selectedVideoUrls || []).forEach(url => {
+      const vid = row.querySelector(`video[data-url='${url}']`);
+      if (vid) {
+        vid.style.opacity = "1";
+        vid.style.border = "2px solid #1877F2";
+      }
+    });
+  }
 }
+window.toggleSelectVideo = function(vidEl) {
+  const url = vidEl.getAttribute('data-url');
+  const idx = window.selectedVideoUrls.indexOf(url);
+  if (idx === -1) {
+    window.selectedVideoUrls.push(url);
+    vidEl.style.opacity = "1";
+    vidEl.style.border = "2px solid #1877F2";
+  } else {
+    window.selectedVideoUrls.splice(idx, 1);
+    vidEl.style.opacity = "0.7";
+    vidEl.style.border = "2px solid #ff4d4f";
+  }
+};
 
 function renderVideoPagination(pageInfo, size) {
   const pag = document.getElementById('video-pagination');
@@ -779,5 +772,248 @@ if (tabFriends) {
   });
 }
 
+// Xử lý nút Xóa tài khoản
+const btnDeleteAccount = document.getElementById('btn-delete-account');
+if (btnDeleteAccount) {
+  btnDeleteAccount.onclick = function() {
+    document.getElementById('delete-account-modal').style.display = 'flex';
+  };
+}
+document.getElementById('btn-cancel-delete-account').onclick = function() {
+  document.getElementById('delete-account-modal').style.display = 'none';
+};
+document.getElementById('btn-confirm-delete-account').onclick = async function() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Bạn chưa đăng nhập!');
+    return;
+  }
+  try {
+    const res = await fetch('http://localhost:8080/api/user-profile/delete', {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const json = await res.json();
+    if (json.success) {
+      alert('Tài khoản đã được xóa!');
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    } else {
+      alert('Xóa tài khoản thất bại!');
+    }
+  } catch (err) {
+    alert('Lỗi khi xóa tài khoản!');
+  }
+  document.getElementById('delete-account-modal').style.display = 'none';
+};
+
 
 });
+
+// --- HIỂN THỊ STORY Ở TAB STORY (OWNER) ---
+async function loadOwnStories() {
+  const row = document.getElementById('own-story-row');
+  if (!row) return;
+  row.innerHTML = '<div style="text-align:center;color:#aaa;">Đang tải story...</div>';
+  try {
+    const res = await fetch('http://localhost:8080/api/story/owner', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const json = await res.json();
+    console.log('API /api/story/owner trả về:', json);
+    let stories = [];
+    if (json.success && Array.isArray(json.data)) {
+      stories = json.data;
+    }
+    if (stories.length === 0) {
+      row.innerHTML = '<div style="text-align:center;color:#aaa;">Bạn chưa có story nào.</div>';
+      return;
+    }
+    window.storyPhotoIndexes = stories.map(() => 0);
+    row.innerHTML = stories.map((story, idx) => renderOwnStoryItem(story, idx)).join('');
+    // Gán sự kiện cho các nút mũi tên
+    stories.forEach((story, idx) => {
+      const upBtn = document.getElementById('story-arrow-up-' + idx);
+      const downBtn = document.getElementById('story-arrow-down-' + idx);
+      if (upBtn) upBtn.onclick = function() { changeStoryPhoto(idx, -1, stories); };
+      if (downBtn) downBtn.onclick = function() { changeStoryPhoto(idx, 1, stories); };
+    });
+  } catch (err) {
+    row.innerHTML = '<div style="color:red;">Lỗi khi tải story!</div>';
+  }
+}
+function renderOwnStoryItem(story, idx) {
+  const photoIdx = (window.storyPhotoIndexes && window.storyPhotoIndexes[idx]) || 0;
+  const total = story.listStoryPhoto.length;
+  const photoUrl = story.listStoryPhoto[photoIdx] || '';
+  const date = story.listDateUpload && story.listDateUpload[photoIdx] ? new Date(story.listDateUpload[photoIdx]).toLocaleString('vi-VN') : '';
+  const encodedPhotoUrl = encodeURIComponent(photoUrl);
+  return `
+    <div class="own-story-item">
+      <img src="${story.profileUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(story.fullName)}" class="story-avatar" alt="avatar">
+      <div class="story-info">
+        <div class="story-author">${story.fullName || ''}</div>
+        <div class="story-date">${date}</div>
+      </div>
+      <div class="story-photo-box">
+        <button id="story-arrow-up-${idx}" class="story-arrow-btn" ${photoIdx === 0 ? 'disabled' : ''}>&uarr;</button>
+        <div style="position:relative;display:inline-block;">
+          <img src="${photoUrl}" class="story-photo" alt="Story">
+          <button class="story-trash-btn" onclick="deleteStoryPhoto('${encodedPhotoUrl}')" title="Xóa story"><i class="fas fa-trash"></i></button>
+        </div>
+        <button id="story-arrow-down-${idx}" class="story-arrow-btn" ${photoIdx === total-1 ? 'disabled' : ''}>&darr;</button>
+      </div>
+    </div>
+  `;
+}
+window.changeStoryPhoto = function(idx, delta, data) {
+  if (!window.storyPhotoIndexes) return;
+  const story = data[idx];
+  let cur = window.storyPhotoIndexes[idx];
+  const total = story.listStoryPhoto.length;
+  cur = Math.max(0, Math.min(total-1, cur + delta));
+  window.storyPhotoIndexes[idx] = cur;
+  // Cập nhật lại ảnh story
+  const row = document.getElementById('own-story-row');
+  if (!row) return;
+  row.children[idx].outerHTML = renderOwnStoryItem(story, idx);
+  // Gán lại sự kiện cho các nút mũi tên của story này
+  const upBtn = document.getElementById('story-arrow-up-' + idx);
+  const downBtn = document.getElementById('story-arrow-down-' + idx);
+  if (upBtn) upBtn.onclick = function() { changeStoryPhoto(idx, -1, data); };
+  if (downBtn) downBtn.onclick = function() { changeStoryPhoto(idx, 1, data); };
+};
+window.deleteStoryPhoto = async function(photoUrl) {
+  if (!confirm('Bạn có chắc chắn muốn xóa story này?')) return;
+  const token = localStorage.getItem('token');
+  try {
+    const res = await fetch('http://localhost:8080/api/story/delete?photoUrl=' + photoUrl, {
+      method: 'DELETE', 
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const json = await res.json();
+    if (json.success) {
+      alert('Đã xóa story!');
+      loadOwnStories();
+    } else {
+      alert('Xóa story thất bại!');
+    }
+  } catch (err) {
+    alert('Lỗi khi xóa story!');
+  }
+};
+
+const tabStory = document.getElementById('tab-story');
+if (tabStory) {
+  tabStory.addEventListener('click', function() {
+    showSection("story");  
+   
+  });
+}
+
+
+// --- XÓA VIDEO ---
+window.isVideoDeleteMode = false;
+window.selectedVideoUrls = [];
+document.getElementById('btn-delete-video').onclick = function() {
+  window.isVideoDeleteMode = true;
+  window.selectedVideoUrls = [];
+  document.getElementById('btn-confirm-delete-video').style.display = 'inline-block';
+  document.getElementById('btn-cancel-delete-video').style.display = 'inline-block';
+  renderVideos(window.lastVideoList || []);
+};
+document.getElementById('btn-cancel-delete-video').onclick = function() {
+  window.isVideoDeleteMode = false;
+  window.selectedVideoUrls = [];
+  document.getElementById('btn-confirm-delete-video').style.display = 'none';
+  document.getElementById('btn-cancel-delete-video').style.display = 'none';
+  renderVideos(window.lastVideoList || []);
+};
+document.getElementById('btn-confirm-delete-video').onclick = async function() {
+  if (window.selectedVideoUrls.length === 0) {
+    alert('Vui lòng chọn ít nhất 1 video để xóa!');
+    return;
+  }
+  if (!confirm('Bạn có chắc chắn muốn xóa các video đã chọn?')) return;
+  let successCount = 0;
+  for (const url of window.selectedVideoUrls) {
+    try {
+      const res = await fetch('http://localhost:8080/api/video/delete?videoUrl=' + encodeURIComponent(url), {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const json = await res.json();
+      if (json.success) successCount++;
+    } catch {}
+  }
+  alert(`Đã xóa ${successCount} video!`);
+  window.isVideoDeleteMode = false;
+  window.selectedVideoUrls = [];
+  document.getElementById('btn-confirm-delete-video').style.display = 'none';
+  document.getElementById('btn-cancel-delete-video').style.display = 'none';
+  loadVideos();
+};
+
+function renderVideos(videoList) {
+  window.lastVideoList = videoList;
+  const row = document.getElementById('video-row');
+  if (!row) {
+    console.warn('Không tìm thấy phần tử video-row!');
+    return;
+  }
+  const isDeleteMode = window.isVideoDeleteMode;
+  // Sắp xếp ngược lại: mới nhất lên trước
+  const reversed = [...videoList].reverse();
+  row.innerHTML = reversed.map(v => {
+    const selected = (window.selectedVideoUrls || []).includes(v.videoUrl);
+    return `
+      <div class="video-item" style="position:relative;">
+        <video src="${v.videoUrl}" controls data-url="${v.videoUrl}"
+          ${isDeleteMode ? 'style="opacity:0.7;cursor:pointer;border:2px solid #ff4d4f;"' : ''}
+          onclick="${isDeleteMode ? 'toggleSelectVideo(this)' : ''}"></video>
+      </div>
+    `;
+  }).join('');
+  if (isDeleteMode) {
+    // Chỉ làm nổi bật các video đã chọn
+    (window.selectedVideoUrls || []).forEach(url => {
+      const vid = row.querySelector(`video[data-url='${url}']`);
+      if (vid) {
+        vid.style.opacity = "1";
+        vid.style.border = "2px solid #1877F2";
+      }
+    });
+  }
+}
+window.toggleSelectVideo = function(vidEl) {
+  const url = vidEl.getAttribute('data-url');
+  const idx = window.selectedVideoUrls.indexOf(url);
+  if (idx === -1) {
+    window.selectedVideoUrls.push(url);
+    vidEl.style.opacity = "1";
+    vidEl.style.border = "2px solid #1877F2";
+  } else {
+    window.selectedVideoUrls.splice(idx, 1);
+    vidEl.style.opacity = "0.7";
+    vidEl.style.border = "2px solid #ff4d4f";
+  }
+};
+
+
+function renderAllStoryItem(story) {
+  // Hiển thị story đầu tiên của mỗi user
+  const photoUrl = story.listStoryPhoto[0] || '';
+  const date = story.listDateUpload && story.listDateUpload[0] ? new Date(story.listDateUpload[0]).toLocaleString('vi-VN') : '';
+  return `
+    <div class="own-story-item">
+      <img src="${story.profileUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(story.fullName)}" class="story-avatar" alt="avatar">
+      <div class="story-info">
+        <div class="story-author">${story.fullName || ''}</div>
+        <div class="story-date">${date}</div>
+      </div>
+      <div class="story-photo-box">
+        <img src="${photoUrl}" class="story-photo" alt="Story">
+      </div>
+    </div>
+  `;
+}

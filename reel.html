@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Facebook Reels Clone</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .reel-wrapper {
+      width: 100%;
+      max-width: 420px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #000;
+      position: relative;
+    }
+
+    .reel-video-container {
+      position: relative;
+      width: 100%;
+      flex-grow: 1;
+      background: #000;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-info-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 90%;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .user-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-weight: bold;
+    }
+
+    .upload-date {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .caption {
+      font-size: 14px;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .nav-buttons {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 9999;
+    }
+
+    .nav-buttons button {
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      padding: 12px;
+      font-size: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      color: white;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .nav-buttons button:hover {
+      background-color: rgba(255, 255, 255, 0.4);
+      transform: scale(1.1);
+    }
+
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      color: white;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      z-index: 10;
+    }
+
+    .end-message {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 20;
+      display: none;
+    }
+
+    .end-message.show {
+  display: block;
+}
+
+.back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 25px; 
+  color: white;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  z-index: 10000;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.9);
+  color: black;
+  transform: scale(1.05); 
+}
+
+
+
+    
+  </style>
+</head>
+<body>
+    <a href="index.html" class="back-button" title="Quay lại">
+        &#8592;
+      </a>
+      
+  <div class="reel-wrapper">
+    <div class="reel-video-container">
+      <div id="loading" class="loading">Đang tải...</div>
+      <video id="reelVideo" controls autoplay muted></video>
+
+      <!-- Phần hiển thị thông tin video overlay phía trên video -->
+      <div class="video-info-overlay">
+        <div class="user-info">
+          <img id="profilePicture" src="" alt="avatar" />
+          <div class="user-details">
+            <div id="fullName" class="user-name"></div>
+            <div id="uploadDate" class="upload-date"></div>
+          </div>
+        </div>
+        <div id="caption" class="caption"></div>
+      </div>
+
+      <div class="end-message" id="endMessage">Đã hết video!</div>
+    </div>
+  </div>
+
+  <!-- Nút mũi tên (bên phải video) -->
+  <div class="nav-buttons">
+    <button id="prevBtn"><i class="fas fa-chevron-up"></i></button>
+    <button id="nextBtn"><i class="fas fa-chevron-down"></i></button>
+  </div>
+
+  <script>
+    // luot video
+    let lastScroll = 0;
+let scrollTimeout = null;
+
+// Scroll bằng chuột
+document.addEventListener("wheel", (e) => {
+  const now = Date.now();
+  if (now - lastScroll < 600) return; // tránh lướt quá nhanh
+
+  if (e.deltaY > 0) {
+    // kéo xuống
+    currentPage++;
+    fetchVideo(currentPage);
+  } else if (e.deltaY < 0 && currentPage > 0) {
+    // kéo lên
+    currentPage--;
+    fetchVideo(currentPage);
+  }
+
+  lastScroll = now;
+});
+
+    const videoElement = document.getElementById("reelVideo");
+    const loadingText = document.getElementById("loading");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const fullNameDiv = document.getElementById("fullName");
+    const captionDiv = document.getElementById("caption");
+    const profilePictureImg = document.getElementById("profilePicture");
+    const uploadDateDiv = document.getElementById("uploadDate");
+    const endMessage = document.getElementById("endMessage");
+
+    let currentPage = 0;
+    const pageSize = 1;
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("Không tìm thấy token! Hãy đăng nhập trước.");
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString("vi-VN", {
+        year: "numeric", month: "long", day: "numeric",
+        hour: "2-digit", minute: "2-digit"
+      });
+    }
+
+    function showEndMessage() {
+      endMessage.classList.add("show");
+      setTimeout(() => endMessage.classList.remove("show"), 3000);
+    }
+
+    async function fetchVideo(page) {
+      loadingText.style.display = "block";
+      endMessage.classList.remove("show");
+      videoElement.style.display = "none";
+      videoElement.pause();
+
+      try {
+        const response = await fetch(`http://localhost:8080/api/reel?page=${page}&size=${pageSize}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        const text = await response.text();
+        try {
+          const result = JSON.parse(text);
+
+          if (result.success && result.data && result.data.content.length > 0) {
+            const videoData = result.data.content[0];
+            videoElement.src = videoData.videosUrl || "";
+            videoElement.load();
+            videoElement.play();
+
+            profilePictureImg.src = videoData.profilePicture || "";
+            fullNameDiv.innerText = videoData.fullName || "";
+            captionDiv.innerText = videoData.content || "";
+            uploadDateDiv.innerText = formatDate(videoData.uploadDate || "");
+          } else {
+            showEndMessage();
+            if (page > 0) currentPage--;
+          }
+        } catch (jsonError) {
+          console.error("Không thể parse JSON:", text);
+        }
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+      } finally {
+        loadingText.style.display = "none";
+        videoElement.style.display = "block";
+      }
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 0) {
+        currentPage--;
+        fetchVideo(currentPage);
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      currentPage++;
+      fetchVideo(currentPage);
+    });
+
+    fetchVideo(currentPage);
+  </script>
+</body>
+</html>
