@@ -185,7 +185,7 @@ nav a:hover, nav a.active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto 18px auto;
   gap: 16px;
   flex-wrap: wrap;
@@ -709,3 +709,51 @@ nav a:hover, nav a.active {
     z-index: 10;
   }
 }
+.story-carousel {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-snap-type: x mandatory;
+}
+.story-card {
+  flex: 0 0 180px;
+  height: 320px;
+  background: #242526;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 2px 8px #00000044;
+  scroll-snap-align: start;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.story-card:hover {
+  transform: scale(1.03);
+}
+.story-card img.story-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.story-card .story-user {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+}
+.story-card .story-avatar {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid #1877F2;
+  object-fit: cover;
+  z-index: 2;
+}
+/* aaa */
+

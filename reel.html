@@ -91,6 +91,14 @@
       margin-top: 4px;
       line-height: 1.4;
     }
+    #reactionBtn i {
+  color: #f02849;
+}
+
+#commentBtn i {
+  color: #45bd62;
+}
+
 
     .nav-buttons {
       position: fixed;
@@ -171,6 +179,38 @@
   transform: scale(1.05); 
 }
 
+.nav-scroll {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 1000;
+}
+
+.nav-actions {
+  position: absolute;
+  bottom: 20%;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  z-index: 10;
+}
+
+
+
+#reactionBtn i {
+  color: #f02849;
+}
+
+#commentBtn i {
+  color: #45bd62;
+}
+
 
 
     
@@ -185,7 +225,10 @@
     <div class="reel-video-container">
       <div id="loading" class="loading">Đang tải...</div>
       <video id="reelVideo" controls autoplay muted></video>
-
+      <div class="nav-buttons nav-actions">
+        <button id="reactionBtn" title="Thả tim"><i class="fas fa-heart"></i></button>
+        <button id="commentBtn" title="Bình luận"><i class="fas fa-comment"></i></button>
+      </div>
       <!-- Phần hiển thị thông tin video overlay phía trên video -->
       <div class="video-info-overlay">
         <div class="user-info">
@@ -203,10 +246,14 @@
   </div>
 
   <!-- Nút mũi tên (bên phải video) -->
-  <div class="nav-buttons">
-    <button id="prevBtn"><i class="fas fa-chevron-up"></i></button>
-    <button id="nextBtn"><i class="fas fa-chevron-down"></i></button>
-  </div>
+  <!-- Nút điều hướng lên/xuống -->
+<div class="nav-buttons nav-scroll">
+  <button id="prevBtn" title="Video trước"><i class="fas fa-chevron-up"></i></button>
+  <button id="nextBtn" title="Video sau"><i class="fas fa-chevron-down"></i></button>
+</div>
+
+
+
 
   <script>
     // luot video

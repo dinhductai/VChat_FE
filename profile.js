@@ -71,8 +71,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // --- PHÂN TRANG ẢNH TAB PHOTO ---
-  const PHOTO_PAGE_SIZE = 5;
+  const PHOTO_PAGE_SIZE = 9;
   async function loadPhotos(page = 0, size = PHOTO_PAGE_SIZE) {
+    currentPhotoPage = page;
     try {
       const res = await fetch(`http://localhost:8080/api/photo?page=${page}&size=${size}`, {
         headers: {
@@ -97,6 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('photo-pagination').innerHTML = '';
     }
   }
+  window.loadPhotos = loadPhotos;
 
   function renderPhotos(photoUrls) {
     const row = document.getElementById('photo-row');
@@ -123,17 +125,65 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function renderPhotoPagination(pageInfo, size) {
-    const pag = document.getElementById('photo-pagination');
-    let html = '';
-    for (let i = 0; i < pageInfo.totalPages; i++) {
-      html += `<button onclick="loadPhotos(${i},${size})" ${i === pageInfo.number ? 'style="background:#1877F2;color:#fff;"' : ''}>${i + 1}</button> `;
+    const paginationContainer = document.getElementById('photo-pagination');
+    paginationContainer.innerHTML = '';
+  
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number; // ✅ sửa đúng tên
+  
+    if (!totalPages || totalPages <= 1) return;
+  
+    const createButton = (text, page, isActive = false) => {
+      const btn = document.createElement('button');
+      btn.textContent = text;
+      btn.className = 'page-btn';
+      if (isActive) btn.classList.add('active');
+      btn.onclick = () => loadPhotos(page, size);
+      return btn;
+    };
+  
+    // « first
+    if (currentPage > 0) {
+      paginationContainer.appendChild(createButton('«', 0));
     }
-    pag.innerHTML = html;
+  
+    const visiblePages = 2;
+    let start = Math.max(0, currentPage - visiblePages);
+    let end = Math.min(totalPages - 1, currentPage + visiblePages);
+  
+    if (start > 0) {
+      paginationContainer.appendChild(createButton('1', 0));
+      if (start > 1) {
+        paginationContainer.appendChild(document.createTextNode('...'));
+      }
+    }
+  
+    for (let i = start; i <= end; i++) {
+      paginationContainer.appendChild(createButton((i + 1).toString(), i, i === currentPage));
+    }
+  
+    if (end < totalPages - 1) {
+      if (end < totalPages - 2) {
+        paginationContainer.appendChild(document.createTextNode('...'));
+      }
+      paginationContainer.appendChild(createButton(totalPages.toString(), totalPages - 1));
+    }
+  
+    if (currentPage < totalPages - 1) {
+      paginationContainer.appendChild(createButton('»', totalPages - 1));
+    }
   }
-
+  
+  
   // Tải ảnh khi chuyển sang tab "Ảnh"
   document.getElementById('tab-photo').addEventListener('click', function() {
-    loadPhotos();
+    document.getElementById('section-info').style.display = 'none';
+  document.getElementById('section-photo').style.display = 'block';
+  document.getElementById('section-video').style.display = 'none';
+  document.getElementById('section-story').style.display = 'none';
+
+  // ✅ Tải ảnh trang đầu tiên
+  loadPhotos(0);
   });
 
   // Thêm biến flag để phân biệt upload ảnh profile
@@ -544,8 +594,8 @@ document.getElementById('form-edit-profile').onsubmit = async function (e) {
   };
 
   // Hàm load video 
-  const VIDEO_PAGE_SIZE = 10;
 
+  const VIDEO_PAGE_SIZE = 4;
 async function loadVideos(page = 0, size = VIDEO_PAGE_SIZE) {
   const token = localStorage.getItem('token');
   try {
@@ -617,17 +667,55 @@ window.toggleSelectVideo = function(vidEl) {
 };
 
 function renderVideoPagination(pageInfo, size) {
-  const pag = document.getElementById('video-pagination');
-  if (!pag) {
-    console.warn('Không tìm thấy phần tử video-pagination!');
-    return;
+  const paginationContainer = document.getElementById('video-pagination');
+  paginationContainer.innerHTML = '';
+
+  const totalPages = pageInfo.totalPages;
+  const currentPage = pageInfo.number;
+
+  if (!totalPages || totalPages <= 1) return;
+
+  const createButton = (text, page, isActive = false) => {
+    const btn = document.createElement('button');
+    btn.textContent = text;
+    btn.className = 'page-btn';
+    if (isActive) btn.classList.add('active');
+    btn.onclick = () => loadVideos(page, size); // ⬅️ gọi lại loadVideos đúng trang
+    return btn;
+  };
+
+  // « First
+  if (currentPage > 0) {
+    paginationContainer.appendChild(createButton('«', 0));
   }
-  let html = '';
-  for (let i = 0; i < pageInfo.totalPages; i++) {
-    html += `<button onclick="loadVideos(${i}, ${size})" ${i === pageInfo.number ? 'style="background:#1877F2;color:#fff;"' : ''}>${i + 1}</button> `;
+
+  const visiblePages = 2;
+  let start = Math.max(0, currentPage - visiblePages);
+  let end = Math.min(totalPages - 1, currentPage + visiblePages);
+
+  if (start > 0) {
+    paginationContainer.appendChild(createButton('1', 0));
+    if (start > 1) {
+      paginationContainer.appendChild(document.createTextNode('...'));
+    }
   }
-  pag.innerHTML = html;
+
+  for (let i = start; i <= end; i++) {
+    paginationContainer.appendChild(createButton((i + 1).toString(), i, i === currentPage));
+  }
+
+  if (end < totalPages - 1) {
+    if (end < totalPages - 2) {
+      paginationContainer.appendChild(document.createTextNode('...'));
+    }
+    paginationContainer.appendChild(createButton(totalPages.toString(), totalPages - 1));
+  }
+
+  if (currentPage < totalPages - 1) {
+    paginationContainer.appendChild(createButton('»', totalPages - 1));
+  }
 }
+
 
 document.getElementById('tab-video').addEventListener('click', function () {
   loadVideos(); // tải trang đầu tiên
@@ -638,24 +726,35 @@ async function loadOwnPosts() {
   const listPost = document.getElementById('list-post');
   if (!listPost) return;
   listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Đang tải bài viết...</div>';
+  const token = localStorage.getItem('token');
   try {
-    const res = await fetch('http://localhost:8080/api/post/owner', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    const json = await res.json();
-    if (json.success && json.data && Array.isArray(json.data.content)) {
-      if (json.data.content.length === 0) {
-        listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Chưa có bài viết nào.</div>';
-        return;
+    let allPosts = [];
+    let page = 0;
+    let totalPages = 1;
+    do {
+      const res = await fetch(`http://localhost:8080/api/post/owner?page=${page}&size=10`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const json = await res.json();
+      if (json.success && json.data && Array.isArray(json.data.content)) {
+        allPosts = allPosts.concat(json.data.content);
+        totalPages = json.data.page.totalPages;
+        page++;
+      } else {
+        break;
       }
-      listPost.innerHTML = json.data.content.map(post => renderPostItem(post)).join('');
+    } while (page < totalPages);
+
+    if (allPosts.length === 0) {
+      listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Chưa có bài viết nào.</div>';
     } else {
-      listPost.innerHTML = '<div style="color:red;">Không tải được bài viết!</div>';
+      listPost.innerHTML = allPosts.map(post => renderPostItem(post)).join('');
     }
   } catch (err) {
     listPost.innerHTML = '<div style="color:red;">Lỗi khi tải bài viết!</div>';
   }
 }
+
 function renderPostItem(post) {
   // Xử lý ngày đăng
   const date = new Date(post.uploadDate).toLocaleString('vi-VN');
@@ -810,106 +909,7 @@ document.getElementById('btn-confirm-delete-account').onclick = async function()
 
 });
 
-// --- HIỂN THỊ STORY Ở TAB STORY (OWNER) ---
-async function loadOwnStories() {
-  const row = document.getElementById('own-story-row');
-  if (!row) return;
-  row.innerHTML = '<div style="text-align:center;color:#aaa;">Đang tải story...</div>';
-  try {
-    const res = await fetch('http://localhost:8080/api/story/owner', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    const json = await res.json();
-    console.log('API /api/story/owner trả về:', json);
-    let stories = [];
-    if (json.success && Array.isArray(json.data)) {
-      stories = json.data;
-    }
-    if (stories.length === 0) {
-      row.innerHTML = '<div style="text-align:center;color:#aaa;">Bạn chưa có story nào.</div>';
-      return;
-    }
-    window.storyPhotoIndexes = stories.map(() => 0);
-    row.innerHTML = stories.map((story, idx) => renderOwnStoryItem(story, idx)).join('');
-    // Gán sự kiện cho các nút mũi tên
-    stories.forEach((story, idx) => {
-      const upBtn = document.getElementById('story-arrow-up-' + idx);
-      const downBtn = document.getElementById('story-arrow-down-' + idx);
-      if (upBtn) upBtn.onclick = function() { changeStoryPhoto(idx, -1, stories); };
-      if (downBtn) downBtn.onclick = function() { changeStoryPhoto(idx, 1, stories); };
-    });
-  } catch (err) {
-    row.innerHTML = '<div style="color:red;">Lỗi khi tải story!</div>';
-  }
-}
-function renderOwnStoryItem(story, idx) {
-  const photoIdx = (window.storyPhotoIndexes && window.storyPhotoIndexes[idx]) || 0;
-  const total = story.listStoryPhoto.length;
-  const photoUrl = story.listStoryPhoto[photoIdx] || '';
-  const date = story.listDateUpload && story.listDateUpload[photoIdx] ? new Date(story.listDateUpload[photoIdx]).toLocaleString('vi-VN') : '';
-  const encodedPhotoUrl = encodeURIComponent(photoUrl);
-  return `
-    <div class="own-story-item">
-      <img src="${story.profileUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(story.fullName)}" class="story-avatar" alt="avatar">
-      <div class="story-info">
-        <div class="story-author">${story.fullName || ''}</div>
-        <div class="story-date">${date}</div>
-      </div>
-      <div class="story-photo-box">
-        <button id="story-arrow-up-${idx}" class="story-arrow-btn" ${photoIdx === 0 ? 'disabled' : ''}>&uarr;</button>
-        <div style="position:relative;display:inline-block;">
-          <img src="${photoUrl}" class="story-photo" alt="Story">
-          <button class="story-trash-btn" onclick="deleteStoryPhoto('${encodedPhotoUrl}')" title="Xóa story"><i class="fas fa-trash"></i></button>
-        </div>
-        <button id="story-arrow-down-${idx}" class="story-arrow-btn" ${photoIdx === total-1 ? 'disabled' : ''}>&darr;</button>
-      </div>
-    </div>
-  `;
-}
-window.changeStoryPhoto = function(idx, delta, data) {
-  if (!window.storyPhotoIndexes) return;
-  const story = data[idx];
-  let cur = window.storyPhotoIndexes[idx];
-  const total = story.listStoryPhoto.length;
-  cur = Math.max(0, Math.min(total-1, cur + delta));
-  window.storyPhotoIndexes[idx] = cur;
-  // Cập nhật lại ảnh story
-  const row = document.getElementById('own-story-row');
-  if (!row) return;
-  row.children[idx].outerHTML = renderOwnStoryItem(story, idx);
-  // Gán lại sự kiện cho các nút mũi tên của story này
-  const upBtn = document.getElementById('story-arrow-up-' + idx);
-  const downBtn = document.getElementById('story-arrow-down-' + idx);
-  if (upBtn) upBtn.onclick = function() { changeStoryPhoto(idx, -1, data); };
-  if (downBtn) downBtn.onclick = function() { changeStoryPhoto(idx, 1, data); };
-};
-window.deleteStoryPhoto = async function(photoUrl) {
-  if (!confirm('Bạn có chắc chắn muốn xóa story này?')) return;
-  const token = localStorage.getItem('token');
-  try {
-    const res = await fetch('http://localhost:8080/api/story/delete?photoUrl=' + photoUrl, {
-      method: 'DELETE', 
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    const json = await res.json();
-    if (json.success) {
-      alert('Đã xóa story!');
-      loadOwnStories();
-    } else {
-      alert('Xóa story thất bại!');
-    }
-  } catch (err) {
-    alert('Lỗi khi xóa story!');
-  }
-};
 
-const tabStory = document.getElementById('tab-story');
-if (tabStory) {
-  tabStory.addEventListener('click', function() {
-    showSection("story");  
-   
-  });
-}
 
 
 // --- XÓA VIDEO ---
@@ -1000,20 +1000,3 @@ window.toggleSelectVideo = function(vidEl) {
 };
 
 
-function renderAllStoryItem(story) {
-  // Hiển thị story đầu tiên của mỗi user
-  const photoUrl = story.listStoryPhoto[0] || '';
-  const date = story.listDateUpload && story.listDateUpload[0] ? new Date(story.listDateUpload[0]).toLocaleString('vi-VN') : '';
-  return `
-    <div class="own-story-item">
-      <img src="${story.profileUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(story.fullName)}" class="story-avatar" alt="avatar">
-      <div class="story-info">
-        <div class="story-author">${story.fullName || ''}</div>
-        <div class="story-date">${date}</div>
-      </div>
-      <div class="story-photo-box">
-        <img src="${photoUrl}" class="story-photo" alt="Story">
-      </div>
-    </div>
-  `;
-}

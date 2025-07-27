@@ -181,6 +181,28 @@
       100% { transform: rotate(360deg);}
     }
   </style>
+  <style>
+    .page-btn {
+      padding: 6px 12px;
+      margin: 0 4px;
+      background-color: #f0f2f5;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
+  
+    .page-btn:hover {
+      background-color: #d8d8d8;
+    }
+  
+    .page-btn.active {
+      background-color: #1877f2;
+      color: #fff;
+    }
+  </style>
+  
 </head>
 <body>
   <div class="fb-topbar">
@@ -245,6 +267,12 @@
         <h3><i class="fas fa-newspaper"></i> BÀI ĐĂNG</h3>
         <!-- ...phần giới thiệu... -->
         <div class="list-post" id="list-post"></div>
+        <div id="load-more-post-wrapper" style="text-align:center; margin:16px 0;">
+          <button id="btn-load-more-post" style="padding:8px 18px; background:#1877F2; color:white; border:none; border-radius:6px; cursor:pointer;">
+            Xem thêm bài viết
+          </button>
+        </div>
+        
       </div>
       <div id="section-photo" style="display:none;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
@@ -588,7 +616,8 @@
 
   <script src="profile.js"></script>
   <script src="createReel.js"></script>
-
+  <script src="post-lazyload.js"></script>
+  <script src="story.js"></script>
 
   <script>
   // Kiểm tra token khi tải trang
