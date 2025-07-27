@@ -33,56 +33,58 @@ const emotionMap = {
 
 let currentReaction = null;
 
-document.querySelectorAll(".icon").forEach((icon) => {
-  icon.addEventListener("click", async () => {
-    const emotion = icon.getAttribute("data-emotion");
+document.addEventListener("click", async (e) => {
+  const icon = e.target.closest(".icon");
+  if (!icon) return;
+
+  const emotion = icon.getAttribute("data-emotion");
+
+  // Tìm postId từ thẻ cha gần nhất là .post
+  let postContainer = icon.closest(".post");
+  let postId = postContainer?.getAttribute("data-post-id");
+  // Nếu không có .post, thử lấy từ modal
+  if (!postId) {
     const modal = document.getElementById("imageModal");
-    const postId = modal.getAttribute("data-post-id");
-    const token = localStorage.getItem("accessToken");
-    const likeBtn = modal.querySelector(`#like-btn-${postId}`);
+    postId = modal?.getAttribute("data-post-id");
+  }
 
-    try {
-      if (currentReaction === emotion) {
-        // Gỡ cảm xúc
-        await fetch(
-          `http://localhost:8080/api/reaction/delete?postId=${postId}&contentType=POST`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+  if (!postId) {
+    console.error("Không tìm thấy postId!");
+    return;
+  }
+  const token = localStorage.getItem("accessToken");
 
-        // Reset nút like về mặc định
-        likeBtn.innerHTML = `<i class="bi bi-hand-thumbs-up"></i>Like`;
-        likeBtn.style.color = ""; // bỏ màu
-        likeBtn.classList.remove("active");
-        currentReaction = null;
-      } else {
-        // Gửi cảm xúc mới
-        const payload = {
-          emotionName: emotion,
-          contentId: postId,
-          contentReact: "POST",
-        };
+  try {
+    if (currentReaction === emotion) {
+      await fetch(
+        `http://localhost:8080/api/reaction/delete?postId=${postId}&contentType=POST`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      currentReaction = null;
+    } else {
+      const payload = {
+        emotionName: emotion,
+        contentId: postId,
+        contentReact: "POST",
+      };
 
-        await fetch("http://localhost:8080/api/reaction/create", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        });
-
-        // Cập nhật nút like theo cảm xúc mới
-        likeBtn.innerHTML = `<span>${emotionMap[emotion].icon} ${emotionMap[emotion].label}</span>`;
-        likeBtn.style.color = emotionMap[emotion].color;
-        currentReaction = emotion;
-      }
-    } catch (err) {
-      console.error("Lỗi gửi hoặc xóa cảm xúc:", err);
+      await fetch("http://localhost:8080/api/reaction/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      currentReaction = emotion;
     }
-  });
+
+    // Gọi lại hàm để render trạng thái mới
+    fetchReactionState(postId);
+  } catch (err) {
+    console.error("Lỗi gửi hoặc xóa cảm xúc:", err);
+  }
 });

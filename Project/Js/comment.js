@@ -1,4 +1,3 @@
-
 function submitComment() {
   const input = document.getElementById("mainCommentInput");
   const content = input.value.trim();

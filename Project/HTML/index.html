@@ -1011,6 +1011,99 @@
         />
       </div>
     </div>
+
+    <!-- Khung chat nhỏ hiện khi chọn bạn bè -->
+    <div
+      id="chatBox"
+      class="position-fixed bottom-0 end-0"
+      style="width: 380px; display: none; z-index: 9999"
+    >
+      <div
+        class="card shadow border rounded d-flex flex-column"
+        style="height: 550px"
+      >
+        <div
+          class="card-header d-flex justify-content-between align-items-center p-2"
+        >
+          <div>
+            <img
+              src="../images/user-default.webp"
+              style="
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 0.5px solid #65676b;
+              "
+            />
+            <span style="font-weight: bold">Nguyen sang</span>
+          </div>
+          <button id="closeChatBtn" class="btn btn-sm btn-light rounded-circle">
+            ✕
+          </button>
+        </div>
+
+        <!-- Phần body chiếm phần lớn không gian -->
+        <div
+          class="card-body flex-grow-1 overflow-auto"
+          id="chatMessages"
+          style="min-height: 0"
+        ></div>
+
+        <!-- Phần nhập -->
+        <div
+          class="card-footer p-2 d-flex"
+          style="
+            align-items: center;
+            justify-content: space-around;
+            background-color: transparent;
+          "
+        >
+          <div
+            class="icon-hover align-self-end"
+            style="
+              display: flex;
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              align-items: center;
+              justify-content: center;
+              margin-right: 10px;
+            "
+          >
+            <i class="bi bi-images" style="font-size: 25px; color: #00b894"></i>
+          </div>
+          <div class="rounded-5">
+            <textarea
+              id="chatInput"
+              class="form-control form-control-sm rounded-5 px-3"
+              placeholder="Nhập tin nhắn..."
+              rows="1"
+              style="
+                resize: none;
+                overflow-y: auto;
+                max-height: 140px;
+                width: 250px;
+                height: auto;
+                min-height: 45px;
+                border: none;
+                background-color: #b2bec3;
+                padding-top: 12px;
+                padding-bottom: 12px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                  Roboto, Helvetica, Arial, sans-serif;
+                flex-shrink: 0;
+              "
+            ></textarea>
+          </div>
+          <div
+            class="send-hover align-self-end"
+            style="width: 40px; height: 40px; border-radius: 50%; padding: 10px"
+          >
+            <i class="bi bi-send-fill fs-5" style="color: #0984e3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
   <script src="../Js/api-post.js"></script>
   <script>
@@ -1027,27 +1120,13 @@
   <script src="../Js/get_friends-chat.js"></script>
   <script src="../Js/api-reaction.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-
+  <script src="../Js/api-chat-friends.js"></script>
   <!-- ✅ Tải STOMP sau -->
   <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
   <script src="../Js/socket.js"></script>
   <script>
-    const modalElement = document.getElementById("imageModal");
-
-    if (modalElement) {
-      modalElement.addEventListener("hidden.bs.modal", function () {
-        console.log("❌ Modal bị đóng. Ngắt kết nối WebSocket nếu cần.");
-
-        if (stompClient && stompClient.connected) {
-          stompClient.disconnect(() => {
-            console.log("🔌 WebSocket đã được ngắt.");
-          });
-        }
-
-        currentSubscribedPostId = null;
-        resetModalState();
-      });
-    }
+   
   </script>
   <script src="https://unpkg.com/lottie-web/build/player/lottie.min.js"></script>
+  <script src="../Js/api-share-save-post.js"></script>
 </html>

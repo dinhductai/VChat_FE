@@ -1,48 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
   <head>
+    <meta charset="UTF-8" />
+    <title>WebSocket Chat Test</title>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      #messages {
+        border: 1px solid #ccc;
+        height: 300px;
+        overflow-y: scroll;
+        padding: 10px;
+      }
+      .me {
+        color: blue;
+      }
+      .other {
+        color: green;
+      }
+    </style>
   </head>
   <body>
-    <h2>Test WebSocket</h2>
-    <button onclick="connect()">Kết nối</button>
-    <button onclick="send()">Gửi yêu cầu lấy comment</button>
-    <pre id="messages"></pre>
+    <h2>Test Chat WebSocket</h2>
+
+    <label>ID người nhận:</label>
+    <input type="number" id="receiverId" />
+    <button onclick="startChat()">Bắt đầu chat</button>
+    <br /><br />
+
+    <label>Tin nhắn:</label>
+    <input type="text" id="messageInput" />
+    <button onclick="sendMessage()">Gửi</button>
+    <br /><br />
+
+    <div id="messages"></div>
 
     <script>
+      const token = localStorage.getItem("accessToken");
+      const userId = JSON.parse(atob(token.split(".")[1])).sub;
+      let currentReceiverId = null;
       let stompClient = null;
-      const token =
-        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNiIsInNjb3BlIjoiQURNSU4gbnVsbCIsImlzcyI6IndlYnNpdGUuY29tIiwiZXhwIjoxNzUyODUwNTA2LCJpYXQiOjE3NTI4NDY5MDYsImp0aSI6ImU3Mjc0NDU3LTcwZGItNGYxNC1iZDljLWY3OGIxNDUzYTZlNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIn0.D9bGG47aAQyXY8s73RExnBPuTN_zmnXzS0qoknzoNTCIAVL0wVTYwSVDC-PuzFcqPTXQ5H2W3xGgOt8w3p74SA";
-      const postId = 2;
+      let subscribedChannel = "";
 
-      function connect() {
-        const socket = new SockJS("http://localhost:8080/ws");
-        stompClient = Stomp.over(socket);
+      const socket = new SockJS("http://localhost:8080/ws");
+      stompClient = Stomp.over(socket);
+      stompClient.connect({ Authorization: "Bearer " + token }, () => {
+        console.log("✅ Đã kết nối WebSocket");
+      });
 
-        // Gửi token trong header Authorization
-        stompClient.connect(
-          { Authorization: "Bearer " + token }, // 👈 THÊM DÒNG NÀY
-          function (frame) {
-            console.log("✅ Connected: " + frame);
-
-            // Lắng nghe phản hồi từ server
-            stompClient.subscribe("/user/queue/comments", function (message) {
-              console.log("📥 Nhận comment:", message.body);
-              document.getElementById("messages").textContent = message.body;
-            });
-
-            // Gửi yêu cầu sau khi kết nối thành công
-            send();
-          },
-          function (error) {
-            console.error("❌ Kết nối thất bại:", error);
-          }
-        );
+      function createChatChannel(id1, id2) {
+        const min = Math.min(id1, id2);
+        const max = Math.max(id1, id2);
+        return "/topic/chat/" + min + "-" + max;
       }
 
-      function send() {
-        stompClient.send(`/app/comments.fetchAll/${postId}`, {}, token);
+      function startChat() {
+        const input = document.getElementById("receiverId").value;
+        if (!input) return alert("⚠️ Nhập ID người nhận");
+        currentReceiverId = parseInt(input);
+        const channel = createChatChannel(userId, currentReceiverId);
+
+        if (subscribedChannel !== channel) {
+          stompClient.subscribe(channel, (message) => {
+            const msg = JSON.parse(message.body);
+            console.log("📨 Nhận được response:", msg);
+            showMessage(msg, false);
+          });
+          subscribedChannel = channel;
+          console.log("📡 Subscribed to:", channel);
+        }
+      }
+
+      function sendMessage() {
+        const content = document.getElementById("messageInput").value.trim();
+        if (!currentReceiverId || !content)
+          return alert("⚠️ Chưa nhập tin nhắn hoặc người nhận");
+
+        stompClient.send(
+          "/app/message.private",
+          {},
+          JSON.stringify({
+            receiverId: currentReceiverId,
+            message: content,
+            token: token,
+          })
+        );
+
+        // 👇 Sửa lại để dùng đúng định dạng
+        showMessage({ message: content }, true);
+        document.getElementById("messageInput").value = "";
+      }
+
+      function showMessage(msg, isMe) {
+        const div = document.createElement("div");
+        div.className = isMe ? "me" : "other";
+        div.innerText = (isMe ? "Bạn: " : "Người khác: ") + msg.message;
+        document.getElementById("messages").appendChild(div);
       }
     </script>
   </body>

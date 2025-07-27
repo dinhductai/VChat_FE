@@ -13,88 +13,282 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
       rel="stylesheet"
     />
+    <style>
+      #userInput::placeholder {
+        color: #ccc;
+        opacity: 1;
+      }
+      #userInput:focus {
+        outline: none;
+        box-shadow: none;
+        border: none;
+      }
+      #userInput {
+        overflow: hidden;
+        overflow-y: auto;
+        min-height: 40px;
+        max-height: 300px;
+      }
+
+      #avatarCircle {
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .chat-container {
+        position: relative;
+        height: 1000px;
+        overflow-y: auto;
+      }
+
+      #chatForm {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        padding: 1rem;
+        background-color: #000;
+        z-index: 10;
+        transition: transform 0.5s ease;
+        border-radius: 12px;
+      }
+
+      .chat-sidebar {
+        border-right: 1px solid #444;
+        transition: all 0.3s ease;
+      }
+
+      .chat-sidebar ul li {
+        padding: 8px 0;
+        border-bottom: 1px solid #555;
+      }
+
+      .chat-sidebar ul li a:hover {
+        text-decoration: underline;
+        color: #0dcaf0;
+      }
+
+      #sidebar.collapsed {
+        width: 60px !important;
+      }
+
+      #sidebar.collapsed .sidebar-title,
+      #sidebar.collapsed ul {
+        display: none;
+      }
+
+      #sidebar button#toggleSidebarBtn {
+        width: 100%;
+        text-align: right;
+      }
+
+      #sidebar.collapsed button#toggleSidebarBtn i {
+        transform: rotate(180deg);
+      }
+      .chat-box {
+        max-height: 700px; /* 👈 Bạn có thể chỉnh lại giá trị này tùy bố cục */
+        overflow-y: auto;
+        scrollbar-width: thin;
+      }
+      body {
+        overflow: hidden;
+      }
+      .chat-box {
+        overflow-y: scroll;
+        scrollbar-width: none; /* Firefox */
+      }
+
+      .chat-box::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Edge */
+      }
+    </style>
   </head>
   <body>
     <div
-      class="chat-container shadow-box"
+      class="chat-container d-flex shadow-box position-relative row"
       style="
-        width: 740px;
+        width: 100%;
         height: 1000px;
-        overflow-y: auto;
         background-color: transparent;
         margin: 0 auto;
       "
     >
-      <div class="d-flex my-5" style="width: 100%; justify-content: center">
-        <div class="gradient-border-circle">
-          <div class="inner-circle">
-            <!-- Nội dung bên trong nếu muốn (ví dụ: avatar, icon...) -->
+      <!-- SIDEBAR -->
+      <div id="sidebar" class="chat-sidebar bg-dark text-white p-3 col-2">
+        <!-- Nút toggle -->
+        <button id="toggleSidebarBtn" class="btn btn-sm btn-secondary mb-3">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <!-- Nội dung lịch sử -->
+        <h5 class="sidebar-title">Lịch sử</h5>
+        <ul id="chatHistory" class="list-unstyled">
+          <li>
+            <a href="#" class="text-white text-decoration-none"
+              >Cuộc trò chuyện 1</a
+            >
+          </li>
+          <li>
+            <a href="#" class="text-white text-decoration-none"
+              >Cuộc trò chuyện 2</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- KHUNG CHAT -->
+      <div
+        class="chat-main flex-grow-1 position-relative justify-content-center col-10"
+        style="overflow-y: auto; overflow: hidden"
+      >
+        <!-- Avatar -->
+        <div
+          class="d-flex my-5 justify-content-center mx-auto col-8"
+          id="avatarCircle"
+        >
+          <div class="gradient-border-circle">
+            <div class="inner-circle"></div>
           </div>
         </div>
-      </div>
-      <!-- Khung chat -->
-      <div
-        class="chat-box d-flex flex-column mx-auto"
-        style="
-          width: 650px;
-          height: 150px;
-          background-color: #303030;
-          border-radius: 10px;
-          overflow: hidden;
-        "
-      >
-        <!-- Nội dung tin nhắn -->
-        <!-- <div id="chatMessages" class="flex-grow">
-          <div class="message bot">Chào bạn! Tôi có thể giúp gì hôm nay?</div>
-        </div> -->
 
-        <!-- Ô nhập và nút gửi -->
-        <form id="chatForm" class="chat-input-container">
-          <div class="chat-input">
-            <textarea
-              id="userInput"
-              class="input-area form-control text-white bg-transparent border-0"
-              placeholder="Hỏi bất cứ điều gì"
-              autocomplete="off"
-              rows="1"
-            ></textarea>
+        <!-- Chat box -->
+        <div
+          class="chat-box d-flex flex-column mx-auto"
+          style="
+            background-color: transparent;
+            margin-top: 20px;
+            padding-bottom: 200px;
+            max-width: 876px;
+          "
+        >
+          <!-- Nội dung chat -->
+          <!-- Tin nhắn từ người dùng -->
+        </div>
 
-            <div class="chat-actions mt-2">
-              <button type="button" class="icon-btn">
-                <i class="bi bi-paperclip"></i>
-              </button>
-              <button type="button" class="icon-btn">
-                <i class="bi bi-sliders2"></i> Công cụ
-              </button>
-              <div class="spacer"></div>
-              <button type="button" class="icon-btn">
-                <i class="bi bi-mic"></i>
-              </button>
-              <button type="submit" class="icon-btn circle">
-                <i
-                  class="bi bi-arrow-up-circle-fill"
-                  style="font-size: 28px"
-                ></i>
-              </button>
-            </div>
+        <!-- Form nhập -->
+        <!-- Form nhập -->
+        <form id="chatForm" class="chat-input col-8" style="max-width: 876px">
+          <div id="previewContainer" style="margin-bottom: 10px">
+            <img
+              id="previewImage"
+              style="
+                width: 144px;
+                height: 144px;
+                display: none;
+                object-fit: cover;
+                border-radius: 8px;
+              "
+            />
+            <button
+              type="button"
+              id="removeImageBtn"
+              style="
+                display: none;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                background: rgba(f, f, f, 0.6);
+                color: black;
+                border: none;
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+                font-size: 16px;
+                line-height: 20px;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i class="bi bi-x" style="margin-right: 5px"></i>
+            </button>
+          </div>
+          <textarea
+            id="userInput"
+            class="input-area form-control text-white bg-transparent border-0"
+            placeholder="Hỏi bất cứ điều gì"
+            autocomplete="off"
+            rows="1"
+          ></textarea>
+          <input type="file" id="fileInput" hidden />
+
+          <div class="chat-actions mt-2">
+            <button type="button" class="icon-btn" id="fileButton">
+              <i class="bi bi-paperclip"></i>
+            </button>
+            <button type="button" class="icon-btn">
+              <i class="bi bi-sliders2"></i> Công cụ
+            </button>
+            <div class="spacer"></div>
+            <button type="button" class="icon-btn">
+              <i class="bi bi-mic"></i>
+            </button>
+            <button type="submit" class="icon-btn circle">
+              <i class="bi bi-arrow-up-circle-fill" style="font-size: 28px"></i>
+            </button>
           </div>
         </form>
       </div>
     </div>
-  </body>
-  <script>
-    const textarea = document.getElementById("userInput");
-    textarea.addEventListener("input", () => {
-      textarea.style.height = "auto";
-      textarea.style.height = textarea.scrollHeight + "px";
-    });
 
-    // Gửi khi nhấn Enter, xuống dòng khi Shift+Enter
-    textarea.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        document.getElementById("chatForm").requestSubmit();
-      }
-    });
-  </script>
+    <script src="../Js/chat-bot.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById("toggleSidebarBtn");
+        const sidebar = document.getElementById("sidebar");
+
+        toggleBtn.addEventListener("click", function () {
+          sidebar.classList.toggle("collapsed");
+
+          // Đổi icon trái/phải
+          const icon = toggleBtn.querySelector("i");
+          if (sidebar.classList.contains("collapsed")) {
+            icon.classList.remove("bi-chevron-left");
+            icon.classList.add("bi-chevron-right");
+          } else {
+            icon.classList.remove("bi-chevron-right");
+            icon.classList.add("bi-chevron-left");
+          }
+        });
+      });
+
+      const fileInput = document.getElementById("fileInput");
+      const fileButton = document.getElementById("fileButton");
+      const previewImage = document.getElementById("previewImage");
+      const removeImageBtn = document.getElementById("removeImageBtn");
+
+      fileButton.addEventListener("click", () => {
+        fileInput.click();
+      });
+
+      fileInput.addEventListener("change", () => {
+        const file = fileInput.files[0];
+        if (file && file.type.startsWith("image/")) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            previewImage.src = e.target.result;
+            previewImage.style.display = "block";
+            removeImageBtn.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        } else {
+          previewImage.style.display = "none";
+          removeImageBtn.style.display = "none";
+          previewImage.src = "";
+        }
+      });
+
+      // Nút X để xóa ảnh
+      removeImageBtn.addEventListener("click", () => {
+        previewImage.style.display = "none";
+        removeImageBtn.style.display = "none";
+        previewImage.src = "";
+        fileInput.value = ""; // reset input file
+      });
+    </script>
+  </body>
 </html>

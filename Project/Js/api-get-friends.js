@@ -18,7 +18,7 @@ fetch("http://localhost:8080/api/user/friends?page=0&size=10", {
   .then((data) => {
     const friendList = document.getElementById("friendContainer");
     const users = data.data.content;
-
+    
     users.forEach((friend) => {
       const avatar =
         friend.photoProfile && friend.photoProfile.trim() !== ""

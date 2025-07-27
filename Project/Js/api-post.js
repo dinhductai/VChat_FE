@@ -115,7 +115,9 @@ async function loadPosts() {
     console.log(data);
     if (data?.data?.content && Array.isArray(data.data.content)) {
       data.data.content.forEach((post) => {
+        console.log(post);
         renderPost(post); // 👈 Hàm hiển thị bài viết
+        fetchReactionState(post.postId);
       });
     } else {
       console.warn("Không có bài viết nào hoặc sai cấu trúc!");
@@ -266,10 +268,36 @@ function renderPost(post, insert = true) {
                   >
                 </div>
               </div>
-            <div class="d-flex icon-hover rounded-circle" 
-                  style="width: 35px; height: 35px; align-items: center; justify-content: center;">
-              <i class="bi bi-three-dots"></i>
-            </div>
+                <!-- Bao toàn bộ nút và menu vào .dropdown -->
+<div class="dropdown">
+  <!-- Nút ba chấm -->
+  <div
+    class="rounded-circle contact-icon d-flex justify-content-center align-items-center ms-2"
+    role="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    <i class="bi bi-three-dots"></i>
+  </div>
+
+  <!-- Menu nhỏ hiện ra khi bấm -->
+  <ul class="dropdown-menu dropdown-menu-end custom-shadow border-0">
+    <li>
+      <a class="dropdown-item" onclick="shareOrSavePost('SHARE', ${
+        post.postId
+      })"
+        ><i class="bi bi-share-fill me-2"></i> <span>Share Post</span>
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item" onclick="shareOrSavePost('SAVE', ${post.postId})"
+        ><i class="bi bi-bookmark-fill m2-2"></i> <span>Save Post</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
             </div>
       <p class="post-text">${post.content}</p>
 
@@ -278,15 +306,57 @@ function renderPost(post, insert = true) {
 
       <div class="d-flex justify-content-around mt-3 border-top pt-2 position-relative">
         <div class="like-wrapper position-relative w-100 me-1">
-          <button class="btn btn-light w-100 btn-action">
-            <i class="bi bi-hand-thumbs-up"></i> Thích
+          <button class="btn btn-light w-100 btn-action"  style="font-weight: bold; color: #65676b; font-size:15px;"
+          id="like-btn-home-${post.postId}">
+            <i class="bi bi-hand-thumbs-up"></i> Like
           </button>
+                              <div
+                      class="reaction-popup d-flex gap-2 rounded-5 shadow border"
+                    >
+                      <span class="icon" data-emotion="LIKE">
+                        <img
+                          src="../images/Animation/uv2XD2zFzt.gif"
+                          alt="Like"
+                          class="reaction-img"
+                        />
+                      </span>
+                      <span class="icon" data-emotion="LOVE"
+                        ><img
+                          src="../images/Animation/Emojis - Love (1).gif"
+                          alt=""
+                          style="width: 40px; height: 40px"
+                      /></span>
+                      <span class="icon" data-emotion="HAHA"
+                        ><img
+                          src="../images/Animation/smiley emoji 2.gif"
+                          alt=""
+                          style="width: 50px; height: 50px"
+                      /></span>
+                      <span class="icon" data-emotion="WOW"
+                        ><img
+                          src="../images/Animation/Emojis - Wow.gif"
+                          alt=""
+                          style="width: 40px; height: 40px"
+                      /></span>
+                      <span class="icon" data-emotion="SAD"
+                        ><img
+                          src="../images/Animation/Sad Emoji.gif"
+                          alt=""
+                          style="width: 50px; height: 50px"
+                      /></span>
+                      <span class="icon" data-emotion="ANGRY"
+                        ><img
+                          src="../images/Animation/Angry emoji.gif"
+                          alt=""
+                          style="width: 35px; height: 35px"
+                      /></span>
+                    </div>
         </div>
-        <button class="btn btn-light w-100 me-1 btn-action toggle-comment">
-          <i class="bi bi-chat-left"></i> Bình luận
+        <button class="btn btn-light w-100 me-1 btn-action toggle-comment"  style="font-weight: bold; color: #65676b; font-size:15px;">
+          <i class="bi bi-chat-left"></i> Comment
         </button>
-        <button class="btn btn-light w-100 btn-action">
-          <i class="bi bi-share"></i> Chia sẻ
+        <button class="btn btn-light w-100 btn-action"  style="font-weight: bold; color: #65676b; font-size:15px;">
+          <i class="bi bi-share"></i> Share
         </button>
       </div>
     </div>
@@ -348,7 +418,7 @@ async function openImageModal(srcImg, postId) {
     const post = await response.json();
     resetModalState(); // Reset UI
     renderPostToModal(srcImg, post); // Hiển thị
-
+    fetchReactionState(postId);
     // 👉 Logic xử lý kết nối WebSocket
 
     if (stompClient && stompClient.connected) {
@@ -443,4 +513,89 @@ function resetModalState() {
   }
 
   // Nếu có popup cảm xúc/emoji khác thì cũng reset ở đây
+}
+
+// function updateLikeButton(postId, emotionName) {
+//   const btnHome = document.getElementById(`like-btn-home-${postId}`);
+//   const btnModal = document.getElementById(`like-btn-${postId}`);
+
+//   if (emotionName) {
+//     const html = `<span>${emotionMap[emotionName].icon} ${emotionMap[emotionName].label}</span>`;
+//     const color = emotionMap[emotionName].color;
+
+//     if (btnHome) {
+//       btnHome.innerHTML = html;
+//       btnHome.style.color = color;
+//     }
+//     if (btnModal) {
+//       btnModal.innerHTML = html;
+//       btnModal.style.color = color;
+//     }
+//   } else {
+//     const defaultHTML = `<i class="bi bi-hand-thumbs-up"></i> Like`;
+
+//     if (btnHome) {
+//       btnHome.innerHTML = defaultHTML;
+//       btnHome.style.color = "";
+//     }
+//     if (btnModal) {
+//       btnModal.innerHTML = defaultHTML;
+//       btnModal.style.color = "";
+//     }
+//   }
+// }
+
+async function fetchReactionState(postId) {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/reaction/cnt-check?postId=${postId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const data = await res.json();
+    const emotion = data?.data?.emotionName;
+    const btnInModal = document.querySelector(`#like-btn-${postId}`);
+    const btnInHome = document.querySelector(`#like-btn-home-${postId}`);
+    console.log("emotion:", emotion);
+
+    if (emotion && emotionMap && emotionMap[emotion]) {
+      const { icon, label, color } = emotionMap[emotion];
+
+      if (btnInModal) {
+        btnInModal.innerHTML = `${icon} ${label}`;
+        btnInModal.style.color = color;
+        console.log("test");
+      }
+
+      if (btnInHome) {
+        btnInHome.innerHTML = `${icon} ${label}`;
+        btnInHome.style.color = color;
+        console.log(btnInHome);
+        console.log("test");
+      }
+      console.log("test");
+      currentReaction = emotion;
+    } else {
+      // Không có cảm xúc -> reset
+      const defaultContent = `<i class="bi bi-hand-thumbs-up"></i> Like`;
+
+      if (btnInModal) {
+        btnInModal.innerHTML = defaultContent;
+        btnInModal.style.color = "";
+      }
+
+      if (btnInHome) {
+        btnInHome.innerHTML = defaultContent;
+        btnInHome.style.color = "";
+      }
+
+      currentReaction = null;
+    }
+  } catch (err) {
+    console.error("Lỗi fetch trạng thái reaction:", err);
+  }
 }

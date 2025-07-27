@@ -1,11 +1,10 @@
 let stompClient = null;
-const token = localStorage.getItem("accessToken");
 let currentSubscribedPostId = null;
 
 function connect(postId) {
   const socket = new SockJS("http://localhost:8080/ws");
   stompClient = Stomp.over(socket);
-
+  const token = localStorage.getItem("accessToken");
   stompClient.connect({ Authorization: "Bearer " + token }, (frame) => {
     console.log("Đã kết nối WebSocket:", frame);
 
@@ -189,3 +188,21 @@ function toggleReplyBox(commentId) {
   const box = document.getElementById(`reply-input-${commentId}`);
   box.style.display = box.style.display === "none" ? "block" : "none";
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const modalElement = document.getElementById("imageModal");
+  if (modalElement) {
+    modalElement.addEventListener("hidden.bs.modal", function () {
+      console.log("❌ Modal bị đóng. Ngắt kết nối WebSocket nếu cần.");
+
+      if (stompClient && stompClient.connected) {
+        stompClient.disconnect(() => {
+          console.log("🔌 WebSocket đã được ngắt.");
+        });
+      }
+
+      currentSubscribedPostId = null;
+      resetModalState();
+    });
+  }
+});
