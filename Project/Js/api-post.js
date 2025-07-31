@@ -174,8 +174,8 @@ function renderPost(post, insert = true) {
             <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${post.postId}')" />
           </div>
           <div class="row-grid">
-            <img src="${photos[1]}" onclick="openImageModal('${photos[1]}','${post.postId}')" />
-            <img src="${photos[2]}" onclick="openImageModal('${photos[2]}','${post.postId}')" />
+            <img style="width: 50%;" src="${photos[1]}" onclick="openImageModal('${photos[1]}','${post.postId}')" />
+            <img style="width: 50%;" src="${photos[2]}" onclick="openImageModal('${photos[2]}','${post.postId}')" />
           </div>
         </div>
       `;
@@ -200,9 +200,9 @@ function renderPost(post, insert = true) {
           <div style="position: relative; flex: 1">
             <img style="width: 100%; height: 100%" src="${
               limitedPhotos[3]
-            }" onclick="openImageModal('${
-      limitedPhotos[3]
-    }','${user_name}')" style="width: 50%; height: 100%; object-fit: cover; border-radius: 6px;" />
+            }" onclick="openImageModal('${limitedPhotos[3]}','${
+      post.postId
+    }')" style="width: 50%; height: 100%; object-fit: cover; border-radius: 6px;" />
             ${
               photos.length > 4
                 ? `<div style="
@@ -352,7 +352,10 @@ function renderPost(post, insert = true) {
                       /></span>
                     </div>
         </div>
-        <button class="btn btn-light w-100 me-1 btn-action toggle-comment"  style="font-weight: bold; color: #65676b; font-size:15px;">
+        <button class="btn btn-light w-100 me-1 btn-action toggle-comment" data-post-id="${
+          post.postId
+        }"   onclick="openAllImagesModal('${post.postId}')"
+  style="font-weight: bold; color: #65676b; font-size:15px;">
           <i class="bi bi-chat-left"></i> Comment
         </button>
         <button class="btn btn-light w-100 btn-action"  style="font-weight: bold; color: #65676b; font-size:15px;">
@@ -424,10 +427,12 @@ async function openImageModal(srcImg, postId) {
     if (stompClient && stompClient.connected) {
       stompClient.disconnect(() => {
         console.log("🔌 Ngắt kết nối cũ để kết nối lại với postId mới");
-        connect(postId);
+        // connect(postId);
+        connectComment(postId);
       });
     } else {
-      connect(postId);
+      // connect(postId);
+      connectComment(postId);
     }
   } catch (error) {
     console.error("Lỗi load chi tiết bài viết:", error);
@@ -560,7 +565,6 @@ async function fetchReactionState(postId) {
     const emotion = data?.data?.emotionName;
     const btnInModal = document.querySelector(`#like-btn-${postId}`);
     const btnInHome = document.querySelector(`#like-btn-home-${postId}`);
-    console.log("emotion:", emotion);
 
     if (emotion && emotionMap && emotionMap[emotion]) {
       const { icon, label, color } = emotionMap[emotion];
@@ -568,16 +572,12 @@ async function fetchReactionState(postId) {
       if (btnInModal) {
         btnInModal.innerHTML = `${icon} ${label}`;
         btnInModal.style.color = color;
-        console.log("test");
       }
 
       if (btnInHome) {
         btnInHome.innerHTML = `${icon} ${label}`;
         btnInHome.style.color = color;
-        console.log(btnInHome);
-        console.log("test");
       }
-      console.log("test");
       currentReaction = emotion;
     } else {
       // Không có cảm xúc -> reset
@@ -598,4 +598,194 @@ async function fetchReactionState(postId) {
   } catch (err) {
     console.error("Lỗi fetch trạng thái reaction:", err);
   }
+}
+
+document.addEventListener("click", function (e) {
+  if (e.target.closest(".toggle-comment")) {
+    const button = e.target.closest(".toggle-comment");
+    const postId = button.getAttribute("data-post-id");
+    console.log(postId);
+    openAllImagesModal(postId);
+  }
+});
+
+async function openAllImagesModal(postId) {
+  try {
+    const res = await fetch(`http://localhost:8080/api/post/${postId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) throw new Error("Không thể lấy chi tiết bài viết");
+
+    const data = await res.json();
+    console.log("📥 JSON nhận được:", data); // 👉 log ở đây
+
+    // Gán thông tin user
+    const avatarEl = document.getElementById("allImagesAvatar");
+    const nameEl = document.getElementById("allImagesName");
+    const timeEl = document.getElementById("allImagesTime");
+    const contentEl = document.getElementById("allImagesContent");
+
+    avatarEl.src =
+      data.data.profilePicture?.trim() && data.data.profilePicture !== "null"
+        ? data.data.profilePicture
+        : "../images/user-default.webp";
+    nameEl.textContent = data.data.fullName;
+    timeEl.textContent = formatTimeAgo(data.data.uploadDate);
+    contentEl.textContent = data.data.content || "";
+
+    // Gán ảnh
+    const grid = document.getElementById("allImagesGrid");
+    grid.innerHTML = ""; // reset
+
+    if (data.data.photosUrl && data.data.photosUrl.length > 0) {
+      grid.innerHTML = renderPhotosHTML(data.data.photosUrl);
+    }
+
+    // Gán phần video (nếu có)
+    const videoGrid = document.getElementById("allVideosGrid");
+    videoGrid.innerHTML = ""; // reset
+
+    if (data.data.videosUrl && data.data.videosUrl.length > 0) {
+      videoGrid.innerHTML = renderVideosHTML(data.data.videosUrl);
+    }
+
+    // Ẩn/hiện khung nếu không có ảnh & không có video
+    const hasMedia =
+      (data.data.photosUrl && data.data.photosUrl.length > 0) ||
+      (data.data.videosUrl && data.data.videosUrl.length > 0);
+
+    const mediaWrapper = document.getElementById("mediaWrapper");
+    if (!hasMedia) {
+      mediaWrapper.style.display = "none";
+    } else {
+      mediaWrapper.style.display = "block";
+    }
+
+    // Reset phần bình luận
+    resetModalState(); // hàm này bạn đã có để reset comment hoặc reply state
+
+    // Mở modal ảnh
+    const modal = new bootstrap.Modal(
+      document.getElementById("allImagesModal")
+    );
+    modal.show();
+
+    // Gọi socket và reaction
+    connectComment(postId); // kết nối socket bình luận riêng post này
+    fetchReactionState(postId); // gọi lại trạng thái cảm xúc nếu có
+  } catch (err) {
+    console.error("❌ Lỗi khi mở modal tất cả ảnh:", err);
+    alert("Không thể mở chi tiết bài viết");
+  }
+}
+
+function renderPhotosHTML(photos) {
+  if (photos.length === 1) {
+    return `
+      <div class="post-images-grid single-image mb-2">
+      <img src="${photos[0]}" style="width: 666px; height: 100%; object-fit: cover;" />
+      </div>
+    `;
+  }
+
+  if (photos.length === 2) {
+    return `
+    <div class="post-images-grid mb-2" style="max-width: 700px; margin: auto; display: flex; flex-direction: row; gap: 4px; height: 500px;">
+      <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+        <img src="${photos[0]}" style="width: 100%; height: 100%; object-fit: cover;" />
+      </div>
+      <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+        <img src="${photos[1]}" style="width: 100%; height: 100%; object-fit: cover;" />
+      </div>
+    </div>
+  `;
+  }
+
+  if (photos.length === 3) {
+    return `
+    <div class="post-images-grid mb-2" style="display: flex; flex-direction: column; gap: 4px; max-width: 700px; margin: auto;">
+      
+      <!-- Ảnh đầu tiên -->
+      <div style="width: 100%; height: 400px; overflow: hidden; border-radius: 8px;">
+        <img src="${photos[0]}" style="width: 100%; height: 100%; object-fit: cover;" />
+      </div>
+      
+      <!-- 2 ảnh dưới -->
+      <div style="display: flex; gap: 4px; height: 300px;">
+        <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+          <img src="${photos[1]}" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+        <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+          <img src="${photos[2]}" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+      </div>
+
+    </div>
+  `;
+  }
+
+  const limitedPhotos = photos.slice(0, 4);
+  return `
+  <div class="post-images-grid mb-2" style="max-width: 700px; margin: auto; display: flex; flex-direction: column; gap: 4px;">
+    <div style="display: flex; gap: 4px; height: 240px;">
+      <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+        <img src="${
+          limitedPhotos[0]
+        }" style="width: 100%; height: 100%; object-fit: cover;" />
+      </div>
+      <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+        <img src="${
+          limitedPhotos[1]
+        }" style="width: 100%; height: 100%; object-fit: cover;" />
+      </div>
+    </div>
+    <div style="display: flex; gap: 4px; height: 240px;">
+      <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+        <img src="${
+          limitedPhotos[2]
+        }" style="width: 100%; height: 100%; object-fit: cover;" />
+      </div>
+      <div style="flex: 1; overflow: hidden; border-radius: 8px; position: relative;">
+        <img src="${
+          limitedPhotos[3]
+        }" style="width: 100%; height: 100%; object-fit: cover;" />
+        ${
+          photos.length > 4
+            ? `<div style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.4);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 32px;
+                font-weight: bold;
+                border-radius: 8px;
+              ">+${photos.length - 4}</div>`
+            : ""
+        }
+      </div>
+    </div>
+  </div>
+`;
+}
+
+function renderVideosHTML(videos) {
+  return videos
+    .map(
+      (url) => `
+    <video controls style="width: 100%; max-height: 450px; border-radius: 8px;" class="mb-2">
+      <source src="${url}" type="video/mp4" />
+      Trình duyệt không hỗ trợ video.
+    </video>
+  `
+    )
+    .join("");
 }

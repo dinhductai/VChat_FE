@@ -1,6 +1,3 @@
-const token = localStorage.getItem("accessToken");
-console.log("Token:", token);
-
 fetch("http://localhost:8080/api/user/friends?page=0&size=10", {
   method: "GET",
   headers: {
@@ -42,8 +39,10 @@ fetch("http://localhost:8080/api/user/friends?page=0&size=10", {
         // Hiển thị khung chat
         const chatBox = document.getElementById("chatBox");
         chatBox.style.display = "block";
-        chatBox.dataset.friendId = friend.id;
-
+        chatBox.dataset.friendId = friend.userId;
+        connectWebSocket(() => {
+          startChat(); // Gọi sau khi kết nối thành công
+        });
         // Reset tin nhắn cũ (hoặc có thể load từ API)
       });
 
@@ -60,20 +59,9 @@ document.getElementById("closeChatBtn").addEventListener("click", () => {
 });
 
 // Gửi tin nhắn khi nhấn Enter
-document.getElementById("chatInput").addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    const message = e.target.value.trim();
-    if (message === "") return;
-
-    const friendId = document.getElementById("chatBox").dataset.friendId;
-
-    const msgDiv = document.createElement("div");
-    msgDiv.className = "text-end mb-1";
-    msgDiv.innerHTML = `<span class="bg-primary text-white px-2 py-1 rounded">${message}</span>`;
-    document.getElementById("chatMessages").appendChild(msgDiv);
-
-    e.target.value = "";
-
-    // TODO: Gửi message qua API POST /api/messages/send với friendId và message
+document.getElementById("chatInput").addEventListener("keydown", function (e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
   }
 });

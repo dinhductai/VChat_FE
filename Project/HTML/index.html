@@ -966,7 +966,7 @@
 
     <!-- AI Assistant Button -->
     <!-- AI Assistant Button with Gradient Border -->
-    <div
+    <!-- <div
       style="
         position: fixed;
         bottom: 20px;
@@ -1010,8 +1010,25 @@
           "
         />
       </div>
-    </div>
+    </div> -->
+    <div
+      style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
 
+        z-index: 9999;
+        cursor: pointer;
+      "
+      onclick="window.location.href='chatbot.html'"
+      id="ai"
+    >
+      <img
+        src="../images/Animation/CHOP Robot.gif"
+        style="width: 60px; height: 60x"
+        alt=""
+      />
+    </div>
     <!-- Khung chat nhỏ hiện khi chọn bạn bè -->
     <div
       id="chatBox"
@@ -1098,8 +1115,130 @@
           <div
             class="send-hover align-self-end"
             style="width: 40px; height: 40px; border-radius: 50%; padding: 10px"
+            onclick="sendMessage()"
           >
             <i class="bi bi-send-fill fs-5" style="color: #0984e3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal hiển thị tất cả ảnh và bình luận -->
+    <div
+      class="modal fade"
+      id="allImagesModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" style="max-width: 700px">
+        <div
+          class="modal-content"
+          style="height: 90vh; display: flex; flex-direction: column"
+        >
+          <!-- Modal Body Cuộn được -->
+          <div
+            class="modal-body"
+            style="overflow-y: auto; flex: 1; padding-bottom: 16px"
+          >
+            <!-- Thông tin người đăng -->
+            <div class="d-flex align-items-center mb-3">
+              <img
+                id="allImagesAvatar"
+                src="../images/user-default.webp"
+                alt="Avatar"
+                class="rounded-circle me-2"
+                style="width: 40px; height: 40px; object-fit: cover"
+              />
+              <div>
+                <strong id="allImagesName">Tên người dùng</strong><br />
+                <small id="allImagesTime">...</small>
+              </div>
+            </div>
+
+            <!-- Nội dung bài viết -->
+            <p id="allImagesContent" class="mb-3"></p>
+
+            <!-- Ảnh & Video -->
+            <div id="mediaWrapper" class="mb-3">
+              <div id="allImagesGrid"></div>
+              <div id="allVideosGrid" class="mt-2"></div>
+            </div>
+
+            <hr />
+
+            <!-- Danh sách bình luận -->
+            <div id="commentList" class="mb-3">
+              <div
+                id="noCommentPlaceholder"
+                class="text-center text-muted my-4"
+                style="display: block"
+              >
+                <i class="bi bi-chat-left-text" style="font-size: 2rem"></i>
+                <p class="mt-2 mb-0">No comments yet</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ô nhập bình luận (Cố định) -->
+          <div
+            class="d-flex bg-white border-top p-3 dark-mode-bg dark-mode-border"
+          >
+            <img
+              src="../images/IMG_2007.JPG"
+              alt=""
+              style="
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                margin-right: 5px;
+              "
+              class="userAvatar"
+            />
+            <div
+              class="container d-block gap-2 align-items-end rounded-3 p-2 dark-mode-input-container"
+              style="background-color: #f0f2f5"
+            >
+              <textarea
+                id="commentInput"
+                class="form-control dark-mode-textarea"
+                placeholder="Write a comment..."
+                rows="1"
+                style="
+                  max-height: 292px;
+                  overflow-y: auto;
+                  resize: none;
+                  padding: 10px 0;
+                  border: none;
+                  background-color: transparent;
+                "
+                oninput="autoGrow(this)"
+              ></textarea>
+              <div
+                class="d-flex justify-content-between align-items-center mb-1"
+              >
+                <!-- Emoji Icon -->
+                <div
+                  class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
+                  style="width: 30px; height: 30px; cursor: pointer"
+                >
+                  <i
+                    class="bi bi-emoji-smile text-dark dark-mode-icon"
+                    style="font-size: 15px"
+                  ></i>
+                </div>
+
+                <!-- Send Icon -->
+                <div
+                  class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
+                  style="width: 30px; height: 30px; cursor: pointer"
+                  id="sendCommentBtn"
+                >
+                  <i
+                    class="bi bi-send-fill text-dark dark-mode-icon"
+                    style="font-size: 15px"
+                  ></i>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1112,6 +1251,8 @@
       textarea.style.height = textarea.scrollHeight + "px";
     }
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
   <script src="../Js/mess.js"></script>
   <script src="../Js/token.js"></script>
   <script src="../Js/api-get-story.js"></script>
@@ -1119,14 +1260,11 @@
   <script src="../Js/api-get-friends.js"></script>
   <script src="../Js/get_friends-chat.js"></script>
   <script src="../Js/api-reaction.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
   <script src="../Js/api-chat-friends.js"></script>
+  <script src="../Js/comment.js"></script>
   <!-- ✅ Tải STOMP sau -->
-  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
   <script src="../Js/socket.js"></script>
-  <script>
-   
-  </script>
+  <script></script>
   <script src="https://unpkg.com/lottie-web/build/player/lottie.min.js"></script>
   <script src="../Js/api-share-save-post.js"></script>
 </html>
