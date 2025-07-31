@@ -50,20 +50,51 @@ document.addEventListener('DOMContentLoaded', async () => {
       const userDetail = document.querySelector('.user-details');
       if (userDetail) {
         userDetail.innerHTML = `
-          <p><strong><i class="fas fa-user"></i> Họ tên:</strong> ${d.fullName || ''}</p>
-          <p><strong><i class="fas fa-phone"></i> Số điện thoại:</strong> ${d.phoneNumber || ''}</p>
-          <p><strong><i class="fas fa-birthday-cake"></i> Ngày sinh:</strong> ${d.birthDate ? new Date(d.birthDate).toLocaleDateString('vi-VN') : ''}</p>
-          <p><strong><i class="fas fa-mars"></i> Giới tính:</strong> ${d.gender || ''}</p>
-          <p><strong><i class="fas fa-search"></i> Đang tìm kiếm:</strong> ${d.lookingFor || ''}</p>
-          <p><strong><i class="fas fa-ruler-vertical"></i> Chiều cao:</strong> ${d.height || ''}</p>
-          <p><strong><i class="fas fa-weight"></i> Cân nặng:</strong> ${d.weight || ''}</p>
-          <p><strong><i class="fas fa-map-marker-alt"></i> Địa chỉ:</strong> ${d.location || ''}</p>
-          <p><strong><i class="fas fa-briefcase"></i> Vị trí:</strong> ${d.jobTitle || ''}</p>
-          <p><strong><i class="fas fa-building"></i> Công ty:</strong> ${d.company || ''}</p>
-          <p><strong><i class="fas fa-graduation-cap"></i> Học vấn:</strong> ${d.education || ''}</p>
-          <p><strong><i class="fas fa-info-circle"></i> Mô tả:</strong> ${d.description || ''}</p>
-          <p><strong><i class="fas fa-star"></i> Sở thích:</strong> ${Array.isArray(d.interestName) && d.interestName.length > 0 ? d.interestName.join(', ') : ''}</p>
+          <div class="user-info-basic">
+            <p><strong><i class="fas fa-user"></i> Họ tên:</strong> ${d.fullName || ''}</p>
+            <p><strong><i class="fas fa-phone"></i> Số điện thoại:</strong> ${d.phoneNumber || ''}</p>
+            <p><strong><i class="fas fa-birthday-cake"></i> Ngày sinh:</strong> ${d.birthDate ? new Date(d.birthDate).toLocaleDateString('vi-VN') : ''}</p>
+            <p><strong><i class="fas fa-mars"></i> Giới tính:</strong> ${d.gender || ''}</p>
+          </div>
+          <div class="user-info-more" style="display:none;">
+            <p><strong><i class="fas fa-search"></i> Đang tìm kiếm:</strong> ${d.lookingFor || ''}</p>
+            <p><strong><i class="fas fa-ruler-vertical"></i> Chiều cao:</strong> ${d.height || ''}</p>
+            <p><strong><i class="fas fa-weight"></i> Cân nặng:</strong> ${d.weight || ''}</p>
+            <p><strong><i class="fas fa-map-marker-alt"></i> Địa chỉ:</strong> ${d.location || ''}</p>
+            <p><strong><i class="fas fa-briefcase"></i> Vị trí:</strong> ${d.jobTitle || ''}</p>
+            <p><strong><i class="fas fa-building"></i> Công ty:</strong> ${d.company || ''}</p>
+            <p><strong><i class="fas fa-graduation-cap"></i> Học vấn:</strong> ${d.education || ''}</p>
+            <p><strong><i class="fas fa-info-circle"></i> Mô tả:</strong> ${d.description || ''}</p>
+            <p><strong><i class="fas fa-star"></i> Sở thích:</strong> ${Array.isArray(d.interestName) && d.interestName.length > 0 ? d.interestName.join(', ') : ''}</p>
+          </div>
         `;
+
+        // Thêm đoạn xử lý nút xem thêm ở đây
+        const btnShowMore = document.getElementById('btn-show-more-details');
+        const more = userDetail.querySelector('.user-info-more');
+        const textEl = btnShowMore.querySelector('.banner-text');
+        const iconEl = btnShowMore.querySelector('i');
+
+        btnShowMore.style.display = 'flex'; // luôn hiển thị dải băng
+
+        let expanded = false;
+
+        btnShowMore.onclick = function(e) {
+          e.stopPropagation();
+          if (!expanded) {
+            if (more) more.style.display = 'block';
+            textEl.textContent = 'Ẩn bớt thông tin';
+            iconEl.classList.remove('fa-chevron-down');
+            iconEl.classList.add('fa-chevron-up');
+            expanded = true;
+          } else {
+            if (more) more.style.display = 'none';
+            textEl.textContent = 'Xem thêm thông tin';
+            iconEl.classList.remove('fa-chevron-up');
+            iconEl.classList.add('fa-chevron-down');
+            expanded = false;
+          }
+        };
       }
     }
   } catch (err) {
@@ -374,7 +405,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   
 
 
-
   // Xử lý nút "Tạo bài viết"
 document.getElementById('btn-create-post').onclick = function() {
   document.getElementById('form-create-post-modal').reset();
@@ -466,12 +496,8 @@ document.getElementById('form-create-post-modal').onsubmit = async function (e) 
 };
 
 
-
-
-
-
   // Khi ấn nút "Chỉnh sửa thông tin cá nhân"
-document.querySelector('.intro-box button').onclick = async function () {
+document.getElementById('btn-edit-profile').onclick = async function () {
   const modal = document.getElementById('edit-profile-modal');
   const form = document.getElementById('form-edit-profile');
   const token = localStorage.getItem('token');
@@ -604,7 +630,6 @@ async function loadVideos(page = 0, size = VIDEO_PAGE_SIZE) {
         'Authorization': 'Bearer ' + token
       }
     });
-
     const json = await res.json();
     if (json.success && json.data && Array.isArray(json.data.content)) {
       const videos = json.data.content;
@@ -999,4 +1024,15 @@ window.toggleSelectVideo = function(vidEl) {
   }
 };
 
-
+function openModal(imageUrl) {
+  const modal = document.getElementById('image-modal');
+  const zoomedImage = document.getElementById('zoomed-image');
+  zoomedImage.src = imageUrl;
+  modal.style.display = 'flex';
+  modal.querySelector('.modal-content').classList.add('animate__animated', 'animate__fadeInDown');
+}
+function closeModal() {
+  const modal = document.getElementById('image-modal');
+  modal.style.display = 'none';
+  modal.querySelector('.modal-content').classList.remove('animate__animated', 'animate__fadeInDown');
+}

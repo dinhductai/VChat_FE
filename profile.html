@@ -9,6 +9,7 @@
   <link href="profile.css" rel="stylesheet">
   <!-- Font Awesome for beautiful icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
   
   #section-story {
@@ -244,9 +245,13 @@
   <div class="main">
     <div class="left-panel" id="left-panel">
       <div class="intro-box">
-        <div class="user-details">
-          <!-- Thông tin user sẽ được JS cập nhật -->
-        </div>
+        <div class="user-details" id="user-details"></div>
+        <!-- nút xem thêm profile -->
+        <div id="btn-show-more-details" class="show-more-banner" style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+  <span class="banner-text">Xem thêm thông tin</span>
+  <i class="fas fa-chevron-down"></i>
+</div>
+
         <div style="display:flex;gap:10px;margin-top:10px;">
           <button id="btn-edit-profile" class="edit-profile-btn"><i class="fas fa-edit"></i> Chỉnh sửa thông tin cá nhân</button>
           <button id="btn-delete-account" class="delete-account-btn"><i class="fas fa-user-slash"></i> Xóa tài khoản</button>
@@ -255,7 +260,7 @@
       <!-- <div class="friend-list"> ... </div> -->
     </div>
     <div class="right-panel">
-      <div class="intro-box" id="section-info">
+      <div class="intro-box animate__animated" id="section-info">
         <div class="post-box" style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
           <button id="btn-create-post"><i class="fas fa-pen"></i> Tạo bài viết</button>
           <button id="btn-add-profile-photo"><i class="fas fa-user-circle"></i> Thêm ảnh profile</button>
@@ -274,7 +279,7 @@
         </div>
         
       </div>
-      <div id="section-photo" style="display:none;">
+      <div id="section-photo" class="animate__animated" style="display:none;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
           <button id="btn-delete-photo" style="background:#ff4d4f;color:#fff;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Xóa ảnh</button>
           <button id="btn-confirm-delete-photo" style="display:none;background:#1877F2;color:#fff;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Xác nhận xóa</button>
@@ -287,7 +292,7 @@
           <!-- Nút phân trang sẽ render ở đây -->
         </div>
       </div>
-      <div id="section-video" style="display: none;">
+      <div id="section-video" class="animate__animated" style="display: none;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
           <button id="btn-delete-video" style="background:#ff4d4f;color:#fff;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Xóa video</button>
           <button id="btn-confirm-delete-video" style="display:none;background:#1877F2;color:#fff;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Xác nhận xóa</button>
@@ -296,12 +301,12 @@
         <div id="video-row" class="video-row" style="display:flex;flex-wrap:wrap;gap:18px;"></div>
         <div id="video-pagination" style="text-align:center;margin-top:10px;"></div>
       </div>
-      <div class="intro-box" id="section-story" style="display:none;align-items:center;justify-content:center;padding:32px 0 24px 0;">
+      <div class="intro-box animate__animated" id="section-story" style="display:none;">
         <h3 style="text-align:center;margin-bottom:18px;color:#fff;font-size:22px;letter-spacing:1px;">Story của bạn</h3>
         <div class="own-story-row" id="own-story-row" style="display:flex;flex-wrap:wrap;gap:18px;justify-content:center;"></div>
         <div id="own-story-pagination" style="text-align:center;margin-top:10px;"></div>
       </div>
-      <div class="intro-box" id="section-friends" style="display:none;">
+      <div class="intro-box animate__animated" id="section-friends" style="display:none;">
         <h3><i class="fas fa-user-friends"></i> Danh sách bạn bè</h3>
         <div class="friend-list" id="friend-list"></div>
       </div>
@@ -568,8 +573,9 @@
   sectionIds.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
-      el.style.display = 'none';            // Ẩn bằng JS
-      el.classList.remove('show-story');    // Bỏ class nếu có
+      el.style.display = 'none';
+      el.classList.remove('animate__fadeIn');
+      el.classList.remove('show-story');
     }
   });
 
@@ -580,13 +586,13 @@
     if (el) el.classList.remove('active');
   });
 
-  // Hiện section được chọn
+  // Hiện section được chọn với hiệu ứng animate.css
   const showEl = document.getElementById('section-' + section);
   if (showEl) {
+    showEl.style.display = 'block';
+    showEl.classList.add('animate__fadeIn');
     if (section === 'story') {
-      showEl.classList.add('show-story');   // Dùng class để override !important
-    } else {
-      showEl.style.display = 'block';       // Các section khác dùng display thường
+      showEl.classList.add('show-story');
     }
   }
 

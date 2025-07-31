@@ -1,9 +1,7 @@
 body {
-  margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  color: #e4e6eb;
   background: linear-gradient(135deg, #232526 0%, #414345 100%);
-  color: white;
-  min-height: 100vh;
 }
 header {
   background: linear-gradient(90deg, #242526 60%, #1877F2 100%);
@@ -755,5 +753,177 @@ nav a:hover, nav a.active {
   object-fit: cover;
   z-index: 2;
 }
-/* aaa */
 
+/* Font chữ cho toàn bộ trang */
+body {
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  color: #e4e6eb;
+  background: linear-gradient(135deg, #232526 0%, #414345 100%);
+}
+
+/* Tiêu đề lớn */
+.profile-info h1,
+.intro-box h3,
+nav a.active {
+  color: #fff;
+  font-family: 'Roboto Slab', 'Segoe UI', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Tiêu đề nhỏ, label */
+label, .profile-info p, .user-details strong, .post-author, .story-author, .friend-item .post-author {
+  color: #f5f6fa;
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-weight: 500;
+}
+
+/* Chữ mô tả, phụ, số điện thoại, ngày sinh, ... */
+.profile-info p,
+.user-details,
+.post-date,
+.friend-item .post-date,
+.friend-item .post-content,
+.story-date,
+nav a {
+  color: #b0b3b8;
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-size: 15px;
+}
+
+/* Chữ trong các nút */
+button,
+.intro-box button,
+.post-box button {
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* Chữ trong modal */
+.modal-content label,
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  color: #232526;
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+}
+
+/* Chữ placeholder */
+input::placeholder,
+textarea::placeholder {
+  color: #b0b3b8;
+  font-style: italic;
+}
+
+/* Chữ nổi bật */
+.edit-profile-btn,
+.add-friend-btn,
+.delete-account-btn {
+  color: #fff !important;
+  font-family: 'Roboto Slab', 'Segoe UI', Arial, sans-serif;
+  font-weight: 700;
+}
+
+/* Chữ trong các modal tiêu đề */
+.modal-content h3 {
+  color: #1877F2;
+  font-family: 'Roboto Slab', 'Segoe UI', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Chữ trong các trạng thái, loading, thông báo */
+.loading-upload,
+.list-post div,
+.friend-list div,
+#photo-row p,
+#video-row p {
+  color: #b0b3b8;
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-size: 15px;
+}
+
+/* Chữ trong các tab khi hover hoặc active */
+nav a:hover, nav a.active {
+  color: #1877F2;
+  border-bottom: 2px solid #1877F2;
+  background: none;
+}
+
+/* Chữ trong các input khi focus */
+input:focus, textarea:focus, select:focus {
+  color: #232526;
+  background: #fff;
+  outline: 2px solid #1877F2;
+}
+
+/* Chữ trong các nút xác nhận/xóa */
+#btn-confirm-delete-photo,
+#btn-confirm-delete-video,
+#btn-delete-photo,
+#btn-delete-video {
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* Chữ trong các nút hủy */
+#btn-cancel-delete-photo,
+#btn-cancel-delete-video,
+#btn-cancel-upload-modal,
+#btn-cancel-upload-video-modal {
+  color: #232526;
+  font-weight: 600;
+}
+
+/* Chữ trong các nút phân trang */
+.page-btn {
+  color: #232526;
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-weight: 600;
+}
+.page-btn.active {
+  color: #fff;
+}
+
+/* Chữ trong các bài viết */
+.post-content {
+  color: #e4e6eb;
+  font-size: 16px;
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* css cho nút xem thêm profile */
+.show-more-banner {
+  display: flex;
+  align-items: center;
+  background: #e4e6eb;
+  color: #1877F2;
+  border: none;
+  padding: 7px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.show-more-banner:hover {
+  background: #d0d2d6;
+}
+
+@keyframes slideUpFadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.slide-up {
+  animation: slideUpFadeOut 0.4s ease forwards;
+}
