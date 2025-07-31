@@ -17,8 +17,7 @@ fetch("http://localhost:8080/api/user-name-profile", {
     document.getElementById("userAvatar").src =
       data.data.profileUrl || "/images/user-default.webp";
     console.log(data.data.profileUrl);
-
-    document.getElementById("userName").textContent =
+    document.getElementsByClassName("userName").textContent =
       data.data.fullName || "Người dùng";
     console.log(data.data.fullName);
 

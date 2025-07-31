@@ -26,11 +26,6 @@
   background-color: #ffffff;
 }
 
-.dark-mode .left-sidebar,
-.dark-mode .right-sidebar {
-  background-color: #242526 !important;
-}
-
 .dark-mode .full-height-sidebar::-webkit-scrollbar-thumb,
 .dark-mode .right-sidebar::-webkit-scrollbar-thumb {
   background-color: #555;
@@ -248,4 +243,23 @@ body.dark-mode .search-input::placeholder {
 
 .icon-hover-dark:hover i {
   color: #1877f2 !important; /* Màu xanh Facebook khi hover icon trong light mode */
+}
+
+/* Light mode hover */
+.friend-hover-item {
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.friend-hover-item:hover {
+  background-color: #bdc3c7;
+}
+
+/* Dark mode hỗ trợ */
+.dark-mode .friend-hover-item:hover {
+  background-color: #3a3b3c;
+}
+
+.dark-mode .friend-hover-item h6 {
+  color: #fff;
 }

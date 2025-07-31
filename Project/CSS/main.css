@@ -37,9 +37,8 @@
 /* Sidebar trái và phải */
 .left-sidebar,
 .right-sidebar {
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
   border-radius: 8px;
-  padding: 1rem;
 }
 
 /* Sidebar sticky */
@@ -193,6 +192,7 @@
   z-index: 1000;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   pointer-events: none;
+  padding: 0 20px;
 }
 
 .like-wrapper:hover .reaction-popup {
@@ -202,7 +202,7 @@
 }
 
 .reaction-popup .icon {
-  font-size: 32px;
+  font-size: 30px;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
@@ -232,7 +232,7 @@
 }
 
 .user-hover:hover {
-  background-color: #f0f2f5;
+  background-color: #bdc3c7;
 }
 
 /* Ẩn scrollbar mặc định */
@@ -387,4 +387,55 @@
 
 .spacer {
   flex-grow: 1;
+}
+
+.reaction-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+.custom-shadow {
+  box-shadow: 0px 12px 60px rgba(0, 0, 0, 0.45);
+  transition: box-shadow 0.3s ease;
+}
+
+.icon-hover {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.icon-hover:hover {
+  background-color: rgba(0, 184, 148, 0.2);
+  transform: scale(1.1);
+}
+
+/* Hiệu ứng hover cho textarea */
+#chatInput:hover {
+  background-color: #dfe6e9;
+  transition: background-color 0.3s ease;
+}
+
+/* Hiệu ứng hover cho nút gửi */
+.send-hover {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.send-hover:hover {
+  background-color: rgba(9, 132, 227, 0.2);
+  transform: scale(1.1);
+  border-radius: 50%;
+}
+#chatInput:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
+}
+
+.chat-footer {
+  display: flex;
+  align-items: flex-start; /* ❗ quan trọng */
+  justify-content: space-around;
+  gap: 10px;
 }

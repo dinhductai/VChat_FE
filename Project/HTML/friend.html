@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facebook Trang chủ - Dark Mode</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="../CSS/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../CSS/darkmode.css" />
+    <link rel="stylesheet" href="../CSS/mess.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <style>
+      body {
+        background-color: #f2f4f7;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .post {
+        background-color: white;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        transition: background-color 0.3s;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <nav
+      class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top"
+    >
+      <div
+        class="container-fluid d-flex flex-nowrap align-items-center justify-content-between"
+      >
+        <!-- LOGO + SEARCH -->
+        <div class="d-flex align-items-center flex-grow-1 flex-md-grow-0">
+          <!-- Logo -->
+          <a href="index.html" class="me-2">
+            <img
+              class="rounded-circle"
+              style="width: 40px; height: 40px"
+              src="../images/logo.png"
+              alt="logo"
+            />
+          </a>
+
+          <!-- Tìm kiếm (ẩn trên mobile) -->
+          <form
+            class="d-md-none d-lg-flex ms-2"
+            style="position: relative; width: 250px"
+          >
+            <i
+              class="bi bi-search text-secondary position-absolute top-50 start-0 translate-middle-y ms-3"
+            ></i>
+            <input
+              type="search"
+              class="form-control form-control-sm rounded-5 border-0 ps-5 shadow-sm"
+              placeholder="Search"
+              style="background-color: #f0f2f5; height: 35px; width: 240px"
+            />
+          </form>
+          <button
+            class="btn btn-light d-block d-lg-none ms-2"
+            id="mobileSearchBtn"
+            type="button"
+            onclick="toggleMobileSearch()"
+          >
+            <i class="bi bi-search fs-5 text-dark"></i>
+          </button>
+        </div>
+
+        <!-- MENU ICONS GIỮA (ẩn trên mobile, hoặc bạn có thể điều chỉnh thành collapse) -->
+        <div class="d-none d-lg-flex mx-auto" id="menuTabs">
+          <div class="d-flex justify-content-center text-center">
+            <div class="menu-item px-5" data-link="index.html">
+              <a href="#"><i class="bi bi-house fs-4 active"></i></a>
+              <div class="indicator"></div>
+            </div>
+            <div class="menu-item px-5 active" data-link="#">
+              <a><i class="bi bi-person fs-4"></i></a>
+              <div class="indicator"></div>
+            </div>
+            <div class="menu-item px-5" data-link="/">
+              <a href="#"><i class="bi bi-tv fs-4"></i></a>
+              <div class="indicator"></div>
+            </div>
+            <div class="menu-item px-5" data-link="/">
+              <a href="#"><i class="bi bi-bell fs-4"></i></a>
+              <div class="indicator"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ICONS + AVATAR -->
+        <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
+          <!-- App grid -->
+          <div
+            class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
+            style="width: 40px; height: 40px; cursor: pointer"
+          >
+            <i class="bi bi-grid-3x3-gap-fill fs-5 text-dark"></i>
+          </div>
+
+          <!-- Messenger -->
+          <div
+            id="messengerBtn"
+            class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
+            style="width: 40px; height: 40px; cursor: pointer"
+          >
+            <i class="bi bi-messenger fs-5 text-dark"></i>
+          </div>
+
+          <!-- Sidebar Chat -->
+          <div
+            id="chatSidebar"
+            class="chat-sidebar position-fixed top-0 end-0 bg-white dark-mode-bg p-3 shadow"
+            style="
+              width: 380px;
+              height: 100vh;
+              transform: translateX(100%);
+              transition: transform 0.3s ease;
+              z-index: 1050;
+            "
+          >
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="mb-0 fw-bold">Chats</h4>
+              <div class="d-flex align-items-center">
+                <div
+                  class="rounded-circle icon-wrapper d-flex justify-content-center align-items-center me-2"
+                  style="width: 30px; height: 30px; cursor: pointer"
+                >
+                  <i class="bi bi-arrows-fullscreen"></i>
+                </div>
+                <button
+                  class="btn-close btn-close-custom rounded-circle"
+                  onclick="toggleChatSidebar()"
+                ></button>
+              </div>
+            </div>
+
+            <!-- Tìm kiếm -->
+            <form
+              class="d-none d-md-flex mb-3"
+              style="position: relative; width: 100%"
+            >
+              <i
+                class="bi bi-search text-secondary position-absolute top-50 start-0 translate-middle-y ms-3"
+              ></i>
+              <input
+                type="search"
+                class="form-control form-control-sm rounded-5 border-0 ps-5 shadow-sm"
+                placeholder="Search"
+                style="background-color: #f0f2f5; height: 35px; width: 100%"
+              />
+            </form>
+
+            <!-- Một dòng chat -->
+            <div class="d-flex align-items-center gap-2 mb-3 chat-hover">
+              <img
+                src="../images/OIP.jpg"
+                class="rounded-circle"
+                style="width: 48px; height: 48px"
+              />
+              <div>
+                <div class="fw-semibold">Hoàng Đức</div>
+                <div class="text-muted" style="font-size: 13px">
+                  sent a photo · 4h
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bell -->
+          <div
+            class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
+            style="width: 40px; height: 40px; cursor: pointer"
+          >
+            <i class="bi bi-bell fs-5 text-dark"></i>
+          </div>
+
+          <!-- Avatar -->
+          <div
+            class="rounded-circle d-flex align-items-center justify-content-center position-relative"
+            style="width: 40px; height: 40px; overflow: hidden; cursor: pointer"
+          >
+            <img
+              src="../images/OIP.jpg"
+              class="rounded-circle userAvatar"
+              alt="avatar"
+              style="width: 40px; height: 40px"
+            />
+          </div>
+
+          <!-- Dark mode -->
+          <button class="btn btn-sm btn-outline-secondary" id="toggleDarkBtn">
+            🌙 Dark Mode
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="container-fluid mt-3">
+      <div class="row justify-content-center">
+        <!-- Sidebar trái -->
+        <div class="col-lg-3">
+          <div class="left-sidebar shadow-sm p-3 rounded full-height-sidebar">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h3 class="mb-0 fw-bold">Friends</h3>
+              <div
+                class="rounded-circle"
+                style="
+                  width: 35px;
+                  height: 35px;
+                  background-color: #bdc3c7;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  cursor: pointer;
+                "
+              >
+                <i
+                  class="bi bi-gear-fill"
+                  style="font-size: 18px; color: #596275"
+                ></i>
+              </div>
+            </div>
+
+            <!-- Các mục sidebar khác nếu có -->
+          </div>
+        </div>
+
+        <!-- Nội dung chính: trang friends -->
+        <div class="col-lg-9">
+          <div
+            id="friendContainer"
+            class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3"
+          >
+            <!-- Các phần tử bạn bè sẽ hiển thị ở đây -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap & Dark Mode JS -->
+    <script>
+      const btn = document.getElementById("toggleDarkBtn");
+
+      // Khi bấm nút
+      btn.addEventListener("click", () => {
+        const isDark = document.body.classList.toggle("dark-mode");
+        localStorage.setItem("darkMode", isDark ? "on" : "off");
+        btn.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+      });
+
+      // Khi tải trang
+      window.addEventListener("DOMContentLoaded", () => {
+        if (localStorage.getItem("darkMode") === "on") {
+          document.body.classList.add("dark-mode");
+          btn.textContent = "☀️ Light Mode";
+        } else {
+          btn.textContent = "🌙 Dark Mode";
+        }
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AI Assistant Button -->
+    <!-- AI Assistant Button with Gradient Border -->
+    <div
+      style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60x;
+        padding: 3px; /* viền giả */
+        background: conic-gradient(
+          from 0deg,
+          #ff0080,
+          #7928ca,
+          #2afadf,
+          #ff0080
+        );
+        border-radius: 50%;
+        z-index: 9999;
+        cursor: pointer;
+      "
+      onclick="window.location.href='chatbot.html'"
+      id="ai"
+    >
+      <div
+        style="
+          width: 100%;
+          height: 100%;
+          background-color: white; /* màu nền bên trong */
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <img
+          src="../images/OIP.webp"
+          alt="Trợ lý ảo"
+          style="
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+          "
+        />
+      </div>
+    </div>
+  </body>
+  <script>
+    const menuItems = document.querySelectorAll("#menuTabs .menu-item");
+
+    menuItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        // Xoá active ở tất cả
+        menuItems.forEach((el) => el.classList.remove("active"));
+        // Thêm active vào phần tử vừa click
+        item.classList.add("active");
+
+        // Lấy đường dẫn từ thuộc tính data-link và chuyển trang
+        const link = item.getAttribute("data-link");
+        if (link) {
+          window.location.href = link;
+        }
+      });
+    });
+  </script>
+  <script src="../Js/mess.js"></script>
+  <script src="../Js/api-get-friends.js"></script>
+</html>
