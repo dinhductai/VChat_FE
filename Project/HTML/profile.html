@@ -6,11 +6,20 @@
   <title>Facebook | Trang cá nhân</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600&display=swap" rel="stylesheet">
-  <link href="profile.css" rel="stylesheet">
+  <link href="../CSS/profile.css" rel="stylesheet">
   <!-- Font Awesome for beautiful icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
   
+  #section-story {
+  display: none !important;
+}
+
+#section-story.show-story {
+  display: block !important;
+}
+
    
     #form-edit-profile {
   width: 100%;
@@ -173,6 +182,28 @@
       100% { transform: rotate(360deg);}
     }
   </style>
+  <style>
+    .page-btn {
+      padding: 6px 12px;
+      margin: 0 4px;
+      background-color: #f0f2f5;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
+  
+    .page-btn:hover {
+      background-color: #d8d8d8;
+    }
+  
+    .page-btn.active {
+      background-color: #1877f2;
+      color: #fff;
+    }
+  </style>
+  
 </head>
 <body>
   <div class="fb-topbar">
@@ -182,7 +213,7 @@
   </div>
   <div class="fb-icons">
     <a href="home.html" title="Trang chủ"><i class="fas fa-home"></i></a>
-    <a href="watch.html" title="Watch"><i class="fas fa-tv"></i></a>
+    <a href="reel.html" title="Reel"><i class="fas fa-tv"></i></a>
     <a href="marketplace.html" title="Marketplace"><i class="fas fa-store"></i></a>
     <a href="groups.html" title="Groups"><i class="fas fa-users"></i></a>
     <a href="games.html" title="Games"><i class="fas fa-gamepad"></i></a>
@@ -214,28 +245,41 @@
   <div class="main">
     <div class="left-panel" id="left-panel">
       <div class="intro-box">
-        <div class="user-details">
-          <!-- Thông tin user sẽ được JS cập nhật -->
+        <div class="user-details" id="user-details"></div>
+        <!-- nút xem thêm profile -->
+        <div id="btn-show-more-details" class="show-more-banner" style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+  <span class="banner-text">Xem thêm thông tin</span>
+  <i class="fas fa-chevron-down"></i>
+</div>
+
+        <div style="display:flex;gap:10px;margin-top:10px;">
+          <button id="btn-edit-profile" class="edit-profile-btn"><i class="fas fa-edit"></i> Chỉnh sửa thông tin cá nhân</button>
+          <button id="btn-delete-account" class="delete-account-btn"><i class="fas fa-user-slash"></i> Xóa tài khoản</button>
         </div>
-        <button><i class="fas fa-edit"></i> Chỉnh sửa thông tin cá nhân</button>
-        
       </div>
       <!-- <div class="friend-list"> ... </div> -->
     </div>
     <div class="right-panel">
-      <div class="intro-box" id="section-info">
+      <div class="intro-box animate__animated" id="section-info">
         <div class="post-box" style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
           <button id="btn-create-post"><i class="fas fa-pen"></i> Tạo bài viết</button>
           <button id="btn-add-profile-photo"><i class="fas fa-user-circle"></i> Thêm ảnh profile</button>
           <button><i class="fas fa-image"></i> Thêm ảnh</button>
           <button><i class="fas fa-video"></i> Thêm Video</button>
           <button id="btn-create-story"><i class="fas fa-book-open"></i> Tạo story</button>
+          <button id="btn-create-reel"><i class="fas fa-clapperboard"></i> Tạo Reel</button>
         </div>
         <h3><i class="fas fa-newspaper"></i> BÀI ĐĂNG</h3>
         <!-- ...phần giới thiệu... -->
         <div class="list-post" id="list-post"></div>
+        <div id="load-more-post-wrapper" style="text-align:center; margin:16px 0;">
+          <button id="btn-load-more-post" style="padding:8px 18px; background:#1877F2; color:white; border:none; border-radius:6px; cursor:pointer;">
+            Xem thêm bài viết
+          </button>
+        </div>
+        
       </div>
-      <div id="section-photo" style="display:none;">
+      <div id="section-photo" class="animate__animated" style="display:none;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
           <button id="btn-delete-photo" style="background:#ff4d4f;color:#fff;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Xóa ảnh</button>
           <button id="btn-confirm-delete-photo" style="display:none;background:#1877F2;color:#fff;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Xác nhận xóa</button>
@@ -248,15 +292,21 @@
           <!-- Nút phân trang sẽ render ở đây -->
         </div>
       </div>
-      <div id="section-video" style="display: none;">
-  <div id="video-row" class="video-row" style="display:flex;flex-wrap:wrap;gap:18px;"></div>
-  <div id="video-pagination" style="text-align:center;margin-top:10px;"></div>
-</div>
-      <div class="intro-box" id="section-story" style="display:none;">
-        <div class="story-row" id="story-row" style="display:flex;flex-wrap:wrap;gap:18px;"></div>
-        <div id="story-pagination" style="text-align:center;margin-top:10px;"></div>
+      <div id="section-video" class="animate__animated" style="display: none;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <button id="btn-delete-video" style="background:#ff4d4f;color:#fff;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Xóa video</button>
+          <button id="btn-confirm-delete-video" style="display:none;background:#1877F2;color:#fff;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Xác nhận xóa</button>
+          <button id="btn-cancel-delete-video" style="display:none;background:#e4e6eb;color:#050505;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Hủy</button>
+        </div>
+        <div id="video-row" class="video-row" style="display:flex;flex-wrap:wrap;gap:18px;"></div>
+        <div id="video-pagination" style="text-align:center;margin-top:10px;"></div>
       </div>
-      <div class="intro-box" id="section-friends" style="display:none;">
+      <div class="intro-box animate__animated" id="section-story" style="display:none;">
+        <h3 style="text-align:center;margin-bottom:18px;color:#fff;font-size:22px;letter-spacing:1px;">Story của bạn</h3>
+        <div class="own-story-row" id="own-story-row" style="display:flex;flex-wrap:wrap;gap:18px;justify-content:center;"></div>
+        <div id="own-story-pagination" style="text-align:center;margin-top:10px;"></div>
+      </div>
+      <div class="intro-box animate__animated" id="section-friends" style="display:none;">
         <h3><i class="fas fa-user-friends"></i> Danh sách bạn bè</h3>
         <div class="friend-list" id="friend-list"></div>
       </div>
@@ -441,6 +491,42 @@
     </div>
   </div>
 
+  <div class="modal" id="delete-account-modal" style="display:none;">
+    <div class="modal-content upload-modal" style="min-width:320px;max-width:95vw;text-align:center;">
+      <h3 style="color:#d32f2f;margin-bottom:18px;">Bạn có chắc chắn muốn xóa tài khoản này không?</h3>
+      <div style="display:flex;gap:18px;justify-content:center;">
+        <button id="btn-confirm-delete-account" style="background:#d32f2f;color:#fff;padding:10px 28px;border:none;border-radius:8px;font-weight:bold;">Có</button>
+        <button id="btn-cancel-delete-account" style="background:#e4e6eb;color:#050505;padding:10px 28px;border:none;border-radius:8px;font-weight:bold;">Không</button>
+      </div>
+    </div>
+  
+  </div>
+  <div class="modal" id="create-reel-modal" style="display:none;">
+    <div class="modal-content upload-modal">
+      <span class="close-modal" id="close-create-reel-modal" title="Đóng">×</span>
+      <h3 style="margin-bottom:18px;text-align:center;color:#1877F2;">Tạo Reel mới</h3>
+      <form id="form-create-reel-modal" style="display:flex;flex-direction:column;align-items:center;width:100%;">
+        <input type="file" id="input-reel-file-modal" name="file" accept="video/*" required
+               style="border:1px solid #e4e6eb;border-radius:8px;padding:10px;width:250px;margin-bottom:18px;">
+        <textarea id="reel-content" placeholder="Nhập nội dung..." required
+                  style="width:250px;height:80px;padding:10px;border-radius:8px;margin-bottom:10px;"></textarea>
+        <label style="margin-bottom:10px;">
+          <input type="checkbox" id="reel-public" checked> Công khai
+        </label>
+        <div class="modal-btns" style="display:flex;gap:14px;">
+          <button type="submit" style="background:linear-gradient(90deg,#1877F2 60%,#42a5f5 100%);color:white;padding:9px 28px;border:none;border-radius:8px;font-weight:bold;">Tạo Reel</button>
+          <button type="button" id="btn-cancel-create-reel-modal"
+                  style="background:#e4e6eb;color:#050505;padding:9px 28px;border:none;border-radius:8px;font-weight:bold;">Hủy</button>
+        </div>
+        <div id="create-reel-loading" class="loading-upload" style="display:none;margin-top:12px;">
+          <span class="spinner"></span> Đang tạo reel...
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  
+
   <script>
   function openModal(imageUrl) {
     const modal = document.getElementById('image-modal');
@@ -480,37 +566,63 @@
   };
 
   function showSection(section) {
-    // Ẩn tất cả section
-    const sectionIds = ['section-info', 'section-photo', 'section-video', 'section-story', 'section-friends', 'section-checkin'];
-    sectionIds.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = 'none';
-    });
-    // Bỏ active tab
-    const tabIds = ['tab-info', 'tab-photo', 'tab-video', 'tab-story', 'tab-friends', 'tab-checkin'];
-    tabIds.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.classList.remove('active');
-    });
-    // Hiện section được chọn
-    const showEl = document.getElementById('section-' + section);
-    if (showEl) showEl.style.display = 'block';
-    const tabEl = document.getElementById('tab-' + section);
-    if (tabEl) tabEl.classList.add('active');
-    // Xử lý hiển thị left-panel
-    const leftPanel = document.getElementById('left-panel');
-    const rightPanel = document.querySelector('.right-panel');
-    if (section === 'photo' || section === 'video' || section === 'story' || section === 'friends') {
-      if (leftPanel) leftPanel.style.display = 'none';
-      if (rightPanel) rightPanel.style.width = '100%';
-    } else {
-      if (leftPanel) leftPanel.style.display = 'block';
-      if (rightPanel) rightPanel.style.width = '';
+  const sectionIds = [
+    'section-info', 'section-photo', 'section-video',
+    'section-story', 'section-friends', 'section-checkin'
+  ];
+  sectionIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.display = 'none';
+      el.classList.remove('animate__fadeIn');
+      el.classList.remove('show-story');
+    }
+  });
+
+  // Bỏ active tab
+  const tabIds = ['tab-info', 'tab-photo', 'tab-video', 'tab-story', 'tab-friends', 'tab-checkin'];
+  tabIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+
+  // Hiện section được chọn với hiệu ứng animate.css
+  const showEl = document.getElementById('section-' + section);
+  if (showEl) {
+    showEl.style.display = 'block';
+    showEl.classList.add('animate__fadeIn');
+    if (section === 'story') {
+      showEl.classList.add('show-story');
     }
   }
-</script>
 
-  <script src="profile.js"></script>
+  const tabEl = document.getElementById('tab-' + section);
+  if (tabEl) {
+    tabEl.classList.add('active');
+  }
+
+  // Chỉ load Story nếu là tab story
+  if (section === 'story') {
+    loadOwnStories();
+  }
+
+  // Xử lý ẩn/hiện left panel
+  const leftPanel = document.getElementById('left-panel');
+  const rightPanel = document.querySelector('.right-panel');
+  if (['photo', 'video', 'story', 'friends'].includes(section)) {
+    if (leftPanel) leftPanel.style.display = 'none';
+    if (rightPanel) rightPanel.style.width = '100%';
+  } else {
+    if (leftPanel) leftPanel.style.display = 'block';
+    if (rightPanel) rightPanel.style.width = '';
+  }
+}
+
+</script>
+  <script src="../Js/Thiep/profile.js"></script>
+  <script src="../Js/Thiep/createReel.js"></script>
+  <script src="../Js/Thiep/post-lazyload.js"></script>
+  <script src="../Js/Thiep/story.js"></script>
   <script>
   // Kiểm tra token khi tải trang
   const token = localStorage.getItem('token');

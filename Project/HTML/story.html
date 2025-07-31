@@ -234,13 +234,7 @@
                 <small>23 giờ</small>
               </div>
             </div>
-            <div class="user">
-              <img src="../images/planet9_Wallpaper_5000x2813.jpg" />
-              <div>
-                <strong>Nhữ Quỳnh Trang</strong><br />
-                <small>2 giờ</small>
-              </div>
-            </div>
+
             <!-- Thêm user khác nếu muốn -->
           </div>
         </div>
@@ -337,31 +331,86 @@
           formatTimeAgo(story.listDateUpload[0]);
         document.querySelector(".story-box > img").src =
           story.listStoryPhoto[0];
+      });
+      function formatTimeAgo(dateString) {
+        const now = new Date();
+        const postDate = new Date(dateString);
+        const diffInSeconds = Math.floor((now - postDate) / 1000);
 
-        function formatTimeAgo(dateString) {
-          const now = new Date();
-          const postDate = new Date(dateString);
-          const diffInSeconds = Math.floor((now - postDate) / 1000);
-
-          if (diffInSeconds < 60) {
-            return "Vừa xong";
-          } else if (diffInSeconds < 3600) {
-            const minutes = Math.floor(diffInSeconds / 60);
-            return `${minutes} phút trước`;
-          } else if (diffInSeconds < 86400) {
-            const hours = Math.floor(diffInSeconds / 3600);
-            return `${hours} giờ trước`;
-          } else if (diffInSeconds < 604800) {
-            const days = Math.floor(diffInSeconds / 86400);
-            return `${days} ngày trước`;
-          } else {
-            return postDate.toLocaleDateString("vi-VN", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            });
-          }
+        if (diffInSeconds < 60) {
+          return "Vừa xong";
+        } else if (diffInSeconds < 3600) {
+          const minutes = Math.floor(diffInSeconds / 60);
+          return `${minutes} phút trước`;
+        } else if (diffInSeconds < 86400) {
+          const hours = Math.floor(diffInSeconds / 3600);
+          return `${hours} giờ trước`;
+        } else if (diffInSeconds < 604800) {
+          const days = Math.floor(diffInSeconds / 86400);
+          return `${days} ngày trước`;
+        } else {
+          return postDate.toLocaleDateString("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
         }
+      }
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const storyList = document.querySelector(".story-list");
+        const token = localStorage.getItem("accessToken");
+
+        if (!token) {
+          storyList.innerHTML = "<p>Chưa đăng nhập.</p>";
+          return;
+        }
+
+        fetch("http://localhost:8080/api/story?page=0&size=10", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((res) => res.json())
+          .then((response) => {
+            if (!response.success || !response.data?.content?.length) {
+              storyList.innerHTML = "<p>Không có story nào.</p>";
+              return;
+            }
+
+            const users = response.data.content;
+            console.log(users);
+            users.forEach((user) => {
+              const fullName = user.fullName || "Không rõ tên";
+              const avatar = user.profileUrl || "../images/user-default.webp";
+              const storyPhotos = user.listStoryPhoto || [];
+              const times = user.listDateUpload || [];
+
+              const latestTime = times.length
+                ? formatTimeAgo(times[0])
+                : "Vừa đăng";
+
+              const userDiv = document.createElement("div");
+              userDiv.className =
+                "user bg-secondary-subtle rounded d-flex align-items-center p-2 mb-2";
+
+              userDiv.innerHTML = `
+          <img src="${avatar}" alt="avatar" class="me-2 rounded-circle"
+              style="width: 50px; height: 50px; object-fit: cover;" />
+          <div>
+            <strong>${fullName}</strong><br />
+            <small>${latestTime}</small>
+          </div>
+        `;
+
+              storyList.appendChild(userDiv);
+            });
+          })
+          .catch((err) => {
+            console.error("Lỗi khi tải story:", err);
+            storyList.innerHTML = "<p>Lỗi khi tải dữ liệu.</p>";
+          });
       });
     </script>
   </body>

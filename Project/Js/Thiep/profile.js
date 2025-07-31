@@ -50,20 +50,51 @@ document.addEventListener('DOMContentLoaded', async () => {
       const userDetail = document.querySelector('.user-details');
       if (userDetail) {
         userDetail.innerHTML = `
-          <p><strong><i class="fas fa-user"></i> Họ tên:</strong> ${d.fullName || ''}</p>
-          <p><strong><i class="fas fa-phone"></i> Số điện thoại:</strong> ${d.phoneNumber || ''}</p>
-          <p><strong><i class="fas fa-birthday-cake"></i> Ngày sinh:</strong> ${d.birthDate ? new Date(d.birthDate).toLocaleDateString('vi-VN') : ''}</p>
-          <p><strong><i class="fas fa-mars"></i> Giới tính:</strong> ${d.gender || ''}</p>
-          <p><strong><i class="fas fa-search"></i> Đang tìm kiếm:</strong> ${d.lookingFor || ''}</p>
-          <p><strong><i class="fas fa-ruler-vertical"></i> Chiều cao:</strong> ${d.height || ''}</p>
-          <p><strong><i class="fas fa-weight"></i> Cân nặng:</strong> ${d.weight || ''}</p>
-          <p><strong><i class="fas fa-map-marker-alt"></i> Địa chỉ:</strong> ${d.location || ''}</p>
-          <p><strong><i class="fas fa-briefcase"></i> Vị trí:</strong> ${d.jobTitle || ''}</p>
-          <p><strong><i class="fas fa-building"></i> Công ty:</strong> ${d.company || ''}</p>
-          <p><strong><i class="fas fa-graduation-cap"></i> Học vấn:</strong> ${d.education || ''}</p>
-          <p><strong><i class="fas fa-info-circle"></i> Mô tả:</strong> ${d.description || ''}</p>
-          <p><strong><i class="fas fa-star"></i> Sở thích:</strong> ${Array.isArray(d.interestName) && d.interestName.length > 0 ? d.interestName.join(', ') : ''}</p>
+          <div class="user-info-basic">
+            <p><strong><i class="fas fa-user"></i> Họ tên:</strong> ${d.fullName || ''}</p>
+            <p><strong><i class="fas fa-phone"></i> Số điện thoại:</strong> ${d.phoneNumber || ''}</p>
+            <p><strong><i class="fas fa-birthday-cake"></i> Ngày sinh:</strong> ${d.birthDate ? new Date(d.birthDate).toLocaleDateString('vi-VN') : ''}</p>
+            <p><strong><i class="fas fa-mars"></i> Giới tính:</strong> ${d.gender || ''}</p>
+          </div>
+          <div class="user-info-more" style="display:none;">
+            <p><strong><i class="fas fa-search"></i> Đang tìm kiếm:</strong> ${d.lookingFor || ''}</p>
+            <p><strong><i class="fas fa-ruler-vertical"></i> Chiều cao:</strong> ${d.height || ''}</p>
+            <p><strong><i class="fas fa-weight"></i> Cân nặng:</strong> ${d.weight || ''}</p>
+            <p><strong><i class="fas fa-map-marker-alt"></i> Địa chỉ:</strong> ${d.location || ''}</p>
+            <p><strong><i class="fas fa-briefcase"></i> Vị trí:</strong> ${d.jobTitle || ''}</p>
+            <p><strong><i class="fas fa-building"></i> Công ty:</strong> ${d.company || ''}</p>
+            <p><strong><i class="fas fa-graduation-cap"></i> Học vấn:</strong> ${d.education || ''}</p>
+            <p><strong><i class="fas fa-info-circle"></i> Mô tả:</strong> ${d.description || ''}</p>
+            <p><strong><i class="fas fa-star"></i> Sở thích:</strong> ${Array.isArray(d.interestName) && d.interestName.length > 0 ? d.interestName.join(', ') : ''}</p>
+          </div>
         `;
+
+        // Thêm đoạn xử lý nút xem thêm ở đây
+        const btnShowMore = document.getElementById('btn-show-more-details');
+        const more = userDetail.querySelector('.user-info-more');
+        const textEl = btnShowMore.querySelector('.banner-text');
+        const iconEl = btnShowMore.querySelector('i');
+
+        btnShowMore.style.display = 'flex'; // luôn hiển thị dải băng
+
+        let expanded = false;
+
+        btnShowMore.onclick = function(e) {
+          e.stopPropagation();
+          if (!expanded) {
+            if (more) more.style.display = 'block';
+            textEl.textContent = 'Ẩn bớt thông tin';
+            iconEl.classList.remove('fa-chevron-down');
+            iconEl.classList.add('fa-chevron-up');
+            expanded = true;
+          } else {
+            if (more) more.style.display = 'none';
+            textEl.textContent = 'Xem thêm thông tin';
+            iconEl.classList.remove('fa-chevron-up');
+            iconEl.classList.add('fa-chevron-down');
+            expanded = false;
+          }
+        };
       }
     }
   } catch (err) {
@@ -71,8 +102,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // --- PHÂN TRANG ẢNH TAB PHOTO ---
-  const PHOTO_PAGE_SIZE = 5;
+  const PHOTO_PAGE_SIZE = 9;
   async function loadPhotos(page = 0, size = PHOTO_PAGE_SIZE) {
+    currentPhotoPage = page;
     try {
       const res = await fetch(`http://localhost:8080/api/photo?page=${page}&size=${size}`, {
         headers: {
@@ -97,6 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('photo-pagination').innerHTML = '';
     }
   }
+  window.loadPhotos = loadPhotos;
 
   function renderPhotos(photoUrls) {
     const row = document.getElementById('photo-row');
@@ -123,17 +156,65 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function renderPhotoPagination(pageInfo, size) {
-    const pag = document.getElementById('photo-pagination');
-    let html = '';
-    for (let i = 0; i < pageInfo.totalPages; i++) {
-      html += `<button onclick="loadPhotos(${i},${size})" ${i === pageInfo.number ? 'style="background:#1877F2;color:#fff;"' : ''}>${i + 1}</button> `;
+    const paginationContainer = document.getElementById('photo-pagination');
+    paginationContainer.innerHTML = '';
+  
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number; // ✅ sửa đúng tên
+  
+    if (!totalPages || totalPages <= 1) return;
+  
+    const createButton = (text, page, isActive = false) => {
+      const btn = document.createElement('button');
+      btn.textContent = text;
+      btn.className = 'page-btn';
+      if (isActive) btn.classList.add('active');
+      btn.onclick = () => loadPhotos(page, size);
+      return btn;
+    };
+  
+    // « first
+    if (currentPage > 0) {
+      paginationContainer.appendChild(createButton('«', 0));
     }
-    pag.innerHTML = html;
+  
+    const visiblePages = 2;
+    let start = Math.max(0, currentPage - visiblePages);
+    let end = Math.min(totalPages - 1, currentPage + visiblePages);
+  
+    if (start > 0) {
+      paginationContainer.appendChild(createButton('1', 0));
+      if (start > 1) {
+        paginationContainer.appendChild(document.createTextNode('...'));
+      }
+    }
+  
+    for (let i = start; i <= end; i++) {
+      paginationContainer.appendChild(createButton((i + 1).toString(), i, i === currentPage));
+    }
+  
+    if (end < totalPages - 1) {
+      if (end < totalPages - 2) {
+        paginationContainer.appendChild(document.createTextNode('...'));
+      }
+      paginationContainer.appendChild(createButton(totalPages.toString(), totalPages - 1));
+    }
+  
+    if (currentPage < totalPages - 1) {
+      paginationContainer.appendChild(createButton('»', totalPages - 1));
+    }
   }
-
+  
+  
   // Tải ảnh khi chuyển sang tab "Ảnh"
   document.getElementById('tab-photo').addEventListener('click', function() {
-    loadPhotos();
+    document.getElementById('section-info').style.display = 'none';
+  document.getElementById('section-photo').style.display = 'block';
+  document.getElementById('section-video').style.display = 'none';
+  document.getElementById('section-story').style.display = 'none';
+
+  // ✅ Tải ảnh trang đầu tiên
+  loadPhotos(0);
   });
 
   // Thêm biến flag để phân biệt upload ảnh profile
@@ -205,17 +286,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  // --- XÓA ẢNH ---
   window.isPhotoDeleteMode = false;
   window.selectedPhotoUrls = [];
-
   document.getElementById('btn-delete-photo').onclick = function() {
     window.isPhotoDeleteMode = true;
-    window.selectedPhotoUrls = []; // Không chọn ảnh nào mặc định
+    window.selectedPhotoUrls = [];
     document.getElementById('btn-confirm-delete-photo').style.display = 'inline-block';
     document.getElementById('btn-cancel-delete-photo').style.display = 'inline-block';
     renderPhotos(window.lastPhotoUrls || []);
   };
-
   document.getElementById('btn-cancel-delete-photo').onclick = function() {
     window.isPhotoDeleteMode = false;
     window.selectedPhotoUrls = [];
@@ -322,51 +402,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  // --- PHÂN TRANG STORY TAB STORY ---
-  const STORY_PAGE_SIZE = 4;
-  async function loadStories(page = 0, size = STORY_PAGE_SIZE) {
-    try {
-      const res = await fetch(`http://localhost:8080/api/story?page=${page}&size=${size}`, {
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
-      const json = await res.json();
-      if (json.success && json.data && Array.isArray(json.data.content)) {
-        renderStories(json.data.content);
-        renderStoryPagination(json.data, size);
-      } else {
-        document.getElementById('story-row').innerHTML = '<p>Không có story.</p>';
-        document.getElementById('story-pagination').innerHTML = '';
-      }
-    } catch (err) {
-      document.getElementById('story-row').innerHTML = '<p style="color:red">Không tải được story!</p>';
-      document.getElementById('story-pagination').innerHTML = '';
-    }
-  }
-  function renderStories(storyList) {
-    const row = document.getElementById('story-row');
-    row.innerHTML = storyList.reverse().map(story => {
-      if (story.videoUrl && (story.videoUrl.endsWith('.mp4') || story.videoUrl.endsWith('.webm') || story.videoUrl.endsWith('.mov')))
-        return `<div class="video-item"><video src="${story.videoUrl}" controls style="width:100%;height:320px;object-fit:cover;border-radius:10px;"></video><p>Ngày đăng: ${new Date(story.uploadDate).toLocaleDateString('vi-VN')}</p></div>`;
-      else
-        return `<div class="photo-item"><img src="${story.videoUrl}" alt="Story" style="width:240px;height:240px;object-fit:cover;border-radius:12px;"><p>Ngày đăng: ${new Date(story.uploadDate).toLocaleDateString('vi-VN')}</p></div>`;
-    }).join('');
-  }
-  function renderStoryPagination(pageInfo, size) {
-    const pag = document.getElementById('story-pagination');
-    let html = '';
-    for (let i = 0; i < pageInfo.totalPages; i++) {
-      html += `<button onclick="loadStories(${i},${size})" ${i === pageInfo.number ? 'style=\"background:#1877F2;color:#fff;\"' : ''}>${i + 1}</button> `;
-    }
-    pag.innerHTML = html;
-  }
-  document.getElementById('tab-story').addEventListener('click', function () {
-    loadStories();
-  });
+  
+
 
   // Xử lý nút "Tạo bài viết"
 document.getElementById('btn-create-post').onclick = function() {
   document.getElementById('form-create-post-modal').reset();
   document.getElementById('create-post-modal').style.display = 'flex';
+  // Lấy avatar và tên cho modal
+  document.getElementById('profile-avatar-modal').src = document.getElementById('profile-avatar').src;
+  document.getElementById('profile-fullname-modal').textContent = document.getElementById('profile-fullname').textContent;
 };
 document.getElementById('close-create-post-modal').onclick =
 document.getElementById('btn-cancel-create-post-modal').onclick = function() {
@@ -454,12 +499,8 @@ document.getElementById('form-create-post-modal').onsubmit = async function (e) 
 };
 
 
-
-
-
-
   // Khi ấn nút "Chỉnh sửa thông tin cá nhân"
-document.querySelector('.intro-box button').onclick = async function () {
+document.getElementById('btn-edit-profile').onclick = async function () {
   const modal = document.getElementById('edit-profile-modal');
   const form = document.getElementById('form-edit-profile');
   const token = localStorage.getItem('token');
@@ -582,8 +623,8 @@ document.getElementById('form-edit-profile').onsubmit = async function (e) {
   };
 
   // Hàm load video 
-  const VIDEO_PAGE_SIZE = 10;
 
+  const VIDEO_PAGE_SIZE = 4;
 async function loadVideos(page = 0, size = VIDEO_PAGE_SIZE) {
   const token = localStorage.getItem('token');
   try {
@@ -592,7 +633,6 @@ async function loadVideos(page = 0, size = VIDEO_PAGE_SIZE) {
         'Authorization': 'Bearer ' + token
       }
     });
-
     const json = await res.json();
     if (json.success && json.data && Array.isArray(json.data.content)) {
       const videos = json.data.content;
@@ -610,31 +650,100 @@ async function loadVideos(page = 0, size = VIDEO_PAGE_SIZE) {
 }
 
 function renderVideos(videoList) {
+  window.lastVideoList = videoList;
   const row = document.getElementById('video-row');
   if (!row) {
     console.warn('Không tìm thấy phần tử video-row!');
     return;
   }
-  row.innerHTML = videoList.reverse().map(v => `
-    <div class="video-item">
-      <video src="${v.videoUrl}" controls style="max-width:100%;height:auto;"></video>
-      <p>Ngày đăng: ${new Date(v.uploadDate).toLocaleDateString('vi-VN')}</p>
-    </div>
-  `).join('');
+  const isDeleteMode = window.isVideoDeleteMode;
+  // Sắp xếp ngược lại: mới nhất lên trước
+  const reversed = [...videoList].reverse();
+  row.innerHTML = reversed.map(v => {
+    const selected = (window.selectedVideoUrls || []).includes(v.videoUrl);
+    return `
+      <div class="video-item" style="position:relative;">
+        <video src="${v.videoUrl}" controls data-url="${v.videoUrl}"
+          ${isDeleteMode ? 'style="opacity:0.7;cursor:pointer;border:2px solid #ff4d4f;"' : ''}
+          onclick="${isDeleteMode ? 'toggleSelectVideo(this)' : ''}"></video>
+      </div>
+    `;
+  }).join('');
+  if (isDeleteMode) {
+    // Chỉ làm nổi bật các video đã chọn
+    (window.selectedVideoUrls || []).forEach(url => {
+      const vid = row.querySelector(`video[data-url='${url}']`);
+      if (vid) {
+        vid.style.opacity = "1";
+        vid.style.border = "2px solid #1877F2";
+      }
+    });
+  }
 }
+window.toggleSelectVideo = function(vidEl) {
+  const url = vidEl.getAttribute('data-url');
+  const idx = window.selectedVideoUrls.indexOf(url);
+  if (idx === -1) {
+    window.selectedVideoUrls.push(url);
+    vidEl.style.opacity = "1";
+    vidEl.style.border = "2px solid #1877F2";
+  } else {
+    window.selectedVideoUrls.splice(idx, 1);
+    vidEl.style.opacity = "0.7";
+    vidEl.style.border = "2px solid #ff4d4f";
+  }
+};
 
 function renderVideoPagination(pageInfo, size) {
-  const pag = document.getElementById('video-pagination');
-  if (!pag) {
-    console.warn('Không tìm thấy phần tử video-pagination!');
-    return;
+  const paginationContainer = document.getElementById('video-pagination');
+  paginationContainer.innerHTML = '';
+
+  const totalPages = pageInfo.totalPages;
+  const currentPage = pageInfo.number;
+
+  if (!totalPages || totalPages <= 1) return;
+
+  const createButton = (text, page, isActive = false) => {
+    const btn = document.createElement('button');
+    btn.textContent = text;
+    btn.className = 'page-btn';
+    if (isActive) btn.classList.add('active');
+    btn.onclick = () => loadVideos(page, size); // ⬅️ gọi lại loadVideos đúng trang
+    return btn;
+  };
+
+  // « First
+  if (currentPage > 0) {
+    paginationContainer.appendChild(createButton('«', 0));
   }
-  let html = '';
-  for (let i = 0; i < pageInfo.totalPages; i++) {
-    html += `<button onclick="loadVideos(${i}, ${size})" ${i === pageInfo.number ? 'style="background:#1877F2;color:#fff;"' : ''}>${i + 1}</button> `;
+
+  const visiblePages = 2;
+  let start = Math.max(0, currentPage - visiblePages);
+  let end = Math.min(totalPages - 1, currentPage + visiblePages);
+
+  if (start > 0) {
+    paginationContainer.appendChild(createButton('1', 0));
+    if (start > 1) {
+      paginationContainer.appendChild(document.createTextNode('...'));
+    }
   }
-  pag.innerHTML = html;
+
+  for (let i = start; i <= end; i++) {
+    paginationContainer.appendChild(createButton((i + 1).toString(), i, i === currentPage));
+  }
+
+  if (end < totalPages - 1) {
+    if (end < totalPages - 2) {
+      paginationContainer.appendChild(document.createTextNode('...'));
+    }
+    paginationContainer.appendChild(createButton(totalPages.toString(), totalPages - 1));
+  }
+
+  if (currentPage < totalPages - 1) {
+    paginationContainer.appendChild(createButton('»', totalPages - 1));
+  }
 }
+
 
 document.getElementById('tab-video').addEventListener('click', function () {
   loadVideos(); // tải trang đầu tiên
@@ -645,24 +754,35 @@ async function loadOwnPosts() {
   const listPost = document.getElementById('list-post');
   if (!listPost) return;
   listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Đang tải bài viết...</div>';
+  const token = localStorage.getItem('token');
   try {
-    const res = await fetch('http://localhost:8080/api/post/owner', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    const json = await res.json();
-    if (json.success && json.data && Array.isArray(json.data.content)) {
-      if (json.data.content.length === 0) {
-        listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Chưa có bài viết nào.</div>';
-        return;
+    let allPosts = [];
+    let page = 0;
+    let totalPages = 1;
+    do {
+      const res = await fetch(`http://localhost:8080/api/post/owner?page=${page}&size=10`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const json = await res.json();
+      if (json.success && json.data && Array.isArray(json.data.content)) {
+        allPosts = allPosts.concat(json.data.content);
+        totalPages = json.data.page.totalPages;
+        page++;
+      } else {
+        break;
       }
-      listPost.innerHTML = json.data.content.map(post => renderPostItem(post)).join('');
+    } while (page < totalPages);
+
+    if (allPosts.length === 0) {
+      listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Chưa có bài viết nào.</div>';
     } else {
-      listPost.innerHTML = '<div style="color:red;">Không tải được bài viết!</div>';
+      listPost.innerHTML = allPosts.map(post => renderPostItem(post)).join('');
     }
   } catch (err) {
     listPost.innerHTML = '<div style="color:red;">Lỗi khi tải bài viết!</div>';
   }
 }
+
 function renderPostItem(post) {
   // Xử lý ngày đăng
   const date = new Date(post.uploadDate).toLocaleString('vi-VN');
@@ -779,5 +899,143 @@ if (tabFriends) {
   });
 }
 
+// Xử lý nút Xóa tài khoản
+const btnDeleteAccount = document.getElementById('btn-delete-account');
+if (btnDeleteAccount) {
+  btnDeleteAccount.onclick = function() {
+    document.getElementById('delete-account-modal').style.display = 'flex';
+  };
+}
+document.getElementById('btn-cancel-delete-account').onclick = function() {
+  document.getElementById('delete-account-modal').style.display = 'none';
+};
+document.getElementById('btn-confirm-delete-account').onclick = async function() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Bạn chưa đăng nhập!');
+    return;
+  }
+  try {
+    const res = await fetch('http://localhost:8080/api/user-profile/delete', {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const json = await res.json();
+    if (json.success) {
+      alert('Tài khoản đã được xóa!');
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    } else {
+      alert('Xóa tài khoản thất bại!');
+    }
+  } catch (err) {
+    alert('Lỗi khi xóa tài khoản!');
+  }
+  document.getElementById('delete-account-modal').style.display = 'none';
+};
+
 
 });
+
+
+
+
+// --- XÓA VIDEO ---
+window.isVideoDeleteMode = false;
+window.selectedVideoUrls = [];
+document.getElementById('btn-delete-video').onclick = function() {
+  window.isVideoDeleteMode = true;
+  window.selectedVideoUrls = [];
+  document.getElementById('btn-confirm-delete-video').style.display = 'inline-block';
+  document.getElementById('btn-cancel-delete-video').style.display = 'inline-block';
+  renderVideos(window.lastVideoList || []);
+};
+document.getElementById('btn-cancel-delete-video').onclick = function() {
+  window.isVideoDeleteMode = false;
+  window.selectedVideoUrls = [];
+  document.getElementById('btn-confirm-delete-video').style.display = 'none';
+  document.getElementById('btn-cancel-delete-video').style.display = 'none';
+  renderVideos(window.lastVideoList || []);
+};
+document.getElementById('btn-confirm-delete-video').onclick = async function() {
+  if (window.selectedVideoUrls.length === 0) {
+    alert('Vui lòng chọn ít nhất 1 video để xóa!');
+    return;
+  }
+  if (!confirm('Bạn có chắc chắn muốn xóa các video đã chọn?')) return;
+  let successCount = 0;
+  for (const url of window.selectedVideoUrls) {
+    try {
+      const res = await fetch('http://localhost:8080/api/video/delete?videoUrl=' + encodeURIComponent(url), {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const json = await res.json();
+      if (json.success) successCount++;
+    } catch {}
+  }
+  alert(`Đã xóa ${successCount} video!`);
+  window.isVideoDeleteMode = false;
+  window.selectedVideoUrls = [];
+  document.getElementById('btn-confirm-delete-video').style.display = 'none';
+  document.getElementById('btn-cancel-delete-video').style.display = 'none';
+  loadVideos();
+};
+
+function renderVideos(videoList) {
+  window.lastVideoList = videoList;
+  const row = document.getElementById('video-row');
+  if (!row) {
+    console.warn('Không tìm thấy phần tử video-row!');
+    return;
+  }
+  const isDeleteMode = window.isVideoDeleteMode;
+  // Sắp xếp ngược lại: mới nhất lên trước
+  const reversed = [...videoList].reverse();
+  row.innerHTML = reversed.map(v => {
+    const selected = (window.selectedVideoUrls || []).includes(v.videoUrl);
+    return `
+      <div class="video-item" style="position:relative;">
+        <video src="${v.videoUrl}" controls data-url="${v.videoUrl}"
+          ${isDeleteMode ? 'style="opacity:0.7;cursor:pointer;border:2px solid #ff4d4f;"' : ''}
+          onclick="${isDeleteMode ? 'toggleSelectVideo(this)' : ''}"></video>
+      </div>
+    `;
+  }).join('');
+  if (isDeleteMode) {
+    // Chỉ làm nổi bật các video đã chọn
+    (window.selectedVideoUrls || []).forEach(url => {
+      const vid = row.querySelector(`video[data-url='${url}']`);
+      if (vid) {
+        vid.style.opacity = "1";
+        vid.style.border = "2px solid #1877F2";
+      }
+    });
+  }
+}
+window.toggleSelectVideo = function(vidEl) {
+  const url = vidEl.getAttribute('data-url');
+  const idx = window.selectedVideoUrls.indexOf(url);
+  if (idx === -1) {
+    window.selectedVideoUrls.push(url);
+    vidEl.style.opacity = "1";
+    vidEl.style.border = "2px solid #1877F2";
+  } else {
+    window.selectedVideoUrls.splice(idx, 1);
+    vidEl.style.opacity = "0.7";
+    vidEl.style.border = "2px solid #ff4d4f";
+  }
+};
+
+function openModal(imageUrl) {
+  const modal = document.getElementById('image-modal');
+  const zoomedImage = document.getElementById('zoomed-image');
+  zoomedImage.src = imageUrl;
+  modal.style.display = 'flex';
+  modal.querySelector('.modal-content').classList.add('animate__animated', 'animate__fadeInDown');
+}
+function closeModal() {
+  const modal = document.getElementById('image-modal');
+  modal.style.display = 'none';
+  modal.querySelector('.modal-content').classList.remove('animate__animated', 'animate__fadeInDown');
+}

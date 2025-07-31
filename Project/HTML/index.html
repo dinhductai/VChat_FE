@@ -82,19 +82,19 @@
         <!-- MENU ICONS GIỮA (ẩn trên mobile, hoặc bạn có thể điều chỉnh thành collapse) -->
         <div class="d-none d-lg-flex mx-auto" id="menuTabs">
           <div class="d-flex justify-content-center text-center">
-            <div class="menu-item px-5">
+            <div class="menu-item px-5 active" data-link="#">
               <a href="#"><i class="bi bi-house fs-4 active"></i></a>
               <div class="indicator"></div>
             </div>
-            <div class="menu-item px-5">
-              <a href="#"><i class="bi bi-person fs-4"></i></a>
+            <div class="menu-item px-5" data-link="friend.html">
+              <a><i class="bi bi-person fs-4"></i></a>
               <div class="indicator"></div>
             </div>
-            <div class="menu-item px-5">
+            <div class="menu-item px-5" data-link="/">
               <a href="#"><i class="bi bi-tv fs-4"></i></a>
               <div class="indicator"></div>
             </div>
-            <div class="menu-item px-5">
+            <div class="menu-item px-5" data-link="/">
               <a href="#"><i class="bi bi-bell fs-4"></i></a>
               <div class="indicator"></div>
             </div>
@@ -198,7 +198,7 @@
               src="../images/OIP.jpg"
               class="rounded-circle userAvatar"
               alt="avatar"
-              style="width: 40px; height: 40px"
+              style="width: 40px; height: 40px; border: 1px solid #bdc3c7"
             />
           </div>
 
@@ -215,24 +215,31 @@
       <div class="row justify-content-center">
         <!-- Sidebar trái -->
         <div class="col-lg-3 d-none d-lg-block">
-          <div class="left-sidebar shadow-sm p-3 rounded full-height-sidebar">
-            <div class="d-flex p-2 user-hover rounded-2 align-items-center">
+          <div
+            class="left-sidebar py-2 rounded full-height-sidebar"
+            style="background-color: transparent"
+          >
+            <div class="d-flex py-2 user-hover rounded-2 align-items-center">
               <img
                 src="../images/IMG_2007.JPG"
                 alt=""
-                style="width: 40px; height: 40px"
+                style="
+                  width: 40px;
+                  height: 40px;
+                  border: 1px solid #bdc3c7;
+                  margin-left: 5px;
+                "
                 class="rounded-circle userAvatar"
               />
               <a
                 href="#"
-                class="d-block text-decoration-none text-dark ms-2"
+                class="d-block text-decoration-none text-dark ms-2 userName"
                 style="font-weight: bold"
-                id="userName"
               ></a>
             </div>
 
             <div
-              class="d-flex p-2 user-hover rounded-2"
+              class="d-flex py-2 user-hover rounded-2"
               style="align-items: center"
             >
               <div
@@ -251,6 +258,7 @@
                   border-radius: 50%;
                   z-index: 9999;
                   cursor: pointer;
+                  margin-left: 5px;
                 "
                 onclick="window.location.href='/chatbot.html'"
               >
@@ -286,7 +294,7 @@
             </div>
 
             <div
-              class="d-flex p-2 user-hover rounded-2"
+              class="d-flex py-2 user-hover rounded-2"
               style="align-items: center"
             >
               <div
@@ -301,7 +309,7 @@
                 <i class="fa-solid fa-user-group" style="font-size: 20px"></i>
               </div>
               <a
-                href="#"
+                href="friend.html"
                 class="d-block text-decoration-none text-dark ms-2"
                 style="font-weight: bold"
                 >Friends</a
@@ -321,7 +329,7 @@
                 <img
                   src="../images/OIP.jpg"
                   class="rounded-circle me-2 userAvatar"
-                  style="width: 40px; height: 40px"
+                  style="width: 40px; height: 40px; border: 1px solid #bdc3c7"
                   alt="Avatar"
                 />
                 <button
@@ -399,6 +407,7 @@
                     height: 200px;
                     background-color: #252728;
                     flex: 0 0 auto;
+                    margin-left: 5px;
                   "
                   onclick="makeStory()"
                 >
@@ -470,7 +479,10 @@
 
         <!-- Sidebar phải -->
         <div class="col-lg-3 col-md-4 d-none d-md-block">
-          <div class="right-sidebar full-height-sidebar shadow-sm">
+          <div
+            class="right-sidebar full-height-sidebar"
+            style="background-color: transparent"
+          >
             <div class="d-flex justify-content-between contact-header mb-2">
               <div><strong>Contacts</strong></div>
               <div class="d-flex">
@@ -487,7 +499,7 @@
               </div>
             </div>
             <hr />
-            <div id="friendList" class="d-flex flex-column gap-2"></div>
+            <div id="friendList" class="flex-column gap-2"></div>
           </div>
         </div>
       </div>
@@ -516,28 +528,6 @@
     </script>
 
     <script>
-      document.querySelectorAll(".like-wrapper").forEach((wrapper) => {
-        const popup = wrapper.querySelector(".reaction-popup");
-        const button = wrapper.querySelector(".like-btn");
-
-        wrapper.addEventListener("mouseenter", () => {
-          popup.style.display = "flex";
-        });
-
-        wrapper.addEventListener("mouseleave", () => {
-          popup.style.display = "none";
-        });
-
-        popup.querySelectorAll(".icon").forEach((icon) => {
-          icon.addEventListener("click", () => {
-            button.innerHTML = icon.textContent + " Đã thích";
-            popup.style.display = "none";
-          });
-        });
-      });
-    </script>
-
-    <script>
       const menuItems = document.querySelectorAll("#menuTabs .menu-item");
 
       menuItems.forEach((item) => {
@@ -546,9 +536,16 @@
           menuItems.forEach((el) => el.classList.remove("active"));
           // Thêm active vào phần tử vừa click
           item.classList.add("active");
+
+          // Lấy đường dẫn từ thuộc tính data-link và chuyển trang
+          const link = item.getAttribute("data-link");
+          if (link) {
+            window.location.href = link;
+          }
         });
       });
     </script>
+
     <script>
       document.querySelectorAll(".toggle-comment").forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -788,9 +785,13 @@
                 <div class="d-flex justify-content-between">
                   <div class="d-flex align-items-center mb-2">
                     <img
-                      src=""
+                      src="../images/user-default.webp"
                       class="rounded-circle me-2"
-                      style="width: 40px; height: 40px"
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        border: 1px solid #bdc3c7;
+                      "
                       alt="Avatar"
                       id="profile_image"
                     />
@@ -809,67 +810,90 @@
                     <i class="bi bi-three-dots"></i>
                   </div>
                 </div>
-                <p class="post-text" id="postContent"></p>
+                <p class="post-text" id="postContentID"></p>
 
                 <div
                   class="d-flex justify-content-around mt-5 border-top pt-2 position-relative"
                 >
                   <div class="like-wrapper position-relative w-100 me-1">
-                    <button class="btn btn-light w-100 btn-action like-btn">
-                      <i class="bi bi-hand-thumbs-up"></i>Like
+                    <button
+                      class="btn btn-light w-100 btn-action like-btn"
+                      style="font-weight: bold; color: #65676b; font-size: 13px"
+                    >
+                      <i class="fa-solid fa-thumbs-up"></i>
+                      Like
                     </button>
 
                     <div
                       class="reaction-popup d-flex gap-2 rounded-5 shadow border"
                     >
-                      <span class="icon">❤️</span>
-                      <span class="icon">😍</span>
-                      <span class="icon">😆</span>
-                      <span class="icon">😮</span>
-                      <span class="icon">😢</span>
-                      <span class="icon">😡</span>
+                      <span class="icon" data-emotion="LIKE">
+                        <img
+                          src="../images/Animation/uv2XD2zFzt.gif"
+                          alt="Like"
+                          class="reaction-img"
+                        />
+                      </span>
+                      <span class="icon" data-emotion="LOVE"
+                        ><img
+                          src="../images/Animation/Emojis - Love (1).gif"
+                          alt=""
+                          style="width: 40px; height: 40px"
+                      /></span>
+                      <span class="icon" data-emotion="HAHA"
+                        ><img
+                          src="../images/Animation/smiley emoji 2.gif"
+                          alt=""
+                          style="width: 50px; height: 50px"
+                      /></span>
+                      <span class="icon" data-emotion="WOW"
+                        ><img
+                          src="../images/Animation/Emojis - Wow.gif"
+                          alt=""
+                          style="width: 40px; height: 40px"
+                      /></span>
+                      <span class="icon" data-emotion="SAD"
+                        ><img
+                          src="../images/Animation/Sad Emoji.gif"
+                          alt=""
+                          style="width: 50px; height: 50px"
+                      /></span>
+                      <span class="icon" data-emotion="ANGRY"
+                        ><img
+                          src="../images/Animation/Angry emoji.gif"
+                          alt=""
+                          style="width: 35px; height: 35px"
+                      /></span>
                     </div>
                   </div>
 
                   <button
                     class="btn btn-light w-100 me-1 btn-action toggle-comment"
-                    onclick="openCommentModal('Nguyễn Văn A', '2 giờ trước', 'Hôm nay trời đẹp quá ☀️. Đi dạo công viên thôi!', '../images/post1.jpg')"
+                    style="font-weight: bold; color: #65676b; font-size: 13px"
                   >
                     <i class="bi bi-chat-left"></i> Comment
                   </button>
 
-                  <button class="btn btn-light w-100 btn-action">
+                  <button
+                    class="btn btn-light w-100 btn-action"
+                    style="font-weight: bold; color: #65676b; font-size: 13px"
+                  >
                     <i class="bi bi-share"></i> Share
                   </button>
                 </div>
               </div>
 
               <!-- Danh sách bình luận -->
-              <div id="commentList" class="p-3 flex-grow-1 overflow-auto p-3">
-                <!-- Ví dụ 1 bình luận -->
-                <div class="d-flex mb-3">
-                  <img
-                    src="../images/OIP.jpg"
-                    class="rounded-circle me-2"
-                    style="width: 32px; height: 32px"
-                  />
-                  <div>
-                    <div class="bg-light rounded-3 p-2 w-100">
-                      <strong>Nguyễn Văn A</strong>
-                      <div class="text-muted small">Đẹp quá bạn ơi 😍</div>
-                    </div>
-                    <div
-                      class="d-flex justify-content-around"
-                      style="font-size: 12px; max-width: 100px"
-                    >
-                      <a style="cursor: pointer">5d</a>
-                      <a style="cursor: pointer">Like</a>
-                      <a style="cursor: pointer" onclick="repComment()"
-                        >Reply</a
-                      >
-                    </div>
-                  </div>
-                </div>
+              <div
+                id="commentList"
+                class="p-3 flex-grow-1 overflow-auto"
+                style="
+                  height: calc(100vh - 350px - 80px);
+                  max-height: 430px;
+                  margin-bottom: 90px;
+                "
+              >
+                <!-- Các bình luận sẽ được render ở đây -->
               </div>
 
               <!-- Ô nhập bình luận cố định -->
@@ -892,7 +916,7 @@
                   style="background-color: #f0f2f5"
                 >
                   <textarea
-                    id="mainCommentInput"
+                    id="commentInput"
                     class="form-control dark-mode-textarea"
                     placeholder="Write a comment..."
                     rows="1"
@@ -924,6 +948,7 @@
                     <div
                       class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
                       style="width: 30px; height: 30px; cursor: pointer"
+                      id="sendCommentBtn"
                     >
                       <i
                         class="bi bi-send-fill text-dark dark-mode-icon"
@@ -941,7 +966,7 @@
 
     <!-- AI Assistant Button -->
     <!-- AI Assistant Button with Gradient Border -->
-    <div
+    <!-- <div
       style="
         position: fixed;
         bottom: 20px;
@@ -985,6 +1010,238 @@
           "
         />
       </div>
+    </div> -->
+    <div
+      style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+
+        z-index: 9999;
+        cursor: pointer;
+      "
+      onclick="window.location.href='chatbot.html'"
+      id="ai"
+    >
+      <img
+        src="../images/Animation/CHOP Robot.gif"
+        style="width: 60px; height: 60x"
+        alt=""
+      />
+    </div>
+    <!-- Khung chat nhỏ hiện khi chọn bạn bè -->
+    <div
+      id="chatBox"
+      class="position-fixed bottom-0 end-0"
+      style="width: 380px; display: none; z-index: 9999"
+    >
+      <div
+        class="card shadow border rounded d-flex flex-column"
+        style="height: 550px"
+      >
+        <div
+          class="card-header d-flex justify-content-between align-items-center p-2"
+        >
+          <div>
+            <img
+              src="../images/user-default.webp"
+              style="
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 0.5px solid #65676b;
+              "
+            />
+            <span style="font-weight: bold">Nguyen sang</span>
+          </div>
+          <button id="closeChatBtn" class="btn btn-sm btn-light rounded-circle">
+            ✕
+          </button>
+        </div>
+
+        <!-- Phần body chiếm phần lớn không gian -->
+        <div
+          class="card-body flex-grow-1 overflow-auto"
+          id="chatMessages"
+          style="min-height: 0"
+        ></div>
+
+        <!-- Phần nhập -->
+        <div
+          class="card-footer p-2 d-flex"
+          style="
+            align-items: center;
+            justify-content: space-around;
+            background-color: transparent;
+          "
+        >
+          <div
+            class="icon-hover align-self-end"
+            style="
+              display: flex;
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              align-items: center;
+              justify-content: center;
+              margin-right: 10px;
+            "
+          >
+            <i class="bi bi-images" style="font-size: 25px; color: #00b894"></i>
+          </div>
+          <div class="rounded-5">
+            <textarea
+              id="chatInput"
+              class="form-control form-control-sm rounded-5 px-3"
+              placeholder="Nhập tin nhắn..."
+              rows="1"
+              style="
+                resize: none;
+                overflow-y: auto;
+                max-height: 140px;
+                width: 250px;
+                height: auto;
+                min-height: 45px;
+                border: none;
+                background-color: #b2bec3;
+                padding-top: 12px;
+                padding-bottom: 12px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                  Roboto, Helvetica, Arial, sans-serif;
+                flex-shrink: 0;
+              "
+            ></textarea>
+          </div>
+          <div
+            class="send-hover align-self-end"
+            style="width: 40px; height: 40px; border-radius: 50%; padding: 10px"
+            onclick="sendMessage()"
+          >
+            <i class="bi bi-send-fill fs-5" style="color: #0984e3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal hiển thị tất cả ảnh và bình luận -->
+    <div
+      class="modal fade"
+      id="allImagesModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" style="max-width: 700px">
+        <div
+          class="modal-content"
+          style="height: 90vh; display: flex; flex-direction: column"
+        >
+          <!-- Modal Body Cuộn được -->
+          <div
+            class="modal-body"
+            style="overflow-y: auto; flex: 1; padding-bottom: 16px"
+          >
+            <!-- Thông tin người đăng -->
+            <div class="d-flex align-items-center mb-3">
+              <img
+                id="allImagesAvatar"
+                src="../images/user-default.webp"
+                alt="Avatar"
+                class="rounded-circle me-2"
+                style="width: 40px; height: 40px; object-fit: cover"
+              />
+              <div>
+                <strong id="allImagesName">Tên người dùng</strong><br />
+                <small id="allImagesTime">...</small>
+              </div>
+            </div>
+
+            <!-- Nội dung bài viết -->
+            <p id="allImagesContent" class="mb-3"></p>
+
+            <!-- Ảnh & Video -->
+            <div id="mediaWrapper" class="mb-3">
+              <div id="allImagesGrid"></div>
+              <div id="allVideosGrid" class="mt-2"></div>
+            </div>
+
+            <hr />
+
+            <!-- Danh sách bình luận -->
+            <div id="commentList" class="mb-3">
+              <div
+                id="noCommentPlaceholder"
+                class="text-center text-muted my-4"
+                style="display: block"
+              >
+                <i class="bi bi-chat-left-text" style="font-size: 2rem"></i>
+                <p class="mt-2 mb-0">No comments yet</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ô nhập bình luận (Cố định) -->
+          <div
+            class="d-flex bg-white border-top p-3 dark-mode-bg dark-mode-border"
+          >
+            <img
+              src="../images/IMG_2007.JPG"
+              alt=""
+              style="
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                margin-right: 5px;
+              "
+              class="userAvatar"
+            />
+            <div
+              class="container d-block gap-2 align-items-end rounded-3 p-2 dark-mode-input-container"
+              style="background-color: #f0f2f5"
+            >
+              <textarea
+                id="commentInput"
+                class="form-control dark-mode-textarea"
+                placeholder="Write a comment..."
+                rows="1"
+                style="
+                  max-height: 292px;
+                  overflow-y: auto;
+                  resize: none;
+                  padding: 10px 0;
+                  border: none;
+                  background-color: transparent;
+                "
+                oninput="autoGrow(this)"
+              ></textarea>
+              <div
+                class="d-flex justify-content-between align-items-center mb-1"
+              >
+                <!-- Emoji Icon -->
+                <div
+                  class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
+                  style="width: 30px; height: 30px; cursor: pointer"
+                >
+                  <i
+                    class="bi bi-emoji-smile text-dark dark-mode-icon"
+                    style="font-size: 15px"
+                  ></i>
+                </div>
+
+                <!-- Send Icon -->
+                <div
+                  class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
+                  style="width: 30px; height: 30px; cursor: pointer"
+                  id="sendCommentBtn"
+                >
+                  <i
+                    class="bi bi-send-fill text-dark dark-mode-icon"
+                    style="font-size: 15px"
+                  ></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
   <script src="../Js/api-post.js"></script>
@@ -993,12 +1250,21 @@
       textarea.style.height = "auto"; // reset trước
       textarea.style.height = textarea.scrollHeight + "px";
     }
-
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
   <script src="../Js/mess.js"></script>
   <script src="../Js/token.js"></script>
   <script src="../Js/api-get-story.js"></script>
   <script src="../Js/story.js"></script>
   <script src="../Js/api-get-friends.js"></script>
+  <script src="../Js/get_friends-chat.js"></script>
+  <script src="../Js/api-reaction.js"></script>
+  <script src="../Js/api-chat-friends.js"></script>
   <script src="../Js/comment.js"></script>
+  <!-- ✅ Tải STOMP sau -->
+  <script src="../Js/socket.js"></script>
+  <script></script>
+  <script src="https://unpkg.com/lottie-web/build/player/lottie.min.js"></script>
+  <script src="../Js/api-share-save-post.js"></script>
 </html>

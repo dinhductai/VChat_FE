@@ -134,8 +134,7 @@ fetch("http://localhost:8080/api/user-name-profile", {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
-    // Nếu cần token thì thêm:
-    Authorization: "Bearer " + token,
+    Authorization: "Bearer " + token, // Chỉ thêm nếu token tồn tại
   },
 })
   .then((response) => {
@@ -145,12 +144,20 @@ fetch("http://localhost:8080/api/user-name-profile", {
     return response.json();
   })
   .then((data) => {
-    for (const el of document.getElementsByClassName("userAvatar")) {
-      el.src = data.data.profileUrl || "/images/user-default.webp";
-    }
-    document.getElementById("userName").textContent =
-      data.data.fullName || "Người dùng";
-    console.log(data.data.fullName);
+    const profileUrl = data.data.profileUrl || "/images/user-default.webp";
+    const fullName = data.data.fullName || "Người dùng";
+
+    // Gán avatar
+    document.querySelectorAll(".userAvatar").forEach((el) => {
+      el.src = profileUrl;
+    });
+
+    // Gán tên
+    document.querySelectorAll(".userName").forEach((el) => {
+      el.textContent = fullName;
+    });
+
+    console.log(fullName);
     console.log(data);
   })
   .catch((error) => {
