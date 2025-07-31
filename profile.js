@@ -409,6 +409,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 document.getElementById('btn-create-post').onclick = function() {
   document.getElementById('form-create-post-modal').reset();
   document.getElementById('create-post-modal').style.display = 'flex';
+  // Lấy avatar và tên cho modal
+  document.getElementById('profile-avatar-modal').src = document.getElementById('profile-avatar').src;
+  document.getElementById('profile-fullname-modal').textContent = document.getElementById('profile-fullname').textContent;
 };
 document.getElementById('close-create-post-modal').onclick =
 document.getElementById('btn-cancel-create-post-modal').onclick = function() {
