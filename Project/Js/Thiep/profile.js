@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("accessToken");
   try {
     // Lấy fullName và profileUrl
     const res = await fetch('http://localhost:8080/api/user-name-profile', {
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Kiểm tra nếu bị lỗi 401 (Unauthorized)
   if (res.status === 401) {
     alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-    localStorage.removeItem('token');
+    localStorage.removeItem("accessToken");
     window.location.href = 'login.html';
     return;
   }
@@ -363,147 +363,111 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Xử lý nút "Tạo story"
   document.getElementById('btn-create-story').onclick = function() {
-    document.getElementById('form-create-story-modal').reset();
-    document.getElementById('create-story-modal').style.display = 'flex';
-  };
-  document.getElementById('close-create-story-modal').onclick =
-  document.getElementById('btn-cancel-create-story-modal').onclick = function() {
-    document.getElementById('form-create-story-modal').reset();
-    document.getElementById('create-story-modal').style.display = 'none';
-  };
-  document.getElementById('form-create-story-modal').onsubmit = async function(e) {
-    e.preventDefault();
-    const fileInput = document.getElementById('input-story-file-modal');
-    const loading = document.getElementById('create-story-loading');
-    if (!fileInput.files[0]) return alert('Vui lòng chọn ảnh hoặc video!');
-    const formData = new FormData();
-    formData.append('file', fileInput.files[0]);
-    loading.style.display = 'flex';
-    try {
-      const res = await fetch('http://localhost:8080/api/story/create', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        },
-        body: formData
-      });
-      const json = await res.json();
-      loading.style.display = 'none';
-      if (json.success) {
-        alert('Tạo story thành công!');
-        document.getElementById('form-create-story-modal').reset();
-        document.getElementById('create-story-modal').style.display = 'none';
-      } else {
-        alert('Tạo story thất bại!');
-      }
-    } catch (err) {
-      loading.style.display = 'none';
-      alert('Lỗi khi tạo story!');
-    }
+    window.location.href = 'tao_tin.html';
   };
 
   
 
 
-  // Xử lý nút "Tạo bài viết"
-document.getElementById('btn-create-post').onclick = function() {
-  document.getElementById('form-create-post-modal').reset();
-  document.getElementById('create-post-modal').style.display = 'flex';
-  // Lấy avatar và tên cho modal
-  document.getElementById('profile-avatar-modal').src = document.getElementById('profile-avatar').src;
-  document.getElementById('profile-fullname-modal').textContent = document.getElementById('profile-fullname').textContent;
-};
-document.getElementById('close-create-post-modal').onclick =
-document.getElementById('btn-cancel-create-post-modal').onclick = function() {
-  document.getElementById('form-create-post-modal').reset();
-  document.getElementById('create-post-modal').style.display = 'none';
-};
-document.getElementById('form-create-post-modal').onsubmit = async function (e) {
-  e.preventDefault();
+//   // Xử lý nút "Tạo bài viết"
+// document.getElementById('btn-create-post').onclick = function() {
+//   document.getElementById('form-create-post-modal').reset();
+//   document.getElementById('create-post-modal').style.display = 'flex';
+//   // Lấy avatar và tên cho modal
+//   document.getElementById('profile-avatar-modal').src = document.getElementById('profile-avatar').src;
+//   document.getElementById('profile-fullname-modal').textContent = document.getElementById('profile-fullname').textContent;
+// };
+// document.getElementById('close-create-post-modal').onclick =
+// document.getElementById('btn-cancel-create-post-modal').onclick = function() {
+//   document.getElementById('form-create-post-modal').reset();
+//   document.getElementById('create-post-modal').style.display = 'none';
+// };
+// document.getElementById('form-create-post-modal').onsubmit = async function (e) {
+//   e.preventDefault();
 
-  const content = document.getElementById('post-content').value.trim();
-  const images = document.getElementById('post-images').files;
-  const videos = document.getElementById('post-videos').files;
-  const isPublic = document.getElementById('post-public').checked;
-  const email = document.getElementById('post-email').value.trim(); // 👈 thêm lại dòng này
-  const loading = document.getElementById('create-post-loading');
+//   const content = document.getElementById('post-content').value.trim();
+//   const images = document.getElementById('post-images').files;
+//   const videos = document.getElementById('post-videos').files;
+//   const isPublic = document.getElementById('post-public').checked;
+//   const email = document.getElementById('post-email').value.trim(); // 👈 thêm lại dòng này
+//   const loading = document.getElementById('create-post-loading');
 
-  // Kiểm tra hợp lệ
-  if (!email) {
-    alert('Vui lòng nhập email!');
-    return;
-  }
+//   // Kiểm tra hợp lệ
+//   if (!email) {
+//     alert('Vui lòng nhập email!');
+//     return;
+//   }
 
-  if (!content && images.length === 0 && videos.length === 0) {
-    alert('Bài viết phải có nội dung hoặc ảnh/video!');
-    return;
-  }
+//   if (!content && images.length === 0 && videos.length === 0) {
+//     alert('Bài viết phải có nội dung hoặc ảnh/video!');
+//     return;
+//   }
 
-  // Tạo FormData
-  const formData = new FormData();
-  formData.append('content', content);
-  formData.append('isPublic', isPublic.toString()); // "true" hoặc "false"
-  formData.append('userEmail', email); // 👈 thêm để backend không lỗi
+//   // Tạo FormData
+//   const formData = new FormData();
+//   formData.append('content', content);
+//   formData.append('isPublic', isPublic.toString()); // "true" hoặc "false"
+//   formData.append('userEmail', email); // 👈 thêm để backend không lỗi
 
-  for (let i = 0; i < images.length; i++) {
-    formData.append('listImage', images[i]);
-  }
+//   for (let i = 0; i < images.length; i++) {
+//     formData.append('listImage', images[i]);
+//   }
 
-  for (let i = 0; i < videos.length; i++) {
-    formData.append('listVideo', videos[i]);
-  }
+//   for (let i = 0; i < videos.length; i++) {
+//     formData.append('listVideo', videos[i]);
+//   }
 
-  const token = localStorage.getItem('token');
-  if (!token) {
-    alert('Không tìm thấy token đăng nhập!');
-    return;
-  }
+//   const token = localStorage.getItem('accessToken');
+//   if (!token) {
+//     alert('Không tìm thấy token đăng nhập!');
+//     return;
+//   }
 
-  loading.style.display = 'flex';
+//   loading.style.display = 'flex';
 
-  try {
-    const res = await fetch('http://localhost:8080/api/post/create', {
-      method: 'POST',
-      headers: {
-        Authorization: 'Bearer ' + token
-        // KHÔNG thêm Content-Type khi dùng FormData
-      },
-      body: formData
-    });
+//   try {
+//     const res = await fetch('http://localhost:8080/api/post/create', {
+//       method: 'POST',
+//       headers: {
+//         Authorization: 'Bearer ' + token
+//         // KHÔNG thêm Content-Type khi dùng FormData
+//       },
+//       body: formData
+//     });
 
-    const text = await res.text();
-    console.log('Raw response:', text); // debug
+//     const text = await res.text();
+//     console.log('Raw response:', text); // debug
 
-    let json;
-    try {
-      json = JSON.parse(text);
-    } catch (err) {
-      throw new Error('Server không trả về JSON hợp lệ');
-    }
+//     let json;
+//     try {
+//       json = JSON.parse(text);
+//     } catch (err) {
+//       throw new Error('Server không trả về JSON hợp lệ');
+//     }
 
-    loading.style.display = 'none';
+//     loading.style.display = 'none';
 
-    if (json.success) {
-      alert('Tạo bài viết thành công!');
-      document.getElementById('form-create-post-modal').reset();
-      document.getElementById('create-post-modal').style.display = 'none';
-    } else {
-      alert('Tạo bài viết thất bại: ' + (json.message || 'Không rõ lý do'));
-      console.log(json);
-    }
-  } catch (err) {
-    loading.style.display = 'none';
-    console.error(err);
-    alert('Lỗi kết nối hoặc xử lý phía client!');
-  }
-};
+//     if (json.success) {
+//       alert('Tạo bài viết thành công!');
+//       document.getElementById('form-create-post-modal').reset();
+//       document.getElementById('create-post-modal').style.display = 'none';
+//     } else {
+//       alert('Tạo bài viết thất bại: ' + (json.message || 'Không rõ lý do'));
+//       console.log(json);
+//     }
+//   } catch (err) {
+//     loading.style.display = 'none';
+//     console.error(err);
+//     alert('Lỗi kết nối hoặc xử lý phía client!');
+//   }
+// };
 
 
   // Khi ấn nút "Chỉnh sửa thông tin cá nhân"
 document.getElementById('btn-edit-profile').onclick = async function () {
   const modal = document.getElementById('edit-profile-modal');
   const form = document.getElementById('form-edit-profile');
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
 
   try {
     const res = await fetch('http://localhost:8080/api/user-profile', {
@@ -546,7 +510,7 @@ document.getElementById('btn-cancel-edit-profile').onclick = function () {
 document.getElementById('form-edit-profile').onsubmit = async function (e) {
   e.preventDefault();
   const form = e.target;
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
 
   const data = {
     fullName: form.fullName.value,
@@ -626,7 +590,7 @@ document.getElementById('form-edit-profile').onsubmit = async function (e) {
 
   const VIDEO_PAGE_SIZE = 4;
 async function loadVideos(page = 0, size = VIDEO_PAGE_SIZE) {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   try {
     const res = await fetch(`http://localhost:8080/api/video?page=${page}&size=${size}`, {
       headers: {
@@ -754,7 +718,7 @@ async function loadOwnPosts() {
   const listPost = document.getElementById('list-post');
   if (!listPost) return;
   listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Đang tải bài viết...</div>';
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   try {
     let allPosts = [];
     let page = 0;
@@ -910,7 +874,7 @@ document.getElementById('btn-cancel-delete-account').onclick = function() {
   document.getElementById('delete-account-modal').style.display = 'none';
 };
 document.getElementById('btn-confirm-delete-account').onclick = async function() {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   if (!token) {
     alert('Bạn chưa đăng nhập!');
     return;
@@ -923,7 +887,7 @@ document.getElementById('btn-confirm-delete-account').onclick = async function()
     const json = await res.json();
     if (json.success) {
       alert('Tài khoản đã được xóa!');
-      localStorage.removeItem('token');
+      localStorage.removeItem('accessToken');
       window.location.href = 'login.html';
     } else {
       alert('Xóa tài khoản thất bại!');

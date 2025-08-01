@@ -625,7 +625,7 @@
   <script src="../Js/Thiep/story.js"></script>
   <script>
   // Kiểm tra token khi tải trang
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   if (!token) {
     alert('Vui lòng đăng nhập để tiếp tục!');
     window.location.href = 'login.html';

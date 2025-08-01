@@ -45,7 +45,7 @@ function renderOwnStories(apiData) {
 }
 
 function loadOwnStories() {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   fetch('http://localhost:8080/api/story/owner', {
     headers: { 'Authorization': 'Bearer ' + token }
   })

@@ -165,12 +165,12 @@ nav a:hover, nav a.active {
   box-shadow: 0 2px 8px #1877f211;
 }
 .intro-box button, .post-box button {
-  margin-top: 10px;
+  margin-top: 5px;
   background: linear-gradient(90deg, #3A3B3C 60%, #1877F2 100%);
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 8px 12px;
+  padding: 5px 10px;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
   box-shadow: 0 2px 8px #1877f211;
@@ -183,7 +183,7 @@ nav a:hover, nav a.active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto 18px auto;
   gap: 16px;
   flex-wrap: wrap;
@@ -796,7 +796,7 @@ button,
 .intro-box button,
 .post-box button {
   font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
-  font-weight: 600;
+  font-weight: 550;
   letter-spacing: 0.2px;
 }
 
@@ -926,4 +926,34 @@ input:focus, textarea:focus, select:focus {
 
 .slide-up {
   animation: slideUpFadeOut 0.4s ease forwards;
+}
+
+/* Preview media trong modal tạo bài viết */
+.media-grid {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+.media-grid img,
+.media-grid video {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #1877f211;
+}
+.media-grid .media-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 36px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  z-index: 10;
 }
