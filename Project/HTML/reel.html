@@ -292,7 +292,7 @@ document.addEventListener("wheel", (e) => {
     let currentPage = 0;
     const pageSize = 1;
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (!token) {
       alert("Không tìm thấy token! Hãy đăng nhập trước.");
     }

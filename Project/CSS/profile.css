@@ -957,3 +957,69 @@ input:focus, textarea:focus, select:focus {
   border-radius: 8px;
   z-index: 10;
 }
+
+/* Modal tạo bài viết Facebook style */
+#postModal .modal-content {
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(24,119,242,0.13), 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px 28px;
+}
+#postModal .modal-header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+#postModal .modal-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1877F2;
+}
+#postModal .modal-body {
+  padding-top: 0;
+}
+#postModal .rounded-circle {
+  border: 1px solid #e4e6eb;
+}
+#postModal .dropdown-toggle {
+  background: #f0f2f5;
+  border-radius: 15px;
+  font-size: 12px;
+}
+#postModal textarea {
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 16px;
+  padding: 8px;
+  border: 1px solid #e4e6eb;
+  resize: none;
+}
+#imagePreviewContainer.media-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+#imagePreviewContainer img,
+#imagePreviewContainer video {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #1877f211;
+}
+#imagePreviewContainer .media-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 36px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  z-index: 10;
+}
+#postModal .modal-footer {
+  border-top: none;
+  padding-top: 0;
+}

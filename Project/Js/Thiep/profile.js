@@ -18,16 +18,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     const json = await res.json();
     if (json.success && json.data) {
       const d = json.data;
+
+      // Lưu vào localStorage
+      localStorage.setItem("userAvatar", d.profileUrl || '');
+      localStorage.setItem("userFullName", d.fullName || '');
+
       // Thay avatar lớn
       const avatarEl = document.getElementById('profile-avatar');
       if (avatarEl) avatarEl.src = d.profileUrl || '';
+
       // Thay avatar nhỏ trên topbar
       const fbAvatar = document.querySelector('.fb-avatar');
       if (fbAvatar) fbAvatar.src = d.profileUrl || '';
+
       // Thay tên nếu muốn
       const nameEl = document.getElementById('profile-fullname');
       if (nameEl) nameEl.textContent = d.fullName || '';
     }
+
   } catch (err) {
     console.error('Lỗi lấy avatar:', err);
   }
@@ -748,6 +756,10 @@ async function loadOwnPosts() {
 }
 
 function renderPostItem(post) {
+  // Lấy avatar và tên từ localStorage
+  const userAvatar = localStorage.getItem("userAvatar") || "";
+  const userFullName = localStorage.getItem("userFullName") || "";
+
   // Xử lý ngày đăng
   const date = new Date(post.uploadDate).toLocaleString('vi-VN');
   // Ảnh/video
@@ -761,9 +773,9 @@ function renderPostItem(post) {
   return `
     <div class="post-item">
       <div class="post-header">
-        <img src="${post.profilePicture || ''}" class="post-avatar" alt="avatar">
+        <img src="${userAvatar}" class="post-avatar" alt="avatar">
         <div>
-          <div class="post-author">${post.fullName || ''}</div>
+          <div class="post-author">${userFullName}</div>
           <div class="post-date">${date}</div>
         </div>
       </div>

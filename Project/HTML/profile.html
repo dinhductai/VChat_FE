@@ -8,6 +8,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600&display=swap" rel="stylesheet">
   <link href="../CSS/profile.css" rel="stylesheet">
   <!-- Font Awesome for beautiful icons -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
@@ -212,7 +214,7 @@
     <span style="font-size:20px;font-weight:bold;color:#1877F2;">Facebook</span>
   </div>
   <div class="fb-icons">
-    <a href="home.html" title="Trang chủ"><i class="fas fa-home"></i></a>
+    <a href="index.html" title="Trang chủ"><i class="fas fa-home"></i></a>
     <a href="reel.html" title="Reel"><i class="fas fa-tv"></i></a>
     <a href="marketplace.html" title="Marketplace"><i class="fas fa-store"></i></a>
     <a href="groups.html" title="Groups"><i class="fas fa-users"></i></a>
@@ -247,8 +249,8 @@
       <div class="intro-box">
         <div class="user-details" id="user-details"></div>
         <!-- nút xem thêm profile -->
-        <div id="btn-show-more-details" class="show-more-banner" style="display:flex;align-items:center;gap:6px;cursor:pointer;">
-  <span class="banner-text">Xem thêm thông tin</span>
+        <div id="btn-show-more-details" class="show-more-banner" style="display:flex;justify-content: center;align-items:center;gap:6px;cursor:pointer;">
+      <span class="banner-text">Xem thêm thông tin</span>
   <i class="fas fa-chevron-down"></i>
 </div>
 
@@ -452,45 +454,9 @@
   </div>
 </div>
 
-  <div class="modal" id="create-story-modal" style="display:none;">
-    <div class="modal-content upload-modal">
-      <span class="close-modal" id="close-create-story-modal" title="Đóng">×</span>
-      <h3 style="margin-bottom:18px; text-align:center; color:#1877F2;">Tạo story mới</h3>
-      <form id="form-create-story-modal" style="width:100%;display:flex;flex-direction:column;align-items:center;">
-        <input type="file" id="input-story-file-modal" name="file" accept="image/*,video/*" required style="border: 1px solid #e4e6eb; border-radius: 8px; padding: 10px; background: #f0f2f5; width: 250px; margin-bottom: 18px; font-size: 15px;">
-        <div class="modal-btns" style="display: flex; gap: 14px; margin-top: 8px;">
-          <button type="submit" style="background: linear-gradient(90deg,#1877F2 60%,#42a5f5 100%); color: #fff; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; box-shadow: 0 2px 8px rgba(24,119,242,0.08);">Tải lên</button>
-          <button type="button" id="btn-cancel-create-story-modal" style="background: #e4e6eb; color: #050505; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px;">Hủy</button>
-        </div>
-        <div id="create-story-loading" class="loading-upload" style="display:none;">
-          <span class="spinner"></span> Đang tải lên...
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal" id="create-post-modal" style="display:none;">
-    <div class="modal-content upload-modal">
-      <span class="close-modal" id="close-create-post-modal" title="Đóng">×</span>
-      <h3 style="margin-bottom:18px; text-align:center; color:#1877F2;">Tạo bài viết mới</h3>
-      <form id="form-create-post-modal" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;">
-        <textarea id="post-content" name="content" rows="3" placeholder="Bạn muốn chia sẻ điều gì?" style="width:100%;max-width:400px;border-radius:8px;padding:10px;"></textarea>
-        <input type="file" id="post-images" name="listImage" accept="image/*" multiple style="margin-bottom:8px;">
-        <input type="hidden" id="post-email" value="nguoix@example.com">
-
-        <input type="file" id="post-videos" name="listVideo" accept="video/*" multiple style="margin-bottom:8px;">
-        <label style="align-self:flex-start;margin-left:10px;"><input type="checkbox" id="post-public" name="isPublic" checked> Công khai</label>
-        <div class="modal-btns" style="display: flex; gap: 14px; margin-top: 8px;">
-          <button type="submit" style="background: linear-gradient(90deg,#1877F2 60%,#42a5f5 100%); color: #fff; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; box-shadow: 0 2px 8px rgba(24,119,242,0.08);">Tải lên</button>
-          <button type="button" id="btn-cancel-create-post-modal" style="background: #e4e6eb; color: #050505; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px;">Hủy</button>
-        </div>
-        <div id="create-post-loading" class="loading-upload" style="display:none;">
-          <span class="spinner"></span> Đang tải lên...
-        </div>
-      </form>
-    </div>
-  </div>
-
+ 
+ 
+  <!-- modal xoa tk -->
   <div class="modal" id="delete-account-modal" style="display:none;">
     <div class="modal-content upload-modal" style="min-width:320px;max-width:95vw;text-align:center;">
       <h3 style="color:#d32f2f;margin-bottom:18px;">Bạn có chắc chắn muốn xóa tài khoản này không?</h3>
@@ -501,6 +467,8 @@
     </div>
   
   </div>
+
+  <!-- modal tao reel -->
   <div class="modal" id="create-reel-modal" style="display:none;">
     <div class="modal-content upload-modal">
       <span class="close-modal" id="close-create-reel-modal" title="Đóng">×</span>
@@ -524,6 +492,101 @@
       </form>
     </div>
   </div>
+
+  <!-- Modal tạo bài viết (giữ nguyên như index, hoặc copy từ index.html nếu chưa có) -->
+  <div class="modal fade" id="postModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 500px">
+      <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title w-100 text-center" style="font-weight: bold; transform: translateY(-30px);">
+          Create post
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+          style="position: absolute; top: 18px; right: 18px;"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex align-items-center">
+          <img src="../images/OIP.jpg" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px" />
+          <div>
+            <strong> Name</strong>
+            <div class="dropdown">
+              <button
+                class="btn btn-light border dropdown-toggle d-flex align-items-center px-2 py-1 mt-1"
+                type="button"
+                id="privacyDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style="font-size: 10px; border-radius: 15px"
+              >
+                <i class="bi bi-globe me-1"></i>
+                <span id="privacyLabel">Public</span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="privacyDropdown">
+                <li>
+                  <a class="dropdown-item" href="#" onclick="setPrivacy('public')">
+                    <i class="bi bi-globe me-2"></i> Public
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" onclick="setPrivacy('private')">
+                    <i class="bi bi-lock-fill me-2"></i>Private
+                  </a>
+                </li>
+              </ul>
+              <input type="hidden" id="privacyValue" name="privacy" value="public" />
+            </div>
+          </div>
+        </div>
+        <div style="overflow-y: auto; max-height: 450px">
+          <div style="margin: 20px 0">
+            <textarea
+              id="postContent"
+              class="form-control"
+              placeholder="What's on your mind?"
+              style="overflow: hidden; resize: none; min-height: 38px; line-height: 1.5; border-radius: 8px; padding: 8px; font-size: 16px; background-color: #f8f9fa;"
+            ></textarea>
+          </div>
+          <div
+            id="imagePreviewContainer"
+            class="d-none d-flex flex-wrap gap-2 mt-3 rounded-3"
+            style="height: 350px"
+          ></div>
+        </div>
+        <div
+          class="rounded-3 d-flex"
+          style="background-color: #f8f9fa; height: 50px; border: 0.5px solid #bdc3c7; margin-top: 5px; align-items: center; justify-content: space-between; margin-top: 10px;"
+        >
+          <p style="margin: auto 10px">Add to your post</p>
+          <input
+            type="file"
+            id="fileInput"
+            class="d-none"
+            accept="image/*,video/*"
+            multiple
+          />
+          <label for="fileInput" style="cursor: pointer; margin: 0 10px">
+            <i class="bi bi-image fs-4" style="color: #2ecc71"></i>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          id="postBtn"
+          class="btn btn-primary w-100"
+          onclick="submitPost()"
+        >
+          <span id="postBtnText">Post</span>
+          <span
+            id="postBtnSpinner"
+            class="spinner-border spinner-border-sm d-none ms-2"
+            role="status"
+            aria-hidden="true"
+          ></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
   
   
 
@@ -623,6 +686,8 @@
   <script src="../Js/Thiep/createReel.js"></script>
   <script src="../Js/Thiep/post-lazyload.js"></script>
   <script src="../Js/Thiep/story.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../Js/Thiep/profile-post-modal.js"></script>
   <script>
   // Kiểm tra token khi tải trang
   const token = localStorage.getItem('accessToken');
@@ -630,7 +695,9 @@
     alert('Vui lòng đăng nhập để tiếp tục!');
     window.location.href = 'login.html';
   }
-</script>
+  </script>
+
+ 
 
 </body>
 </html>

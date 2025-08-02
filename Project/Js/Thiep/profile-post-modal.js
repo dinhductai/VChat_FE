@@ -89,6 +89,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // --- Sự kiện mở modal ---
   if (btnCreatePost) {
     btnCreatePost.onclick = function () {
+      // Lấy avatar và tên từ localStorage
+      const avatarEl = postModal.querySelector('img.rounded-circle');
+      const nameEl = postModal.querySelector('strong');
+      if (avatarEl) avatarEl.src = localStorage.getItem("userAvatar") || "../images/OIP.jpg";
+      if (nameEl) nameEl.textContent = localStorage.getItem("userFullName") || "Người dùng";
+
       if (postContent) postContent.value = "";
       if (fileInput) fileInput.value = "";
       if (imagePreviewContainer) imagePreviewContainer.innerHTML = "";
