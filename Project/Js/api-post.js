@@ -81,6 +81,7 @@ let currentPage = 0;
 const pageSize = 4;
 let isLoading = false;
 let isLastPage = false;
+const renderedPostIds = new Set(); // 🔁 Lưu các postId đã render
 
 const postContainer = document.getElementById("postContainer");
 const loadingSpinner = document.getElementById("loading");
@@ -115,9 +116,11 @@ async function loadPosts() {
     console.log(data);
     if (data?.data?.content && Array.isArray(data.data.content)) {
       data.data.content.forEach((post) => {
-        console.log(post);
-        renderPost(post); // 👈 Hàm hiển thị bài viết
-        fetchReactionState(post.postId);
+        if (!renderedPostIds.has(post.postId)) {
+          renderedPostIds.add(post.postId); // ✅ Ngăn trùng bài
+          renderPost(post);
+          fetchReactionState(post.postId);
+        }
       });
     } else {
       console.warn("Không có bài viết nào hoặc sai cấu trúc!");
@@ -169,62 +172,102 @@ function renderPost(post, insert = true) {
 
     if (photos.length === 3) {
       return `
-        <div class="post-images-grid mb-2">
-          <div class="row-grid">
-            <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${post.postId}')" />
-          </div>
-          <div class="row-grid">
-            <img style="width: 50%;" src="${photos[1]}" onclick="openImageModal('${photos[1]}','${post.postId}')" />
-            <img style="width: 50%;" src="${photos[2]}" onclick="openImageModal('${photos[2]}','${post.postId}')" />
-          </div>
+    <div class="post-images-grid mb-2" style="display: flex; flex-direction: column; gap: 4px; border-radius: 8px; overflow: hidden; max-width: 700px; margin: auto;">
+      
+      <!-- Ảnh đầu tiên chiếm full -->
+      <div style="width: 100%; height: 400px; overflow: hidden;">
+        <img 
+          src="${photos[0]}" 
+          onclick="openImageModal('${photos[0]}','${post.postId}')" 
+          style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" 
+        />
+      </div>
+      
+      <!-- Hai ảnh dưới -->
+      <div style="display: flex; gap: 4px; height: 300px;">
+        <div style="width: calc(50% - 2px); overflow: hidden;">
+          <img 
+            src="${photos[1]}" 
+            onclick="openImageModal('${photos[1]}','${post.postId}')" 
+            style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" 
+          />
         </div>
-      `;
+        <div style="width: calc(50% - 2px); overflow: hidden;">
+          <img 
+            src="${photos[2]}" 
+            onclick="openImageModal('${photos[2]}','${post.postId}')" 
+            style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" 
+          />
+        </div>
+      </div>
+
+    </div>
+  `;
     }
 
     // ≥4 ảnh: grid 2x2, giới hạn 4 ảnh đầu
     const limitedPhotos = photos.slice(0, 4);
+
     return `
-      <div class="post-images-grid mb-2">
-        <div class="row-grid">
-          <img style="width: 50%;" src="${
-            limitedPhotos[0]
-          }" onclick="openImageModal('${limitedPhotos[0]}','${post.postId}')" />
-          <img style="width: 50%;" src="${
-            limitedPhotos[1]
-          }" onclick="openImageModal('${limitedPhotos[1]}','${post.postId}')" />
-        </div>
-        <div class="row-grid">
-          <img style="width: 50%;" src="${
-            limitedPhotos[2]
-          }" onclick="openImageModal('${limitedPhotos[2]}','${post.postId}')" />
-          <div style="position: relative; flex: 1">
-            <img style="width: 100%; height: 100%" src="${
-              limitedPhotos[3]
-            }" onclick="openImageModal('${limitedPhotos[3]}','${
-      post.postId
-    }')" style="width: 50%; height: 100%; object-fit: cover; border-radius: 6px;" />
-            ${
-              photos.length > 4
-                ? `<div style="
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(0, 0, 0, 0.5);
-                    color: white;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 24px;
-                    border-radius: 6px;
-                  ">+${photos.length - 4}</div>`
-                : ""
-            }
-          </div>
-        </div>
+  <div class="post-images-grid mb-2" style="display: flex; flex-direction: column; gap: 4px; max-width: 700px; margin: auto;">
+    
+    <!-- Dòng đầu -->
+    <div style="display: flex; gap: 4px; height: 300px;">
+      <div style="width: calc(50% - 2px); overflow: hidden; border-radius: 6px;">
+        <img 
+          src="${limitedPhotos[0]}" 
+          onclick="openImageModal('${limitedPhotos[0]}','${post.postId}')" 
+          style="width: 100%; height: 100%; object-fit: cover;" 
+        />
       </div>
-    `;
+      <div style="width: calc(50% - 2px); overflow: hidden; border-radius: 6px;">
+        <img 
+          src="${limitedPhotos[1]}" 
+          onclick="openImageModal('${limitedPhotos[1]}','${post.postId}')" 
+          style="width: 100%; height: 100%; object-fit: cover;" 
+        />
+      </div>
+    </div>
+
+    <!-- Dòng dưới -->
+    <div style="display: flex; gap: 4px; height: 300px;">
+      <div style="width: calc(50% - 2px); overflow: hidden; border-radius: 6px;">
+        <img 
+          src="${limitedPhotos[2]}" 
+          onclick="openImageModal('${limitedPhotos[2]}','${post.postId}')" 
+          style="width: 100%; height: 100%; object-fit: cover;" 
+        />
+      </div>
+      <div style="width: calc(50% - 2px); overflow: hidden; position: relative; border-radius: 6px;">
+        <img 
+          src="${limitedPhotos[3]}" 
+          onclick="openImageModal('${limitedPhotos[3]}','${post.postId}')" 
+          style="width: 100%; height: 100%; object-fit: cover;" 
+        />
+        ${
+          photos.length > 4
+            ? `<div style="
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  background-color: rgba(0, 0, 0, 0.5);
+                  color: white;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 32px;
+                  font-weight: bold;
+                  border-radius: 6px;
+                ">+${photos.length - 4}</div>`
+            : ""
+        }
+      </div>
+    </div>
+
+  </div>
+`;
   }
 
   // HTML video
@@ -250,7 +293,7 @@ function renderPost(post, insert = true) {
     post.profilePicture = "../images/user-default.webp";
   }
   const html = `
-    <div class="post shadow-sm rounded bg-white dark-mode-bg col-10" data-post-id='${
+    <div class="post shadow-sm rounded bg-white dark-mode-bg col-12" style="max-width: 630px" data-post-id='${
       post.postId
     }'>
        <div class="d-flex justify-content-between">
@@ -315,7 +358,7 @@ function renderPost(post, insert = true) {
                     >
                       <span class="icon" data-emotion="LIKE">
                         <img
-                          src="../images/Animation/uv2XD2zFzt.gif"
+                          src="../images/Animation/like.gif"
                           alt="Like"
                           class="reaction-img"
                         />
@@ -729,7 +772,7 @@ function renderPhotosHTML(photos) {
 
   const limitedPhotos = photos.slice(0, 4);
   return `
-  <div class="post-images-grid mb-2" style="max-width: 700px; margin: auto; display: flex; flex-direction: column; gap: 4px;">
+  <div class="post-images-grid mb-2" style="max-width: 700px; margin: auto; display: flex; flex-direction: column; gap: 2px;">
     <div style="display: flex; gap: 4px; height: 240px;">
       <div style="flex: 1; overflow: hidden; border-radius: 8px;">
         <img src="${

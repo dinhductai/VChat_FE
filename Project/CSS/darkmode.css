@@ -263,3 +263,46 @@ body.dark-mode .search-input::placeholder {
 .dark-mode .friend-hover-item h6 {
   color: #fff;
 }
+
+/* Dark mode cho chat box */
+body.dark-mode .card {
+  background-color: #242526 !important;
+  color: #e4e6eb !important;
+  border: 1px solid #3a3b3c !important;
+}
+
+.dark-mode #chatBox .card-header {
+  background-color: #3a3b3c;
+  color: #e4e6eb;
+  border-bottom: 1px solid #555;
+}
+
+.dark-mode #chatBox .card-footer {
+  background-color: #3a3b3c;
+  border-top: 1px solid #555;
+}
+
+.dark-mode #chatBox .form-control {
+  background-color: #3a3b3c !important;
+  color: #e4e6eb !important;
+  border: none;
+}
+
+.dark-mode #chatBox textarea::placeholder {
+  color: #b0b3b8;
+}
+
+.dark-mode #chatBox .icon-hover:hover {
+  background-color: #4e4f50 !important;
+}
+
+.dark-mode #chatBox .send-hover:hover {
+  background-color: #4e4f50 !important;
+}
+
+.dark-mode #chatBox .bi-send-fill {
+  color: #00bcd4 !important;
+}
+.dark-mode .friend-hover-item h6 {
+  color: #ffffff !important;
+}

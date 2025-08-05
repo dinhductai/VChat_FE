@@ -47,13 +47,17 @@ function connectWebSocket(callback) {
 }
 
 function disconnectWebSocket() {
-  if (stompClient && stompClient.connected) {
-    stompClient.disconnect(() => {
-      console.log("❌ WebSocket disconnected");
+  connectWebSocket(() => {
+    // Nếu đã sub post khác, hủy sub cũ
+
+    stompClient.subscribe("/user/queue/notification.history", (message) => {
+      const pageData = JSON.parse(message.body);
+      renderNotifications(pageData.content || []);
+      currentPage = pageData.number;
     });
-    currentSubscribedPostId = null;
-    subscribedChannel = null;
-  }
+
+    requestNotificationHistory(0, 10);
+  });
 }
 
 // function appendSingleComment(comment) {

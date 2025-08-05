@@ -27,7 +27,11 @@
         background-color: #000;
         border-radius: 10px;
         position: relative;
-        overflow: hidden;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
 
       .story-box img {
@@ -156,8 +160,14 @@
         color: #0d6efd;
       }
 
-      .dark-mode .user {
-        background-color: #3a3b3c !important;
+      /* 👉 Hover trong light mode */
+      .story-list .user:hover {
+        background-color: #e4e6eb; /* Màu sáng nhẹ */
+      }
+
+      /* 👉 Hover trong dark mode */
+      .dark-mode .story-list .user:hover {
+        background-color: #3a3b3c; /* Màu tối nhẹ hơn */
       }
 
       .dark-mode .custom-input::placeholder {
@@ -203,6 +213,14 @@
         color: #cccccc; /* Màu placeholder bạn muốn */
         opacity: 1; /* Đảm bảo không bị mờ */
       }
+      .story-box img {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain; /* chuyển từ cover sang contain để không bị cắt */
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
     </style>
   </head>
   <body>
@@ -210,7 +228,7 @@
       <div class="row h-100">
         <!-- Sidebar -->
         <div class="col-3 sidebar p-3">
-          <h5>Story</h5>
+          <h3>Stories</h3>
           <div
             class="mb-3 d-flex align-items-center gap-2"
             style="cursor: pointer"
@@ -226,14 +244,15 @@
             </div>
             <span>Create Story</span>
           </div>
+          <hr />
           <div class="story-list">
-            <div class="user bg-secondary-subtle rounded">
+            <!-- <div class="user bg-secondary-subtle rounded">
               <img src="../images/Nitro_Wallpaper_5000x2813.jpg" alt="avatar" />
               <div>
                 <strong>Trần Bảo Long</strong><br />
                 <small>23 giờ</small>
               </div>
-            </div>
+            </div> -->
 
             <!-- Thêm user khác nếu muốn -->
           </div>
@@ -243,19 +262,22 @@
         <div class="col-9 bg-black content-wrapper">
           <button class="btn-close-story" onclick="goHome()">✖</button>
 
-          <div class="story-box">
-            <div class="story-progress">
-              <div class="progress-bar"></div>
-            </div>
-
+          <div class="story-box" style="border: 2px solid white">
             <div class="story-header">
-              <img src="../images/OIP.jpg" />
-              <div class="info">
+              <div class="story-progress mb-3" style="margin-bottom: 20px">
+                <div class="progress-bar"></div>
+              </div>
+              <img src="../images/OIP.jpg" class="rounded-circle mt-3" />
+              <div class="info mt-3">
                 <strong>Trần Bảo Long</strong><br />
                 <small>23 giờ • 🎵 Linh Tuổi Thìn</small>
               </div>
             </div>
-            <img src="../images/planet9_Wallpaper_5000x2813.jpg" alt="" />
+            <img
+              src="../images/planet9_Wallpaper_5000x2813.jpg"
+              class="story-image"
+              alt=""
+            />
 
             <div class="reply-box">
               <div
@@ -324,7 +346,8 @@
         const story = stories[index];
         if (!story) return;
 
-        document.querySelector(".story-header img").src = story.profileUrl;
+        document.querySelector(".story-header img").src =
+          story.profileUrl || "../images/user-default.webp";
         document.querySelector(".story-header .info strong").textContent =
           story.fullName;
         document.querySelector(".story-header .info small").textContent =
@@ -392,8 +415,11 @@
                 : "Vừa đăng";
 
               const userDiv = document.createElement("div");
+              userDiv.addEventListener("click", () => {
+                showStory(user);
+              });
               userDiv.className =
-                "user bg-secondary-subtle rounded d-flex align-items-center p-2 mb-2";
+                "user rounded d-flex align-items-center p-2 mb-2";
 
               userDiv.innerHTML = `
           <img src="${avatar}" alt="avatar" class="me-2 rounded-circle"
@@ -412,6 +438,29 @@
             storyList.innerHTML = "<p>Lỗi khi tải dữ liệu.</p>";
           });
       });
+    </script>
+    <script>
+      function showStory(user) {
+        if (!user || !user.listStoryPhoto || user.listStoryPhoto.length === 0)
+          return;
+        const progressBar = document.querySelector(".progress-bar");
+        progressBar.style.animation = "none"; // tắt animation hiện tại
+        progressBar.offsetHeight; // trigger reflow để "restart" animation
+        progressBar.style.animation = null; // gán lại animation ban đầu
+        // Cập nhật header
+        document.querySelector(".story-header img").src =
+          user.profileUrl || "../images/user-default.webp";
+        document.querySelector(".story-header .info strong").textContent =
+          user.fullName || "Không rõ tên";
+        document.querySelector(".story-header .info small").textContent =
+          formatTimeAgo(user.listDateUpload?.[0] || new Date());
+
+        // Cập nhật ảnh story
+        document.querySelector(".story-box > img").src =
+          user.listStoryPhoto?.[0] || "../images/default-story.jpg";
+
+        // Nếu bạn có nhiều ảnh story, có thể cập nhật thêm phần chuyển ảnh (sẽ nói sau nếu bạn cần)
+      }
     </script>
   </body>
 </html>

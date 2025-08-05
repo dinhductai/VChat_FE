@@ -37,6 +37,10 @@ fetch("http://localhost:8080/api/user/friends?page=0&size=10", {
       div.querySelector(".friend-hover-item").addEventListener("click", () => {
         // Hiển thị tên
         // Hiển thị khung chat
+        document.getElementById("friendName").textContent = friend.fullName;
+        document.getElementById("friendAvatar").src =
+          friend.photoProfile || "../images/user-default.webp";
+
         const chatBox = document.getElementById("chatBox");
         chatBox.style.display = "block";
         chatBox.dataset.friendId = friend.userId;

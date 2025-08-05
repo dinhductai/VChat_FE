@@ -82,7 +82,7 @@ function showMessage(msg, isMe) {
 
   wrapper.innerHTML = `
     <div
-      class="${isMe ? "bg-primary text-white" : "bg-light text-dark"} 
+      class="${isMe ? "bg-primary text-white" : "bg-light "} 
                  px-3 py-2 rounded-3 d-inline-block"
       style="max-width: 70%; word-break: break-word;"
     >
