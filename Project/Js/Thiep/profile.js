@@ -722,116 +722,72 @@ document.getElementById('tab-video').addEventListener('click', function () {
 });
 
 // --- HIỂN THỊ DANH SÁCH BÀI ĐĂNG Ở TAB BÀI VIẾT ---
-async function loadOwnPosts() {
-  const listPost = document.getElementById('list-post');
-  if (!listPost) return;
-  listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Đang tải bài viết...</div>';
-  const token = localStorage.getItem('accessToken');
-  try {
-    let allPosts = [];
-    let page = 0;
-    let totalPages = 1;
-    do {
-      const res = await fetch(`http://localhost:8080/api/post/owner?page=${page}&size=10`, {
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
-      const json = await res.json();
-      if (json.success && json.data && Array.isArray(json.data.content)) {
-        allPosts = allPosts.concat(json.data.content);
-        totalPages = json.data.page.totalPages;
-        page++;
-      } else {
-        break;
-      }
-    } while (page < totalPages);
+// async function loadOwnPosts() {
+//   const listPost = document.getElementById('list-post');
+//   if (!listPost) return;
+//   listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Đang tải bài viết...</div>';
+//   const token = localStorage.getItem('accessToken');
+//   try {
+//     let allPosts = [];
+//     let page = 0;
+//     let totalPages = 1;
+//     do {
+//       const res = await fetch(`http://localhost:8080/api/post/owner?page=${page}&size=10`, {
+//         headers: { 'Authorization': 'Bearer ' + token }
+//       });
+//       const json = await res.json();
+//       if (json.success && json.data && Array.isArray(json.data.content)) {
+//         allPosts = allPosts.concat(json.data.content);
+//         totalPages = json.data.page.totalPages;
+//         page++;
+//       } else {
+//         break;
+//       }
+//     } while (page < totalPages);
 
-    if (allPosts.length === 0) {
-      listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Chưa có bài viết nào.</div>';
-    } else {
-      listPost.innerHTML = allPosts.map(post => renderPostItem(post)).join('');
-    }
-  } catch (err) {
-    listPost.innerHTML = '<div style="color:red;">Lỗi khi tải bài viết!</div>';
-  }
-}
+//     if (allPosts.length === 0) {
+//       listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Chưa có bài viết nào.</div>';
+//     } else {
+//       listPost.innerHTML = allPosts.map(post => renderPostItem(post)).join('');
+//     }
+//   } catch (err) {
+//     listPost.innerHTML = '<div style="color:red;">Lỗi khi tải bài viết!</div>';
+//   }
+// }
 
-function renderPostItem(post) {
-  // Lấy avatar và tên từ localStorage
-  const userAvatar = localStorage.getItem("userAvatar") || "";
-  const userFullName = localStorage.getItem("userFullName") || "";
+// function renderPostItem(post) {
+//   // Lấy avatar và tên từ localStorage
+//   const userAvatar = localStorage.getItem("userAvatar") || "";
+//   const userFullName = localStorage.getItem("userFullName") || "";
 
-  // Xử lý ngày đăng
-  const date = new Date(post.uploadDate).toLocaleString('vi-VN');
-  // Ảnh/video
-  let mediaHtml = '';
-  if (post.photosUrl && post.photosUrl.length > 0) {
-    mediaHtml += '<div class="post-media-row">' + post.photosUrl.map(url => `<img src="${url}" alt="Ảnh bài viết" class="post-media-img">`).join('') + '</div>';
-  }
-  if (post.videosUrl && post.videosUrl.length > 0) {
-    mediaHtml += '<div class="post-media-row">' + post.videosUrl.map(url => `<video src="${url}" controls class="post-media-video"></video>`).join('') + '</div>';
-  }
-  return `
-    <div class="post-item">
-      <div class="post-header">
-        <img src="${userAvatar}" class="post-avatar" alt="avatar">
-        <div>
-          <div class="post-author">${userFullName}</div>
-          <div class="post-date">${date}</div>
-        </div>
-      </div>
-      <div class="post-content">${post.content || ''}</div>
-      ${mediaHtml}
-    </div>
-  `;
-}
+//   // Xử lý ngày đăng
+//   const date = new Date(post.uploadDate).toLocaleString('vi-VN');
+//   // Ảnh/video
+//   let mediaHtml = '';
+//   if (post.photosUrl && post.photosUrl.length > 0) {
+//     mediaHtml += '<div class="post-media-row">' + post.photosUrl.map(url => `<img src="${url}" alt="Ảnh bài viết" class="post-media-img">`).join('') + '</div>';
+//   }
+//   if (post.videosUrl && post.videosUrl.length > 0) {
+//     mediaHtml += '<div class="post-media-row">' + post.videosUrl.map(url => `<video src="${url}" controls class="post-media-video"></video>`).join('') + '</div>';
+//   }
+//   return `
+//     <div class="post-item">
+//       <div class="post-header">
+//         <img src="${userAvatar}" class="post-avatar" alt="avatar">
+//         <div>
+//           <div class="post-author">${userFullName}</div>
+//           <div class="post-date">${date}</div>
+//         </div>
+//       </div>
+//       <div class="post-content">${post.content || ''}</div>
+//       ${mediaHtml}
+//     </div>
+//   `;
+// }
 // Hiển thị thông tin rút gọn ở tab Bài viết
-async function loadMiniUserInfo() {
-  const el = document.getElementById('mini-user-info');
-  if (!el) return;
-  try {
-    const res = await fetch('http://localhost:8080/api/user-profile', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    const json = await res.json();
-    if (json.success && json.data) {
-      const d = json.data;
-      el.innerHTML = `
-        <div style="margin-bottom:12px;">
-          <strong>Ngày sinh:</strong> ${d.birthDate ? new Date(d.birthDate).toLocaleDateString('vi-VN') : ''}<br>
-          <strong>SĐT:</strong> ${d.phoneNumber || ''}<br>
-          <strong>Giới tính:</strong> ${d.gender || ''}<br>
-          <strong>Đang tìm kiếm:</strong> ${d.lookingFor || ''}<br>
-          <strong>Chiều cao:</strong> ${d.height || ''} cm<br>
-          <strong>Cân nặng:</strong> ${d.weight || ''} kg
-        </div>
-      `;
-    } else {
-      el.innerHTML = '';
-    }
-  } catch (err) {
-    el.innerHTML = '';
-  }
-}
-// Gọi khi vào tab Bài viết
-const tabPost = document.getElementById('tab-post');
-if (tabPost) {
-  tabPost.addEventListener('click', function() {
-    loadMiniUserInfo();
-    loadOwnPosts();
-  });
-}
 
-// Gọi khi vào tab Giới thiệu
-const tabInfo = document.getElementById('tab-info');
-if (tabInfo) {
-  tabInfo.addEventListener('click', function() {
-    loadOwnPosts();
-  });
-}
-// Gọi khi load trang nếu đang ở tab info
-if (document.getElementById('section-info') && document.getElementById('section-info').style.display !== 'none') {
-  loadOwnPosts();
-}
+
+
 
 // --- HIỂN THỊ DANH SÁCH BẠN BÈ Ở TAB BẠN BÈ ---
 async function loadFriends() {

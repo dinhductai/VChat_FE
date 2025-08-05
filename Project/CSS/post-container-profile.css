@@ -1,0 +1,260 @@
+
+/* Reaction popup */
+.reaction-popup {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background-color: #fff;
+  z-index: 1000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  padding: 0 20px;
+}
+
+.like-wrapper:hover .reaction-popup {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.reaction-popup .icon {
+  font-size: 30px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.reaction-popup .icon:hover {
+  transform: scale(1.5) translateY(-5px);
+}
+
+/* Post image */
+.post-image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+/* Post text */
+.post-text {
+  color: #050505;
+}
+
+/* Hover user */
+.user-hover {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.user-hover:hover {
+  background-color: #bdc3c7;
+}
+
+/* Ẩn scrollbar mặc định */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Toàn bộ overlay xám mờ */
+.success-modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Khối trắng bên trong */
+.success-modal-content {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+/* Icon tròn xanh */
+.success-icon {
+  width: 70px;
+  height: 70px;
+  background-color: #28a745;
+  color: white;
+  font-size: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+/* Nút OK */
+.success-modal-content button {
+  margin-top: 20px;
+  padding: 8px 24px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.success-modal-content button:hover {
+  background-color: #218838;
+}
+
+.action-icon {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.action-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* nền xám nhạt nhẹ */
+  transform: scale(1.1); /* hơi phóng to nhẹ khi hover */
+}
+
+.post-images-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 600px;
+}
+
+.row-grid {
+  display: flex;
+  gap: 5px;
+}
+
+.row-grid img {
+  flex: 1;
+  height: 290px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.single-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  object-fit: contain;
+}
+.chat-input-container {
+  padding: 20px;
+  background-color: #1e1e1e;
+}
+
+.chat-input {
+  display: flex;
+  flex-direction: column;
+  background-color: #2c2c2c;
+  border-radius: 20px;
+  padding: 16px;
+  color: white;
+}
+
+.input-area {
+  min-height: 20px;
+  padding: 4px 0;
+  outline: none;
+  border: none;
+  background: transparent;
+  color: white;
+}
+
+.input-area:empty::before {
+  content: attr(placeholder);
+  color: #888;
+  pointer-events: none;
+}
+
+.chat-actions {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 16px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.icon-btn:hover {
+  color: #fff;
+}
+
+.icon-btn.circle {
+  background-color: #444;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.reaction-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+.custom-shadow {
+  box-shadow: 0px 12px 60px rgba(0, 0, 0, 0.45);
+  transition: box-shadow 0.3s ease;
+}
+
+.icon-hover {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.icon-hover:hover {
+  background-color: rgba(0, 184, 148, 0.2);
+  transform: scale(1.1);
+}
+
+/* Hiệu ứng hover cho textarea */
+#chatInput:hover {
+  background-color: #dfe6e9;
+  transition: background-color 0.3s ease;
+}
+
+/* Hiệu ứng hover cho nút gửi */
+.send-hover {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.send-hover:hover {
+  background-color: rgba(9, 132, 227, 0.2);
+  transform: scale(1.1);
+  border-radius: 50%;
+}
+#chatInput:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
+}
+
+.chat-footer {
+  display: flex;
+  align-items: flex-start; /* ❗ quan trọng */
+  justify-content: space-around;
+  gap: 10px;
+}
