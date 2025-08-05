@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Test Comment WebSocket</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        ul { padding-left: 20px; border-left: 1px solid #ccc; }
+        li { margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Test Socket Comment</h2>
+    <div>
+        <button onclick="connect()">1. Connect & Fetch Comments</button>
+    </div>
+    <hr>
+    <div>
+        <input type="text" id="commentInput" placeholder="Nội dung bình luận gốc..." size="50"/>
+        <button onclick="sendNewComment()">2. Gửi bình luận</button>
+    </div>
+
+    <ul id="comments"></ul>
+
+    <script>
+        let stompClient = null;
+        const postId = 12; // ID bài viết để test
+        const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5Iiwic2NvcGUiOiJVU0VSIG51bGwiLCJpc3MiOiJ3ZWJzaXRlLmNvbSIsImV4cCI6MTc1Mjc0NTUyMSwiaWF0IjoxNzUyNzQxOTIxLCJqdGkiOiIwYzc4MmU1Ny0xOTVjLTQwOWMtYWZhZS1kNmU1MmMyMzVjOGIiLCJlbWFpbCI6ImlyZW5lQGV4YW1wbGUuY29tIn0.Jpyiu-8JMGKY_QyFhkOn2kN9CDjFVpxANdoXpAYetu5QEWtfH3c_NhMkLB5xuuoRVaycVrgBG7ORckRA7nY1ZQ";
+
+        function connect() {
+            const socket = new SockJS("http://localhost:8080/ws");
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({ Authorization: "Bearer " + token }, (frame) => {
+                console.log("Connected: " + frame);
+                
+                // Lắng nghe broadcast comment mới
+                stompClient.subscribe(`/topic/posts/${postId}/comments`, (message) => {
+                    const newComment = JSON.parse(message.body);
+                    addCommentToUI(newComment);
+                });
+
+                // Lắng nghe danh sách comment ban đầu
+                stompClient.subscribe("/user/queue/comments", (message) => {
+                    const commentTree = JSON.parse(message.body);
+                    renderCommentTree(commentTree);
+                });
+
+                // Gửi yêu cầu lấy tất cả comment
+                stompClient.send(`/app/comments.fetchAll/${postId}`, {}, {});
+            });
+        }
+
+        function sendNewComment() {
+            const content = document.getElementById("commentInput").value;
+            if (!content.trim() || !stompClient) return;
+
+            const commentRequest = {
+                content: content,
+                postId: postId,
+                parentCommentId: null // Gửi comment gốc
+            };
+
+            stompClient.send(
+                `/app/comments.add/${postId}`,
+                {},
+                JSON.stringify(commentRequest)
+            );
+            document.getElementById("commentInput").value = "";
+        }
+
+        // Hàm chính để vẽ toàn bộ cây comment ban đầu
+        function renderCommentTree(commentTree) {
+            const commentsUl = document.getElementById("comments");
+            commentsUl.innerHTML = ''; // Xóa các comment cũ
+            commentTree.forEach(comment => {
+                createCommentElement(comment, commentsUl);
+            });
+        }
+
+        // Hàm đệ quy để tạo và hiển thị một comment và các con của nó
+        function createCommentElement(comment, parentElement) {
+            const li = document.createElement("li");
+            li.id = `comment-${comment.commentId}`;
+            
+            const authorName = comment.fullName ? comment.fullName : `User ${comment.userId}`;
+            li.innerHTML = `<b>${authorName}:</b> ${comment.content}`;
+            
+            // Xử lý đệ quy cho các comment con
+            if (comment.replies && comment.replies.length > 0) {
+                const repliesUl = document.createElement("ul");
+                comment.replies.forEach(reply => {
+                    createCommentElement(reply, repliesUl);
+                });
+                li.appendChild(repliesUl);
+            }
+            
+            parentElement.appendChild(li);
+        }
+
+        // Hàm tìm và thêm comment mới vào đúng vị trí trên cây
+        function addCommentToUI(newComment) {
+            let parentElement;
+            if (newComment.parentCommentId) {
+                // Nếu là reply, tìm thẻ <li> của cha
+                const parentLi = document.getElementById(`comment-${newComment.parentCommentId}`);
+                if (parentLi) {
+                    // Tìm hoặc tạo thẻ <ul> cho các replies bên trong cha
+                    parentElement = parentLi.querySelector('ul');
+                    if (!parentElement) {
+                        parentElement = document.createElement('ul');
+                        parentLi.appendChild(parentElement);
+                    }
+                } else {
+                    // Nếu không tìm thấy cha, tạm thời thêm vào gốc
+                    parentElement = document.getElementById("comments");
+                }
+            } else {
+                // Nếu là comment gốc, thêm vào thẻ <ul> chính
+                parentElement = document.getElementById("comments");
+            }
+            
+            if (parentElement) {
+                createCommentElement(newComment, parentElement);
+            }
+        }
+
+        // Bạn có thể gọi connect() ngay khi tải trang nếu muốn
+        // connect();
+    </script>
+</body>
+</html>

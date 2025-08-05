@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -222,4 +222,83 @@
 </script>
 
 </body>
-</html>
+</html> -->
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Test Comment WebSocket</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+  </head>
+  <body>
+    <h2>Test Socket Comment</h2>
+
+    <input type="text" id="commentInput" placeholder="Nội dung bình luận" />
+    <button onclick="sendComment()">Gửi bình luận</button>
+
+    <ul id="comments"></ul>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+    <!-- ✅ Tải STOMP sau -->
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <script>
+      let stompClient = null;
+      const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5Iiwic2NvcGUiOiJVU0VSIG51bGwiLCJpc3MiOiJ3ZWJzaXRlLmNvbSIsImV4cCI6MTc1MjkyMDIwNCwiaWF0IjoxNzUyOTE2NjA0LCJqdGkiOiI5NmE1NzJlZS02YmI2LTQ0NzUtYmQwZi1iNDlhOWE1ZmQzMTMiLCJlbWFpbCI6ImlyZW5lQGV4YW1wbGUuY29tIn0.ISjYY4Ol7gTZG91o-2QFlnJcQo8f2hl3z725tiQwUtBOK-CUnRi_yFZtobix7ux5DG9Pdcn0CcDEnbFdj85-Lg"
+
+      function connect() {
+        const socket = new SockJS("http://localhost:8080/ws");
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({ Authorization: "Bearer " + token }, (frame) => {
+          console.log("Connected: " + frame);
+
+          stompClient.subscribe("/topic/posts/12/comments", (message) => {
+            const comment = JSON.parse(message.body);
+            displayComment(comment);
+          });
+
+          stompClient.subscribe("/user/queue/comments", (message) => {
+            const commentList = JSON.parse(message.body);
+            commentList.forEach(displayComment);
+          });
+
+          stompClient.send("/app/comments.fetchAll/12", {}, {});
+        });
+      }
+
+      function sendComment() {
+        const content = document.getElementById("commentInput").value;
+        const commentRequest = {
+          content: content,
+          postId: 12,
+          parentCommentId: null,
+          level: 1,
+          isEdited: false,
+          isDeleted: false,
+          token: token, // thêm dòng này
+        };
+
+        stompClient.send(
+          "/app/comments.add/12",
+          {},
+          JSON.stringify(commentRequest)
+        );
+        document.getElementById("commentInput").value = "";
+      }
+
+      function displayComment(comment) {
+        const li = document.createElement("li");
+        li.textContent = comment.fullName + ": " + comment.content;
+        document.getElementById("comments").appendChild(li);
+      }
+
+      connect();
+    </script>
+  </body>
+</html> -->
