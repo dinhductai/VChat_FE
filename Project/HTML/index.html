@@ -55,9 +55,10 @@
           </a>
 
           <!-- Tìm kiếm (ẩn trên mobile) -->
+          <!-- Form tìm kiếm cho màn hình lớn -->
           <form
-            class="d-md-none d-lg-flex ms-2"
-            style="position: relative; width: 250px"
+            class="d-none d-lg-flex ms-2 position-relative"
+            style="width: 250px"
           >
             <i
               class="bi bi-search text-secondary position-absolute top-50 start-0 translate-middle-y ms-3"
@@ -69,8 +70,10 @@
               style="background-color: #f0f2f5; height: 35px; width: 240px"
             />
           </form>
+
+          <!-- Nút tìm kiếm cho thiết bị nhỏ -->
           <button
-            class="btn btn-light d-block d-lg-none ms-2"
+            class="btn btn-light d-lg-none ms-2"
             id="mobileSearchBtn"
             type="button"
             onclick="toggleMobileSearch()"
@@ -83,19 +86,19 @@
         <div class="d-none d-lg-flex mx-auto" id="menuTabs">
           <div class="d-flex justify-content-center text-center">
             <div class="menu-item px-5 active" data-link="#">
-              <a href="#"><i class="bi bi-house fs-4 active"></i></a>
+              <a href="#"><i class="bi bi-house-door-fill fs-4 active"></i></a>
               <div class="indicator"></div>
             </div>
             <div class="menu-item px-5" data-link="friend.html">
-              <a><i class="bi bi-person fs-4"></i></a>
+              <a><i class="bi bi-people-fill fs-4"></i></a>
               <div class="indicator"></div>
             </div>
             <div class="menu-item px-5" data-link="/">
-              <a href="#"><i class="bi bi-tv fs-4"></i></a>
+              <a href="#"><i class="bi bi-play-btn-fill fs-4"></i></a>
               <div class="indicator"></div>
             </div>
             <div class="menu-item px-5" data-link="/">
-              <a href="#"><i class="bi bi-bell fs-4"></i></a>
+              <a href="#"><i class="bi bi-bell-fill fs-4"></i></a>
               <div class="indicator"></div>
             </div>
           </div>
@@ -104,11 +107,107 @@
         <!-- ICONS + AVATAR -->
         <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
           <!-- App grid -->
+          <!-- Icon Grid -->
           <div
+            id="menuToggle"
             class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
-            style="width: 40px; height: 40px; cursor: pointer"
+            style="
+              width: 40px;
+              height: 40px;
+              cursor: pointer;
+              position: relative;
+            "
           >
             <i class="bi bi-grid-3x3-gap-fill fs-5 text-dark"></i>
+          </div>
+
+          <!-- Dropdown menu -->
+          <div
+            id="menuDropdown"
+            class="position-absolute bg-white shadow rounded-4 p-3"
+            style="
+              top: 60px;
+              right: 10px;
+              width: 250px;
+              display: none;
+              z-index: 9999;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                'Helvetica Neue', Arial, sans-serif;
+            "
+          >
+            <h5 class="mb-2" style="font-weight: 700; font-size: 25px">Menu</h5>
+            <hr class="my-2" />
+
+            <div class="px-1">
+              <!-- 🔵 Post -->
+              <div
+                class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
+                style="cursor: pointer; transition: background 0.2s"
+                onmouseover="this.style.background='#f0f2f5'"
+                onmouseout="this.style.background='transparent'"
+                onclick="openPostModal()"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center"
+                  style="
+                    width: 44px;
+                    height: 44px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+                    margin-left: 10px;
+                  "
+                >
+                  <i class="bi bi-file-post text-white fs-5"></i>
+                </div>
+                <span style="font-size: 15px; font-weight: 500">Post</span>
+              </div>
+
+              <!-- 🟠 Story -->
+              <div
+                class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
+                style="cursor: pointer; transition: background 0.2s"
+                onmouseover="this.style.background='#f0f2f5'"
+                onmouseout="this.style.background='transparent'"
+                onclick="window.location.href='tao_tin.html'"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center"
+                  style="
+                    width: 44px;
+                    height: 44px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+                    margin-left: 10px;
+                  "
+                >
+                  <i class="bi bi-book-half text-white fs-5"></i>
+                </div>
+                <span style="font-size: 15px; font-weight: 500">Story</span>
+              </div>
+
+              <!-- 🟣 Reel -->
+              <div
+                class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
+                style="cursor: pointer; transition: background 0.2s"
+                onmouseover="this.style.background='#f0f2f5'"
+                onmouseout="this.style.background='transparent'"
+                onclick="window.location.href='tao_tin.html'"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center"
+                  style="
+                    width: 44px;
+                    height: 44px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #84fab0, #8fd3f4);
+                    margin-left: 10px;
+                  "
+                >
+                  <i class="bi bi-fast-forward-btn-fill text-white fs-5"></i>
+                </div>
+                <span style="font-size: 15px; font-weight: 500">Reel</span>
+              </div>
+            </div>
           </div>
 
           <!-- Messenger -->
@@ -182,11 +281,54 @@
           </div>
 
           <!-- Bell -->
+          <!-- 🔔 Nút chuông -->
           <div
+            id="notificationBell"
             class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
-            style="width: 40px; height: 40px; cursor: pointer"
+            style="
+              width: 40px;
+              height: 40px;
+              cursor: pointer;
+              position: relative;
+            "
           >
             <i class="bi bi-bell fs-5 text-dark"></i>
+            <span
+              id="notificationBadge"
+              class="notification-badge d-none"
+              style="
+                position: absolute;
+                top: -4px;
+                right: -4px;
+                background: red;
+                color: white;
+                font-size: 10px;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 16px;
+              "
+              >0</span
+            >
+          </div>
+          <!-- Dropdown thông báo -->
+          <div
+            id="notificationDropdown"
+            class="dropdown-menu p-3 shadow"
+            style="
+              display: none;
+              position: absolute;
+              top: 60px;
+              right: 20px;
+              width: 360px;
+              max-height: 400px;
+              overflow-y: auto;
+              z-index: 9999;
+            "
+          >
+            <h4 style="font-weight: bold">Notifications</h4>
+            <div id="notificationList"></div>
           </div>
 
           <!-- Avatar -->
@@ -203,9 +345,6 @@
           </div>
 
           <!-- Dark mode -->
-          <button class="btn btn-sm btn-outline-secondary" id="toggleDarkBtn">
-            🌙 Dark Mode
-          </button>
         </div>
       </div>
     </nav>
@@ -219,17 +358,15 @@
             class="left-sidebar py-2 rounded full-height-sidebar"
             style="background-color: transparent"
           >
-            <div class="d-flex py-2 user-hover rounded-2 align-items-center">
+            <!-- User avatar -->
+            <div
+              class="d-flex align-items-center py-2 user-hover rounded-2 gap-2"
+            >
               <img
                 src="../images/IMG_2007.JPG"
                 alt=""
-                style="
-                  width: 40px;
-                  height: 40px;
-                  border: 1px solid #bdc3c7;
-                  margin-left: 5px;
-                "
                 class="rounded-circle userAvatar"
+                style="width: 40px; height: 40px; border: 1px solid #bdc3c7"
               />
               <a
                 href="profile.html"
@@ -238,9 +375,10 @@
               ></a>
             </div>
 
+            <!-- SocioAI -->
             <div
-              class="d-flex py-2 user-hover rounded-2"
-              style="align-items: center"
+              class="d-flex align-items-center py-2 user-hover rounded-2 gap-2"
+              onclick="window.location.href='/chatbot.html'"
             >
               <div
                 style="
@@ -256,11 +394,11 @@
                     #f00
                   );
                   border-radius: 50%;
-                  z-index: 9999;
                   cursor: pointer;
-                  margin-left: 5px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
                 "
-                onclick="window.location.href='/chatbot.html'"
               >
                 <div
                   style="
@@ -287,32 +425,106 @@
               </div>
               <a
                 href="chatbot.html"
-                class="d-block text-decoration-none text-dark ms-2"
-                style="font-weight: bold"
-                >Meta AI</a
+                class="text-decoration-none text-dark fw-bold flex-grow-1"
+                >SocioAI</a
               >
             </div>
 
+            <!-- Friends -->
             <div
-              class="d-flex py-2 user-hover rounded-2"
-              style="align-items: center"
+              class="d-flex align-items-center py-2 user-hover rounded-2 gap-2"
             >
               <div
-                style="
-                  width: 40px;
-                  height: 40px;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                "
+                class="d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px"
               >
-                <i class="fa-solid fa-user-group" style="font-size: 20px"></i>
+                <i
+                  class="fa-solid fa-user-group"
+                  style="
+                    font-size: 20px;
+                    background: linear-gradient(45deg, #0984e3, #81ecec);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                  "
+                ></i>
               </div>
               <a
                 href="friend.html"
-                class="d-block text-decoration-none text-dark ms-2"
-                style="font-weight: bold"
+                class="text-decoration-none text-dark fw-bold flex-grow-1"
                 >Friends</a
+              >
+            </div>
+
+            <!-- Save -->
+            <div
+              class="d-flex align-items-center py-2 user-hover rounded-2 gap-2"
+            >
+              <div
+                class="d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px"
+              >
+                <i
+                  class="bi bi-bookmark-check-fill"
+                  style="
+                    font-size: 25px;
+                    background: linear-gradient(45deg, #e84393, #a29bfe);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                  "
+                ></i>
+              </div>
+              <a
+                href="friend.html"
+                class="text-decoration-none text-dark fw-bold flex-grow-1"
+                >Saved</a
+              >
+            </div>
+
+            <!-- Video -->
+            <div
+              class="d-flex align-items-center py-2 user-hover rounded-2 gap-2"
+            >
+              <div
+                class="d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px"
+              >
+                <i
+                  class="bi bi-youtube"
+                  style="
+                    font-size: 25px;
+                    background: linear-gradient(45deg, #0984e3, #74b9ff);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                  "
+                ></i>
+              </div>
+              <a
+                href="friend.html"
+                class="text-decoration-none text-dark fw-bold flex-grow-1"
+                >Video</a
+              >
+            </div>
+            <div
+              class="d-flex align-items-center py-2 user-hover rounded-2 gap-2"
+            >
+              <div
+                class="d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px"
+              >
+                <i
+                  class="bi bi-hourglass-split"
+                  style="
+                    font-size: 25px;
+                    background: linear-gradient(45deg, #e84393, #6c5ce7);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                  "
+                ></i>
+              </div>
+              <a
+                href="story.html"
+                class="text-decoration-none text-dark fw-bold flex-grow-1"
+                >Story</a
               >
             </div>
           </div>
@@ -323,7 +535,7 @@
           <div class="d-flex flex-column align-items-center w-100">
             <div
               class="post shadow-sm p-3 rounded mb-3 bg-white dark-mode-bg w-100"
-              style="max-width: 600px"
+              style="max-width: 625px"
             >
               <div class="d-flex align-items-center mb-2">
                 <img
@@ -371,7 +583,7 @@
             <!-- Story -->
             <div
               class="position-relative w-100 mb-3 rounded-3 story-wrapper"
-              style="background-color: #e4e6eb; max-width: 600px"
+              style="background-color: #e4e6eb; max-width: 625px"
             >
               <!-- Nút cuộn trái -->
               <button
@@ -829,7 +1041,7 @@
                     >
                       <span class="icon" data-emotion="LIKE">
                         <img
-                          src="../images/Animation/uv2XD2zFzt.gif"
+                          src="../images/Animation/like.gif"
                           alt="Like"
                           class="reaction-img"
                         />
@@ -1042,9 +1254,11 @@
         <div
           class="card-header d-flex justify-content-between align-items-center p-2"
         >
-          <div>
+          <div class="d-flex align-items-center">
             <img
+              id="friendAvatar"
               src="../images/user-default.webp"
+              alt="avatar"
               style="
                 width: 40px;
                 height: 40px;
@@ -1052,7 +1266,9 @@
                 border: 0.5px solid #65676b;
               "
             />
-            <span style="font-weight: bold">Nguyen sang</span>
+            <span id="friendName" style="font-weight: bold; margin-left: 10px"
+              >Người dùng</span
+            >
           </div>
           <button id="closeChatBtn" class="btn btn-sm btn-light rounded-circle">
             ✕
@@ -1251,6 +1467,7 @@
       textarea.style.height = textarea.scrollHeight + "px";
     }
   </script>
+  <script src="../Js/socket.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
   <script src="../Js/mess.js"></script>
@@ -1262,9 +1479,24 @@
   <script src="../Js/api-reaction.js"></script>
   <script src="../Js/api-chat-friends.js"></script>
   <script src="../Js/comment.js"></script>
+  <script src="../Js/notification.js"></script>
   <!-- ✅ Tải STOMP sau -->
-  <script src="../Js/socket.js"></script>
   <script></script>
   <script src="https://unpkg.com/lottie-web/build/player/lottie.min.js"></script>
   <script src="../Js/api-share-save-post.js"></script>
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const menuDropdown = document.getElementById("menuDropdown");
+
+    menuToggle.addEventListener("click", function (e) {
+      e.stopPropagation(); // Ngăn sự kiện lan ra ngoài
+      const isVisible = menuDropdown.style.display === "block";
+      menuDropdown.style.display = isVisible ? "none" : "block";
+    });
+
+    // Click ngoài thì ẩn menu
+    document.addEventListener("click", function () {
+      menuDropdown.style.display = "none";
+    });
+  </script>
 </html>

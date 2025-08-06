@@ -315,7 +315,7 @@
 
 .row-grid img {
   flex: 1;
-  height: 290px;
+  height: 295px;
   object-fit: cover;
   border-radius: 6px;
 }
@@ -438,4 +438,9 @@
   align-items: flex-start; /* ❗ quan trọng */
   justify-content: space-around;
   gap: 10px;
+}
+
+#menuDropdown .dropdown-item:hover {
+  background-color: #f8f9fa;
+  border-radius: 5px;
 }
