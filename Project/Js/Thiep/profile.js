@@ -907,11 +907,15 @@ document.getElementById('btn-confirm-delete-video').onclick = async function() {
     } catch {}
   }
   alert(`Đã xóa ${successCount} video!`);
-  window.isVideoDeleteMode = false;
-  window.selectedVideoUrls = [];
-  document.getElementById('btn-confirm-delete-video').style.display = 'none';
-  document.getElementById('btn-cancel-delete-video').style.display = 'none';
-  loadVideos();
+  // window.isVideoDeleteMode = false;
+  // window.selectedVideoUrls = [];
+  // document.getElementById('btn-confirm-delete-video').style.display = 'none';
+  // document.getElementById('btn-cancel-delete-video').style.display = 'none';
+  // loadVideos();
+
+  window.location.reload();
+
+
 };
 
 function renderVideos(videoList) {

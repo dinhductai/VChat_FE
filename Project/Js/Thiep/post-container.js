@@ -7,77 +7,77 @@ const loadingSpinner = document.getElementById("loading");
 
 // Hàm gọi API lấy post
 async function loadPosts() {
-  if (isLoading || isLastPage) return;
+    if (isLoading || isLastPage) return;
 
-  isLoading = true;
-  loadingSpinner.classList.remove("d-none");
+    isLoading = true;
+    loadingSpinner.classList.remove("d-none");
 
-  try {
-    const response = await fetch(
-      `http://localhost:8080/api/post/owner?page=${currentPage}&size=${pageSize}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    try {
+        const response = await fetch(
+            `http://localhost:8080/api/post/owner?page=${currentPage}&size=${pageSize}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                },
+            }
+        );
 
-    // ✅ Kiểm tra HTTP status trước khi xử lý JSON
-    if (!response.ok) {
-      const errorText = await response.text(); // Lấy nội dung trả về nếu có
-      console.error("API trả về lỗi HTTP", response.status, errorText);
-      throw new Error("API trả về lỗi");
+        // ✅ Kiểm tra HTTP status trước khi xử lý JSON
+        if (!response.ok) {
+            const errorText = await response.text(); // Lấy nội dung trả về nếu có
+            console.error("API trả về lỗi HTTP", response.status, errorText);
+            throw new Error("API trả về lỗi");
+        }
+
+        const data = await response.json(); // ✅ Không lỗi nữa
+        console.log(data);
+        if (data?.data?.content && Array.isArray(data.data.content)) {
+            data.data.content.forEach((post) => {
+                console.log(post);
+                renderPost(post); // 👈 Hàm hiển thị bài viết
+                fetchReactionState(post.postId);
+            });
+        } else {
+            console.warn("Không có bài viết nào hoặc sai cấu trúc!");
+        }
+
+        // ✅ Kiểm tra trang cuối
+        const currentPageNumber = data.data.page.number;
+        const totalPages = data.data.page.totalPages;
+
+        if (currentPageNumber + 1 >= totalPages) {
+            isLastPage = true;
+        } else {
+            currentPage++;
+        }
+    } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
     }
 
-    const data = await response.json(); // ✅ Không lỗi nữa
-    console.log(data);
-    if (data?.data?.content && Array.isArray(data.data.content)) {
-      data.data.content.forEach((post) => {
-        console.log(post);
-        renderPost(post); // 👈 Hàm hiển thị bài viết
-        fetchReactionState(post.postId);
-      });
-    } else {
-      console.warn("Không có bài viết nào hoặc sai cấu trúc!");
-    }
-
-    // ✅ Kiểm tra trang cuối
-    const currentPageNumber = data.data.page.number;
-    const totalPages = data.data.page.totalPages;
-
-    if (currentPageNumber + 1 >= totalPages) {
-      isLastPage = true;
-    } else {
-      currentPage++;
-    }
-  } catch (error) {
-    console.error("Lỗi khi gọi API:", error);
-  }
-
-  isLoading = false;
-  loadingSpinner.classList.add("d-none");
+    isLoading = false;
+    loadingSpinner.classList.add("d-none");
 }
 
 // Hàm hiển thị 1 bài post
 function renderPost(post, insert = true) {
-  const postContainer = document.getElementById("postContainer");
+    const postContainer = document.getElementById("postContainer");
 
-  // Hàm xử lý hiển thị ảnh theo số lượng
-  function renderImages(photos) {
-    if (!Array.isArray(photos) || photos.length === 0) return "";
+    // Hàm xử lý hiển thị ảnh theo số lượng
+    function renderImages(photos) {
+        if (!Array.isArray(photos) || photos.length === 0) return "";
 
-    if (photos.length === 1) {
-      return `
+        if (photos.length === 1) {
+            return `
         <div class="post-images-grid single-image mb-2">
           <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${post.postId}')" />
         </div>
       `;
-    }
+        }
 
-    if (photos.length === 2) {
-      return `
+        if (photos.length === 2) {
+            return `
         <div class="post-images-grid mb-2">
           <div class="row-grid">
            <img style="width: 50%;" src="${photos[0]}" onclick="openImageModal('${photos[0]}','${post.postId}')" />
@@ -85,10 +85,10 @@ function renderPost(post, insert = true) {
           </div>
         </div>
       `;
-    }
+        }
 
-    if (photos.length === 3) {
-      return `
+        if (photos.length === 3) {
+            return `
         <div class="post-images-grid mb-2">
           <div class="row-grid">
             <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${post.postId}')" />
@@ -99,32 +99,26 @@ function renderPost(post, insert = true) {
           </div>
         </div>
       `;
-    }
+        }
 
-    // ≥4 ảnh: grid 2x2, giới hạn 4 ảnh đầu
-    const limitedPhotos = photos.slice(0, 4);
-    return `
+        // ≥4 ảnh: grid 2x2, giới hạn 4 ảnh đầu
+        const limitedPhotos = photos.slice(0, 4);
+        return `
       <div class="post-images-grid mb-2">
         <div class="row-grid">
-          <img style="width: 50%;" src="${
-            limitedPhotos[0]
-          }" onclick="openImageModal('${limitedPhotos[0]}','${post.postId}')" />
-          <img style="width: 50%;" src="${
-            limitedPhotos[1]
-          }" onclick="openImageModal('${limitedPhotos[1]}','${post.postId}')" />
+          <img style="width: 50%;" src="${limitedPhotos[0]
+            }" onclick="openImageModal('${limitedPhotos[0]}','${post.postId}')" />
+          <img style="width: 50%;" src="${limitedPhotos[1]
+            }" onclick="openImageModal('${limitedPhotos[1]}','${post.postId}')" />
         </div>
         <div class="row-grid">
-          <img style="width: 50%;" src="${
-            limitedPhotos[2]
-          }" onclick="openImageModal('${limitedPhotos[2]}','${post.postId}')" />
+          <img style="width: 50%;" src="${limitedPhotos[2]
+            }" onclick="openImageModal('${limitedPhotos[2]}','${post.postId}')" />
           <div style="position: relative; flex: 1">
-            <img style="width: 100%; height: 100%" src="${
-              limitedPhotos[3]
-            }" onclick="openImageModal('${limitedPhotos[3]}','${
-      post.postId
-    }')" style="width: 50%; height: 100%; object-fit: cover; border-radius: 6px;" />
-            ${
-              photos.length > 4
+            <img style="width: 100%; height: 100%" src="${limitedPhotos[3]
+            }" onclick="openImageModal('${limitedPhotos[3]}','${post.postId
+            }')" style="width: 50%; height: 100%; object-fit: cover; border-radius: 6px;" />
+            ${photos.length > 4
                 ? `<div style="
                     position: absolute;
                     top: 0;
@@ -145,13 +139,13 @@ function renderPost(post, insert = true) {
         </div>
       </div>
     `;
-  }
+    }
 
-  // HTML video
-  const videoHTML = Array.isArray(post.videosUrl)
-    ? post.videosUrl
-        .map(
-          (url) => `
+    // HTML video
+    const videoHTML = Array.isArray(post.videosUrl)
+        ? post.videosUrl
+            .map(
+                (url) => `
         <video
           controls
           class="img-fluid rounded post-video my-2"
@@ -161,32 +155,30 @@ function renderPost(post, insert = true) {
           Trình duyệt không hỗ trợ phát video.
         </video>
       `
-        )
-        .join("")
-    : "";
+            )
+            .join("")
+        : "";
 
-  // Khung bài đăng
-  if (post.profilePicture == null) {
-    post.profilePicture = "../images/user-default.webp";
-  }
-  const html = `
-    <div class="post shadow-sm rounded bg-dark text-white col-10" data-post-id='${
-      post.postId
-    }'>
+    // Khung bài đăng
+    if (post.profilePicture == null) {
+        post.profilePicture = "../images/user-default.webp";
+    }
+    const html = `
+    <div class="post shadow-sm rounded text-white col-10"
+    style="background-color: #2f3337ff; margin: 10px auto; padding: 20px; position: relative;"    
+        data-post-id='${post.postId
+        }'>
        <div class="d-flex justify-content-between">
               <div class="d-flex align-items-center mb-2">
-                <img src="${
-                  post.profilePicture || "../images/user-default.webp"
-                }"
+                <img src="${post.profilePicture || "../images/user-default.webp"
+        }"
                 class="rounded-circle me-2" style="width: 40px; height:
                 40px;cursor: pointer; border: 1px solid #bdc3c7" alt="Avatar" />
                 <div>
-                  <strong style="cursor: pointer">${post.fullName}</strong
-                  ><br />
-                  <small class="text-muted"
-                    >${formatTimeAgo(post.uploadDate)}</small
-                  >
+                    <strong style="cursor: pointer; color: #bdc3c7;">${post.fullName}</strong><br />
+                     <small style="color: #bdc3c7;">${formatTimeAgo(post.uploadDate)}</small>
                 </div>
+
               </div>
                 <!-- Bao toàn bộ nút và menu vào .dropdown -->
 <div class="dropdown">
@@ -203,23 +195,37 @@ function renderPost(post, insert = true) {
   <!-- Menu nhỏ hiện ra khi bấm -->
   <ul class="dropdown-menu dropdown-menu-end custom-shadow border-0">
     <li>
-      <a class="dropdown-item" onclick="shareOrSavePost('SHARE', ${
-        post.postId
-      })"
-        ><i class="bi bi-share-fill me-2"></i> <span>Share Post</span>
-      </a>
-    </li>
+  <button
+    class="dropdown-item d-flex align-items-center"
+    onclick="shareOrSavePost('SHARE', ${post.postId})"
+    type="button"
+    style="background-color: #ffffff; color: black;"
+  >
+    <i class="bi bi-share-fill me-2"></i>
+    <span>Share Post</span>
+  </button>
+</li>
+
+
     <li>
-      <a class="dropdown-item" onclick="shareOrSavePost('SAVE', ${post.postId})"
-        ><i class="bi bi-bookmark-fill m2-2"></i> <span>Save Post</span>
-      </a>
-    </li>
+  <button
+    class="dropdown-item d-flex align-items-center"
+    onclick="shareOrSavePost('SAVE', ${post.postId})"
+    type="button"
+    style="background-color: #ffffff; color: #000000;"
+  >
+    <i class="bi bi-bookmark-fill me-2" style="color: #000000;"></i>
+    <span>Save Post</span>
+  </button>
+</li>
+
   </ul>
 </div>
 
 
             </div>
-      <p class="post-text">${post.content}</p>
+      <p class="post-text" style="color: #bdc3c7;">${post.content}</p>
+
 
       ${renderImages(post.photosUrl, post.postId)}
       ${videoHTML}
@@ -272,22 +278,21 @@ function renderPost(post, insert = true) {
                       /></span>
                     </div>
         </div>
-        <button class="btn btn-light w-100 me-1 btn-action toggle-comment" data-post-id="${
-          post.postId
+        <button class="btn btn-light w-100 me-1 btn-action toggle-comment" data-post-id="${post.postId
         }"   onclick="openAllImagesModal('${post.postId}')"
-  style="font-weight: bold; color: #65676b; font-size:15px;">
+  style="font-weight: bold; color: #bdc3c7; font-size:15px;">
           <i class="bi bi-chat-left"></i> Comment
         </button>
-        <button class="btn btn-light w-100 btn-action"  style="font-weight: bold; color: #65676b; font-size:15px;">
+        <button class="btn btn-light w-100 btn-action"  style="font-weight: bold; color: #bdc3c7; font-size:15px;">
           <i class="bi bi-share"></i> Share
         </button>
       </div>
     </div>
   `;
-  if (insert) {
-    postContainer.insertAdjacentHTML("beforeend", html);
-  }
-  return html;
+    if (insert) {
+        postContainer.insertAdjacentHTML("beforeend", html);
+    }
+    return html;
 }
 
 // Gọi lần đầu
@@ -295,149 +300,154 @@ loadPosts();
 
 // Lắng nghe cuộn trang
 window.addEventListener("scroll", () => {
-  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-  if (scrollTop + clientHeight >= scrollHeight - 100) {
-    loadPosts();
-  }
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+        loadPosts();
+    }
 });
 
 function formatTimeAgo(dateString) {
-  const now = new Date();
-  const postDate = new Date(dateString);
-  const diffInSeconds = Math.floor((now - postDate) / 1000);
+    const now = new Date();
+    const postDate = new Date(dateString);
+    const diffInSeconds = Math.floor((now - postDate) / 1000);
 
-  if (diffInSeconds < 60) {
-    return "Vừa xong";
-  } else if (diffInSeconds < 3600) {
-    const minutes = Math.floor(diffInSeconds / 60);
-    return `${minutes} phút trước`;
-  } else if (diffInSeconds < 86400) {
-    const hours = Math.floor(diffInSeconds / 3600);
-    return `${hours} giờ trước`;
-  } else if (diffInSeconds < 604800) {
-    const days = Math.floor(diffInSeconds / 86400);
-    return `${days} ngày trước`;
-  } else {
-    return postDate.toLocaleDateString("vi-VN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  }
+    if (diffInSeconds < 60) {
+        return "Vừa xong";
+    } else if (diffInSeconds < 3600) {
+        const minutes = Math.floor(diffInSeconds / 60);
+        return `${minutes} phút trước`;
+    } else if (diffInSeconds < 86400) {
+        const hours = Math.floor(diffInSeconds / 3600);
+        return `${hours} giờ trước`;
+    } else if (diffInSeconds < 604800) {
+        const days = Math.floor(diffInSeconds / 86400);
+        return `${days} ngày trước`;
+    } else {
+        return postDate.toLocaleDateString("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+        });
+    }
 }
 
 // openImageModal
 async function openImageModal(srcImg, postId) {
-  try {
-    const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-    });
-    if (!response.ok) throw new Error("Lỗi khi gọi API");
+    try {
+        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token,
+            },
+        });
+        if (!response.ok) throw new Error("Lỗi khi gọi API");
 
-    const post = await response.json();
-    resetModalState(); // Reset UI
-    renderPostToModal(srcImg, post); // Hiển thị
-    fetchReactionState(postId);
-    // 👉 Logic xử lý kết nối WebSocket
+        const post = await response.json();
+        resetModalState(); // Reset UI
+        renderPostToModal(srcImg, post); // Hiển thị
+        fetchReactionState(postId);
+        // 👉 Logic xử lý kết nối WebSocket
 
-    if (stompClient && stompClient.connected) {
-      stompClient.disconnect(() => {
-        console.log("🔌 Ngắt kết nối cũ để kết nối lại với postId mới");
-        // connect(postId);
-        connectComment(postId);
-      });
-    } else {
-      // connect(postId);
-      connectComment(postId);
+        if (stompClient && stompClient.connected) {
+            stompClient.disconnect(() => {
+                console.log("🔌 Ngắt kết nối cũ để kết nối lại với postId mới");
+                // connect(postId);
+                connectComment(postId);
+            });
+        } else {
+            // connect(postId);
+            connectComment(postId);
+        }
+    } catch (error) {
+        console.error("Lỗi load chi tiết bài viết:", error);
+        alert("Không thể tải nội dung bài viết");
     }
-  } catch (error) {
-    console.error("Lỗi load chi tiết bài viết:", error);
-    alert("Không thể tải nội dung bài viết");
-  }
 }
 
 function renderPostToModal(srcImg, post) {
-  console.log(post);
-  const profile_image = document.getElementById("profile_image");
-  const modalImg = document.getElementById("modalImage");
-  const userName = document.getElementById("post-userName");
-  const postTime = document.getElementById("postTime");
-  const postContent = document.getElementById("postContentID");
+    console.log(post);
+    const profile_image = document.getElementById("profile_image");
+    const modalImg = document.getElementById("modalImage");
+    const userName = document.getElementById("post-userName");
+    const postTime = document.getElementById("postTime");
+    const postContent = document.getElementById("postContentID");
 
-  // Cập nhật nội dung modal
-  modalImg.src = srcImg;
-  userName.textContent = post.data.fullName || "Ẩn danh";
-  postTime.textContent = formatTimeAgo(post.data.uploadDate);
-  postContent.textContent = post.data.content;
+    // Cập nhật nội dung modal
+    modalImg.src = srcImg;
+    userName.textContent = post.data.fullName || "Ẩn danh";
+    postTime.textContent = formatTimeAgo(post.data.uploadDate);
+    postContent.textContent = post.data.content;
 
-  // Avatar người đăng
-  const avatar =
-    post.data.profilePicture?.trim() && post.data.profilePicture !== "null"
-      ? post.data.profilePicture
-      : "../images/user-default.webp";
-  profile_image.src = avatar;
+    // Avatar người đăng
+    const avatar =
+        post.data.profilePicture?.trim() && post.data.profilePicture !== "null"
+            ? post.data.profilePicture
+            : "../images/user-default.webp";
+    profile_image.src = avatar;
 
-  // Lưu postId và userId nếu cần cho like/comment
-  const modal = document.getElementById("imageModal");
-  modal.setAttribute("data-post-id", post.data.postId);
-  modal.setAttribute("data-user-id", post.data.userId);
-  modal.querySelector(".like-btn").id = `like-btn-${post.data.postId}`;
+    // Lưu postId và userId nếu cần cho like/comment
+    const modal = document.getElementById("imageModal");
+    modal.setAttribute("data-post-id", post.data.postId);
+    modal.setAttribute("data-user-id", post.data.userId);
+    modal.querySelector(".like-btn").id = `like-btn-${post.data.postId}`;
 
-  // Ẩn icon AI nếu có
-  const aiIcon = document.getElementById("ai");
-  if (aiIcon) {
-    aiIcon.style.display = "none";
-  }
-
-  // Hiển thị modal
-  const imageModal = new bootstrap.Modal(modal);
-  imageModal.show();
-}
-document
-  .getElementById("imageModal")
-  .addEventListener("hidden.bs.modal", function () {
+    // Ẩn icon AI nếu có
     const aiIcon = document.getElementById("ai");
     if (aiIcon) {
-      aiIcon.style.display = "block";
+        aiIcon.style.display = "none";
     }
-  });
+
+    // Hiển thị modal
+    const imageModal = new bootstrap.Modal(modal);
+    imageModal.show();
+}
+document
+    .getElementById("imageModal")
+    .addEventListener("hidden.bs.modal", function () {
+        const aiIcon = document.getElementById("ai");
+        if (aiIcon) {
+            aiIcon.style.display = "block";
+        }
+    });
 
 document.addEventListener("DOMContentLoaded", function () {
-  document
-    .getElementById("sendCommentBtn")
-    .addEventListener("click", sendComment);
+    document
+        .getElementById("sendCommentBtn")
+        .addEventListener("click", sendComment);
 });
 
 function resetModalState() {
-  // Reset ảnh
-  document.getElementById("modalImage").src = "";
+    // Reset modal ảnh từng post (imageModal)
+    const modalImg = document.getElementById("modalImage");
+    if (modalImg) modalImg.src = "";
 
-  // Reset user info
-  document.getElementById("profile_image").src = "../images/user-default.webp";
-  document.getElementById("post-userName").textContent = "";
-  document.getElementById("postTime").textContent = "";
+    const profile_image = document.getElementById("profile_image");
+    if (profile_image) profile_image.src = "../images/user-default.webp";
 
-  // Reset nội dung bài viết
-  document.getElementById("postContentID").textContent = "";
+    const userName = document.getElementById("post-userName");
+    if (userName) userName.textContent = "";
 
-  // Reset comment list
-  document.getElementById("commentList").innerHTML = "";
+    const postTime = document.getElementById("postTime");
+    if (postTime) postTime.textContent = "";
 
-  // Reset ô nhập comment
-  document.getElementById("commentInput").value = "";
+    const postContent = document.getElementById("postContentID");
+    if (postContent) postContent.textContent = "";
 
-  // Reset nút cảm xúc
-  const likeBtn = document.querySelector(".like-btn");
-  if (likeBtn) {
-    likeBtn.innerHTML = `<i class="bi bi-hand-thumbs-up"></i> Like`;
-    likeBtn.classList.remove("active");
-  }
+    // Reset comment list
+    const commentList = document.getElementById("commentList");
+    if (commentList) commentList.innerHTML = "";
 
-  // Nếu có popup cảm xúc/emoji khác thì cũng reset ở đây
+    // Reset ô nhập comment
+    const commentInput = document.getElementById("commentInput");
+    if (commentInput) commentInput.value = "";
+
+    // Reset nút cảm xúc
+    const likeBtn = document.querySelector(".like-btn");
+    if (likeBtn) {
+        likeBtn.innerHTML = `<i class="bi bi-hand-thumbs-up"></i> Like`;
+        likeBtn.classList.remove("active");
+    }
 }
 
 // function updateLikeButton(postId, emotionName) {
@@ -471,148 +481,148 @@ function resetModalState() {
 // }
 
 async function fetchReactionState(postId) {
-  try {
-    const res = await fetch(
-      `http://localhost:8080/api/reaction/cnt-check?postId=${postId}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    const data = await res.json();
-    const emotion = data?.data?.emotionName;
-    const btnInModal = document.querySelector(`#like-btn-${postId}`);
-    const btnInHome = document.querySelector(`#like-btn-home-${postId}`);
+    try {
+        const res = await fetch(
+            `http://localhost:8080/api/reaction/cnt-check?postId=${postId}`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        const data = await res.json();
+        const emotion = data?.data?.emotionName;
+        const btnInModal = document.querySelector(`#like-btn-${postId}`);
+        const btnInHome = document.querySelector(`#like-btn-home-${postId}`);
 
-    if (emotion && emotionMap && emotionMap[emotion]) {
-      const { icon, label, color } = emotionMap[emotion];
+        if (emotion && emotionMap && emotionMap[emotion]) {
+            const { icon, label, color } = emotionMap[emotion];
 
-      if (btnInModal) {
-        btnInModal.innerHTML = `${icon} ${label}`;
-        btnInModal.style.color = color;
-      }
+            if (btnInModal) {
+                btnInModal.innerHTML = `${icon} ${label}`;
+                btnInModal.style.color = color;
+            }
 
-      if (btnInHome) {
-        btnInHome.innerHTML = `${icon} ${label}`;
-        btnInHome.style.color = color;
-      }
-      currentReaction = emotion;
-    } else {
-      // Không có cảm xúc -> reset
-      const defaultContent = `<i class="bi bi-hand-thumbs-up"></i> Like`;
+            if (btnInHome) {
+                btnInHome.innerHTML = `${icon} ${label}`;
+                btnInHome.style.color = color;
+            }
+            currentReaction = emotion;
+        } else {
+            // Không có cảm xúc -> reset
+            const defaultContent = `<i class="bi bi-hand-thumbs-up"></i> Like`;
 
-      if (btnInModal) {
-        btnInModal.innerHTML = defaultContent;
-        btnInModal.style.color = "";
-      }
+            if (btnInModal) {
+                btnInModal.innerHTML = defaultContent;
+                btnInModal.style.color = "";
+            }
 
-      if (btnInHome) {
-        btnInHome.innerHTML = defaultContent;
-        btnInHome.style.color = "";
-      }
+            if (btnInHome) {
+                btnInHome.innerHTML = defaultContent;
+                btnInHome.style.color = "";
+            }
 
-      currentReaction = null;
+            currentReaction = null;
+        }
+    } catch (err) {
+        console.error("Lỗi fetch trạng thái reaction:", err);
     }
-  } catch (err) {
-    console.error("Lỗi fetch trạng thái reaction:", err);
-  }
 }
 
 document.addEventListener("click", function (e) {
-  if (e.target.closest(".toggle-comment")) {
-    const button = e.target.closest(".toggle-comment");
-    const postId = button.getAttribute("data-post-id");
-    console.log(postId);
-    openAllImagesModal(postId);
-  }
+    if (e.target.closest(".toggle-comment")) {
+        const button = e.target.closest(".toggle-comment");
+        const postId = button.getAttribute("data-post-id");
+        console.log(postId);
+        openAllImagesModal(postId);
+    }
 });
 
 async function openAllImagesModal(postId) {
-  try {
-    const res = await fetch(`http://localhost:8080/api/post/${postId}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) throw new Error("Không thể lấy chi tiết bài viết");
+    try {
+        const res = await fetch(`http://localhost:8080/api/post/${postId}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        if (!res.ok) throw new Error("Không thể lấy chi tiết bài viết");
 
-    const data = await res.json();
-    console.log("📥 JSON nhận được:", data); // 👉 log ở đây
+        const data = await res.json();
+        console.log("📥 JSON nhận được:", data); // 👉 log ở đây
 
-    // Gán thông tin user
-    const avatarEl = document.getElementById("allImagesAvatar");
-    const nameEl = document.getElementById("allImagesName");
-    const timeEl = document.getElementById("allImagesTime");
-    const contentEl = document.getElementById("allImagesContent");
+        // Gán thông tin user
+        const avatarEl = document.getElementById("allImagesAvatar");
+        const nameEl = document.getElementById("allImagesName");
+        const timeEl = document.getElementById("allImagesTime");
+        const contentEl = document.getElementById("allImagesContent");
 
-    avatarEl.src =
-      data.data.profilePicture?.trim() && data.data.profilePicture !== "null"
-        ? data.data.profilePicture
-        : "../images/user-default.webp";
-    nameEl.textContent = data.data.fullName;
-    timeEl.textContent = formatTimeAgo(data.data.uploadDate);
-    contentEl.textContent = data.data.content || "";
+        avatarEl.src =
+            data.data.profilePicture?.trim() && data.data.profilePicture !== "null"
+                ? data.data.profilePicture
+                : "../images/user-default.webp";
+        nameEl.textContent = data.data.fullName;
+        timeEl.textContent = formatTimeAgo(data.data.uploadDate);
+        contentEl.textContent = data.data.content || "";
 
-    // Gán ảnh
-    const grid = document.getElementById("allImagesGrid");
-    grid.innerHTML = ""; // reset
+        // Gán ảnh
+        const grid = document.getElementById("allImagesGrid");
+        grid.innerHTML = ""; // reset
 
-    if (data.data.photosUrl && data.data.photosUrl.length > 0) {
-      grid.innerHTML = renderPhotosHTML(data.data.photosUrl);
+        if (data.data.photosUrl && data.data.photosUrl.length > 0) {
+            grid.innerHTML = renderPhotosHTML(data.data.photosUrl);
+        }
+
+        // Gán phần video (nếu có)
+        const videoGrid = document.getElementById("allVideosGrid");
+        videoGrid.innerHTML = ""; // reset
+
+        if (data.data.videosUrl && data.data.videosUrl.length > 0) {
+            videoGrid.innerHTML = renderVideosHTML(data.data.videosUrl);
+        }
+
+        // Ẩn/hiện khung nếu không có ảnh & không có video
+        const hasMedia =
+            (data.data.photosUrl && data.data.photosUrl.length > 0) ||
+            (data.data.videosUrl && data.data.videosUrl.length > 0);
+
+        const mediaWrapper = document.getElementById("mediaWrapper");
+        if (!hasMedia) {
+            mediaWrapper.style.display = "none";
+        } else {
+            mediaWrapper.style.display = "block";
+        }
+
+        // Reset phần bình luận
+        resetModalState(); // hàm này bạn đã có để reset comment hoặc reply state
+
+        // Mở modal ảnh
+        const modal = new bootstrap.Modal(
+            document.getElementById("allImagesModal")
+        );
+        modal.show();
+
+        // Gọi socket và reaction
+        connectComment(postId); // kết nối socket bình luận riêng post này
+        fetchReactionState(postId); // gọi lại trạng thái cảm xúc nếu có
+    } catch (err) {
+        console.error("❌ Lỗi khi mở modal tất cả ảnh:", err);
+        alert("Không thể mở chi tiết bài viết");
     }
-
-    // Gán phần video (nếu có)
-    const videoGrid = document.getElementById("allVideosGrid");
-    videoGrid.innerHTML = ""; // reset
-
-    if (data.data.videosUrl && data.data.videosUrl.length > 0) {
-      videoGrid.innerHTML = renderVideosHTML(data.data.videosUrl);
-    }
-
-    // Ẩn/hiện khung nếu không có ảnh & không có video
-    const hasMedia =
-      (data.data.photosUrl && data.data.photosUrl.length > 0) ||
-      (data.data.videosUrl && data.data.videosUrl.length > 0);
-
-    const mediaWrapper = document.getElementById("mediaWrapper");
-    if (!hasMedia) {
-      mediaWrapper.style.display = "none";
-    } else {
-      mediaWrapper.style.display = "block";
-    }
-
-    // Reset phần bình luận
-    resetModalState(); // hàm này bạn đã có để reset comment hoặc reply state
-
-    // Mở modal ảnh
-    const modal = new bootstrap.Modal(
-      document.getElementById("allImagesModal")
-    );
-    modal.show();
-
-    // Gọi socket và reaction
-    connectComment(postId); // kết nối socket bình luận riêng post này
-    fetchReactionState(postId); // gọi lại trạng thái cảm xúc nếu có
-  } catch (err) {
-    console.error("❌ Lỗi khi mở modal tất cả ảnh:", err);
-    alert("Không thể mở chi tiết bài viết");
-  }
 }
 
 function renderPhotosHTML(photos) {
-  if (photos.length === 1) {
-    return `
+    if (photos.length === 1) {
+        return `
       <div class="post-images-grid single-image mb-2">
       <img src="${photos[0]}" style="width: 666px; height: 100%; object-fit: cover;" />
       </div>
     `;
-  }
+    }
 
-  if (photos.length === 2) {
-    return `
+    if (photos.length === 2) {
+        return `
     <div class="post-images-grid mb-2" style="max-width: 700px; margin: auto; display: flex; flex-direction: row; gap: 4px; height: 500px;">
       <div style="flex: 1; overflow: hidden; border-radius: 8px;">
         <img src="${photos[0]}" style="width: 100%; height: 100%; object-fit: cover;" />
@@ -622,10 +632,10 @@ function renderPhotosHTML(photos) {
       </div>
     </div>
   `;
-  }
+    }
 
-  if (photos.length === 3) {
-    return `
+    if (photos.length === 3) {
+        return `
     <div class="post-images-grid mb-2" style="display: flex; flex-direction: column; gap: 4px; max-width: 700px; margin: auto;">
       
       <!-- Ảnh đầu tiên -->
@@ -645,35 +655,30 @@ function renderPhotosHTML(photos) {
 
     </div>
   `;
-  }
+    }
 
-  const limitedPhotos = photos.slice(0, 4);
-  return `
+    const limitedPhotos = photos.slice(0, 4);
+    return `
   <div class="post-images-grid mb-2" style="max-width: 700px; margin: auto; display: flex; flex-direction: column; gap: 4px;">
     <div style="display: flex; gap: 4px; height: 240px;">
       <div style="flex: 1; overflow: hidden; border-radius: 8px;">
-        <img src="${
-          limitedPhotos[0]
+        <img src="${limitedPhotos[0]
         }" style="width: 100%; height: 100%; object-fit: cover;" />
       </div>
       <div style="flex: 1; overflow: hidden; border-radius: 8px;">
-        <img src="${
-          limitedPhotos[1]
+        <img src="${limitedPhotos[1]
         }" style="width: 100%; height: 100%; object-fit: cover;" />
       </div>
     </div>
     <div style="display: flex; gap: 4px; height: 240px;">
       <div style="flex: 1; overflow: hidden; border-radius: 8px;">
-        <img src="${
-          limitedPhotos[2]
+        <img src="${limitedPhotos[2]
         }" style="width: 100%; height: 100%; object-fit: cover;" />
       </div>
       <div style="flex: 1; overflow: hidden; border-radius: 8px; position: relative;">
-        <img src="${
-          limitedPhotos[3]
+        <img src="${limitedPhotos[3]
         }" style="width: 100%; height: 100%; object-fit: cover;" />
-        ${
-          photos.length > 4
+        ${photos.length > 4
             ? `<div style="
                 position: absolute;
                 top: 0;
@@ -698,14 +703,14 @@ function renderPhotosHTML(photos) {
 }
 
 function renderVideosHTML(videos) {
-  return videos
-    .map(
-      (url) => `
+    return videos
+        .map(
+            (url) => `
     <video controls style="width: 100%; max-height: 450px; border-radius: 8px;" class="mb-2">
       <source src="${url}" type="video/mp4" />
       Trình duyệt không hỗ trợ video.
     </video>
   `
-    )
-    .join("");
+        )
+        .join("");
 }

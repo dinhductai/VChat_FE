@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form.onsubmit = async function (e) {
         e.preventDefault();
       
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('accessToken');
         const videoInput = document.getElementById('input-reel-file-modal');
         const contentInput = document.getElementById('reel-content');
         const isPublicChecked = document.getElementById('reel-public').checked;
