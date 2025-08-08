@@ -647,7 +647,6 @@ document.addEventListener("click", function (e) {
   if (e.target.closest(".toggle-comment")) {
     const button = e.target.closest(".toggle-comment");
     const postId = button.getAttribute("data-post-id");
-    console.log(postId);
     openAllImagesModal(postId);
   }
 });
@@ -670,7 +669,8 @@ async function openAllImagesModal(postId) {
     const nameEl = document.getElementById("allImagesName");
     const timeEl = document.getElementById("allImagesTime");
     const contentEl = document.getElementById("allImagesContent");
-
+    const modal2 = document.getElementById("allImagesModal");
+    modal2.setAttribute("data-post-id", postId); // gắn id vào modal
     avatarEl.src =
       data.data.profilePicture?.trim() && data.data.profilePicture !== "null"
         ? data.data.profilePicture
@@ -708,8 +708,6 @@ async function openAllImagesModal(postId) {
     }
 
     // Reset phần bình luận
-    resetModalState(); // hàm này bạn đã có để reset comment hoặc reply state
-
     // Mở modal ảnh
     const modal = new bootstrap.Modal(
       document.getElementById("allImagesModal")
@@ -718,6 +716,7 @@ async function openAllImagesModal(postId) {
 
     // Gọi socket và reaction
     connectComment(postId); // kết nối socket bình luận riêng post này
+    loadComments(postId, 1);
     fetchReactionState(postId); // gọi lại trạng thái cảm xúc nếu có
   } catch (err) {
     console.error("❌ Lỗi khi mở modal tất cả ảnh:", err);

@@ -1,5 +1,10 @@
 function connectComment(postId) {
   connectWebSocket(() => {
+    if (!stompClient.connected) {
+      console.warn("WebSocket chưa sẵn sàng.");
+      return;
+    }
+
     // Nếu đã sub post khác, hủy sub cũ
     if (currentSubscribedPostId !== postId) {
       if (currentSubscribedPostId) {
@@ -10,7 +15,7 @@ function connectComment(postId) {
 
       currentSubscribedPostId = postId;
 
-      // Sub topic nhận bình luận mới
+      // Sub nhận bình luận mới
       stompClient.subscribe(`/topic/posts/${postId}/comments`, (message) => {
         const comment = JSON.parse(message.body);
         appendSingleComment(comment);
@@ -18,10 +23,10 @@ function connectComment(postId) {
 
       // Sub nhận danh sách comment từ server
       stompClient.subscribe("/user/queue/comments", (message) => {
-        displayComments(JSON.parse(message.body));
+        displayComments(JSON.parse(message.body), "commentList");
       });
 
-      // Yêu cầu danh sách comment từ server
+      // Gửi yêu cầu danh sách comment
       stompClient.send(`/app/comments.fetchAll/${postId}`, {}, {});
     }
   });
@@ -83,7 +88,7 @@ function sendComment() {
   commentInput.style.height = "auto"; // Reset chiều cao nếu có autoGrow
 }
 
-function renderComment(comment, level = 1) {
+function renderComment(comment, level = 1, reply) {
   const container = document.createElement("div");
   container.className = `ms-${(level - 1) * 4} mb-2`;
   container.setAttribute("data-comment-id", comment.commentId);
@@ -124,8 +129,8 @@ function renderComment(comment, level = 1) {
   return container;
 }
 
-function displayComments(comments) {
-  const commentList = document.getElementById("commentList");
+function displayComments(comments, id) {
+  const commentList = document.getElementById(id);
   commentList.innerHTML = "";
   (Array.isArray(comments) ? comments : [comments]).forEach((comment) => {
     const el = renderComment(comment, 1);
@@ -213,3 +218,75 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+async function loadComments(postId, level = 0, parentCommentId = null) {
+  const commentList = document.getElementById(`commentListAll`);
+  const noComment = document.getElementById(`noCommentPlaceholder`);
+  if (commentList) {
+    // Xóa comment cũ giữ lại placeholder
+    Array.from(commentList.querySelectorAll(".comment-item")).forEach((el) =>
+      el.remove()
+    );
+    // Tiếp tục load comment...
+  } else {
+    console.warn("commentListAll chưa tồn tại trong DOM");
+  }
+
+  try {
+    const url = new URL("http://localhost:8080/api/comments");
+    url.searchParams.append("page", 0);
+    url.searchParams.append("size", 10);
+    url.searchParams.append("postId", postId);
+    url.searchParams.append("level", level);
+    if (parentCommentId !== undefined && parentCommentId !== null) {
+      url.searchParams.append("parentCommentId", parentCommentId);
+    }
+    console.log(url);
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    const result = await res.json();
+    console.log(result.data.content);
+    if (!result.data || result.data.content.length === 0) {
+      if (noComment) {
+        noComment.style.display = "block";
+      }
+      return;
+    }
+    console.log(noComment);
+    if (noComment != null) {
+      noComment.style.display = "none";
+    }
+    displayComments(result.data.content, "commentListAll");
+  } catch (error) {
+    console.error("Error loading comments:", error);
+    if (noComment) {
+      noComment.style.display = "block";
+    }
+  }
+}
+
+document
+  .getElementById("allImagesModal")
+  .addEventListener("show.bs.modal", function () {
+    // Xóa toàn bộ comment cũ
+    const commentList = document.getElementById("commentListAll");
+    if (commentList) {
+      commentList.innerHTML = "";
+    }
+    const noComment = document.getElementById("noCommentPlaceholder");
+    if (noComment) {
+      noComment.style.display = "none";
+    }
+    // Reset ô nhập comment nếu có
+    const commentInput = document.getElementById("commentInput");
+    if (commentInput) {
+      commentInput.value = "";
+      commentInput.style.height = "auto";
+    }
+  });
