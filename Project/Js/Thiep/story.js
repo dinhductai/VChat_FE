@@ -44,21 +44,21 @@ function renderOwnStories(apiData) {
   if (downBtn) downBtn.onclick = function() { changeStoryPhoto(0, 1, [storyData]); };
 }
 
-function loadOwnStories() {
-  const token = localStorage.getItem('accessToken');
-  fetch('http://localhost:8080/api/story/owner', {
-    headers: { 'Authorization': 'Bearer ' + token }
-  })
-    .then(res => res.json())
-    .then(json => {
-      if (json.success) {
-        renderOwnStories(json.data);
-      }
-    })
-    .catch(err => {
-      console.error('Lỗi khi tải story:', err);
-    });
-}
+// function loadOwnStories() {
+//   const token = localStorage.getItem('accessToken');
+//   fetch('http://localhost:8080/api/story/owner', {
+//     headers: { 'Authorization': 'Bearer ' + token }
+//   })
+//     .then(res => res.json())
+//     .then(json => {
+//       if (json.success) {
+//         renderOwnStories(json.data);
+//       }
+//     })
+//     .catch(err => {
+//       console.error('Lỗi khi tải story:', err);
+//     });
+// }
 
 window.changeStoryPhoto = function(idx, delta, data) {
   if (!window.storyPhotoIndexes) return;
@@ -76,25 +76,26 @@ window.changeStoryPhoto = function(idx, delta, data) {
   if (downBtn) downBtn.onclick = function() { changeStoryPhoto(idx, 1, data); };
 };
 
-window.deleteStoryPhoto = async function(photoUrl) {
-  if (!confirm('Bạn có chắc chắn muốn xóa story này?')) return;
-  const token = localStorage.getItem('token');
-  try {
-    const res = await fetch('http://localhost:8080/api/story/delete?photoUrl=' + photoUrl, {
-      method: 'DELETE', 
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    const json = await res.json();
-    if (json.success) {
-      alert('Đã xóa story!');
-      loadOwnStories();
-    } else {
-      alert('Xóa story thất bại!');
-    }
-  } catch (err) {
-    alert('Lỗi khi xóa story!');
-  }
-};
+// xoa story owner
+// window.deleteStoryPhoto = async function(photoUrl) {
+//   if (!confirm('Bạn có chắc chắn muốn xóa story này?')) return;
+//   const token = localStorage.getItem('token');
+//   try {
+//     const res = await fetch('http://localhost:8080/api/story/delete?photoUrl=' + photoUrl, {
+//       method: 'DELETE', 
+//       headers: { 'Authorization': 'Bearer ' + token }
+//     });
+//     const json = await res.json();
+//     if (json.success) {
+//       alert('Đã xóa story!');
+//       loadOwnStories();
+//     } else {
+//       alert('Xóa story thất bại!');
+//     }
+//   } catch (err) {
+//     alert('Lỗi khi xóa story!');
+//   }
+// };
 
 const tabStory = document.getElementById('tab-story');
 if (tabStory) {
