@@ -260,9 +260,6 @@
           </div>
 
           <!-- Dark mode -->
-          <button class="btn btn-sm btn-outline-secondary" id="toggleDarkBtn">
-            🌙 Dark Mode
-          </button>
         </div>
       </div>
     </nav>
@@ -285,11 +282,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a
-                  class="nav-link active"
-                  href="#"
-                  onclick="showSection('requests')"
-                >
+                <a class="nav-link" href="#" onclick="showSection('requests')">
                   <i class="bi bi-person-plus-fill"></i> Friend Requests
                 </a>
               </li>
@@ -315,7 +308,7 @@
         <div class="col-lg-9">
           <div
             id="friendContainer"
-            class="friend-section row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3"
+            class="friend-section row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3 mb-3"
           >
             <!-- Các phần tử bạn bè sẽ hiển thị ở đây -->
           </div>
@@ -342,6 +335,13 @@
               class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3"
             ></div>
           </div>
+          <!-- <div id="scrollSentinel" class="text-center py-4">
+            <div
+              class="spinner-border text-primary"
+              role="status"
+              id="loadingSpinner"
+            ></div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -368,39 +368,7 @@
       });
     </script>
     <script>
-      function showSection(section) {
-        // Ẩn toàn bộ section
-        document.querySelectorAll(".friend-section").forEach((el) => {
-          el.classList.add("d-none");
-        });
-
-        // Reset active tab
-        document.querySelectorAll(".left-sidebar .nav-link").forEach((link) => {
-          link.classList.remove("active");
-        });
-
-        // Hiện section tương ứng
-        if (section === "requests") {
-          document.getElementById("friend-request").classList.remove("d-none");
-        } else if (section === "all") {
-          document.getElementById("all-friend").classList.remove("d-none");
-          loadAllFriends();
-        } else if (section === "suggestions") {
-          document
-            .getElementById("friend-suggestions")
-            .classList.remove("d-none");
-          loadFriendsSuggest();
-        } else if (section === "home") {
-          document.getElementById("friendContainer").classList.remove("d-none");
-          loadHomeFriends();
-        }
-
-        // Đánh dấu tab đang active
-        const activeLink = document.querySelector(
-          `.left-sidebar .nav-link[onclick="showSection('${section}')"]`
-        );
-        if (activeLink) activeLink.classList.add("active");
-      }
+      // Ẩn toàn bộ section
 
       // Mặc định hiển thị All Friends
       document.addEventListener("DOMContentLoaded", () => {

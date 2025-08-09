@@ -1382,15 +1382,14 @@
             <hr />
 
             <!-- Danh sách bình luận -->
-            <div id="commentList" class="mb-3">
-              <div
-                id="noCommentPlaceholder"
-                class="text-center text-muted my-4"
-                style="display: block"
-              >
-                <i class="bi bi-chat-left-text" style="font-size: 2rem"></i>
-                <p class="mt-2 mb-0">No comments yet</p>
-              </div>
+            <div id="commentListAll" class="mb-3"></div>
+            <div
+              id="noCommentPlaceholder"
+              class="text-center text-muted my-4"
+              style="display: none"
+            >
+              <i class="bi bi-chat-left-text" style="font-size: 2rem"></i>
+              <p class="mt-2 mb-0">No comments yet</p>
             </div>
           </div>
 
@@ -1459,6 +1458,7 @@
         </div>
       </div>
     </div>
+    <script src="../Js/comment.js"></script>
   </body>
   <script src="../Js/api-post.js"></script>
   <script>
@@ -1478,7 +1478,6 @@
   <script src="../Js/get_friends-chat.js"></script>
   <script src="../Js/api-reaction.js"></script>
   <script src="../Js/api-chat-friends.js"></script>
-  <script src="../Js/comment.js"></script>
   <script src="../Js/notification.js"></script>
   <!-- ✅ Tải STOMP sau -->
   <script></script>
