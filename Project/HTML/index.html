@@ -207,6 +207,68 @@
                 </div>
                 <span style="font-size: 15px; font-weight: 500">Reel</span>
               </div>
+              <div>
+                <div
+                  class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
+                  style="cursor: pointer; transition: background 0.2s"
+                  onmouseover="this.style.background='#f0f2f5'"
+                  onmouseout="this.style.background='transparent'"
+                >
+                  <div
+                    class="d-flex justify-content-center align-items-center"
+                    style="
+                      width: 44px;
+                      height: 44px;
+                      border-radius: 50%;
+                      background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+                      margin-left: 10px;
+                    "
+                  >
+                    <i class="bi bi-moon-fill text-white fs-5"></i>
+                  </div>
+                  <div>
+                    <span style="font-size: 15px; font-weight: 500"
+                      >Dark mode</span
+                    >
+                    <form
+                      class="darkmode-options"
+                      style="display: flex; gap: 20px; font-size: 12px"
+                    >
+                      <label
+                        style="
+                          display: flex;
+                          align-items: center;
+                          cursor: pointer;
+                        "
+                      >
+                        <input
+                          type="radio"
+                          name="darkmode"
+                          value="off"
+                          checked
+                          style="margin-right: 6px"
+                        />
+                        Off
+                      </label>
+                      <label
+                        style="
+                          display: flex;
+                          align-items: center;
+                          cursor: pointer;
+                        "
+                      >
+                        <input
+                          type="radio"
+                          name="darkmode"
+                          value="on"
+                          style="margin-right: 6px"
+                        />
+                        On
+                      </label>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -729,14 +791,14 @@
       });
 
       // Khi tải trang
-      window.addEventListener("DOMContentLoaded", () => {
-        if (localStorage.getItem("darkMode") === "on") {
-          document.body.classList.add("dark-mode");
-          btn.textContent = "☀️ Light Mode";
-        } else {
-          btn.textContent = "🌙 Dark Mode";
-        }
-      });
+      // window.addEventListener("DOMContentLoaded", () => {
+      //   if (localStorage.getItem("darkMode") === "on") {
+      //     document.body.classList.add("dark-mode");
+      //     btn.textContent = "☀️ Light Mode";
+      //   } else {
+      //     btn.textContent = "🌙 Dark Mode";
+      //   }
+      // });
     </script>
 
     <script>
@@ -1496,6 +1558,36 @@
     // Click ngoài thì ẩn menu
     document.addEventListener("click", function () {
       menuDropdown.style.display = "none";
+    });
+  </script>
+  <script>
+    const darkModeRadios = document.querySelectorAll('input[name="darkmode"]');
+
+    function setDarkMode(isOn) {
+      if (isOn) {
+        document.body.classList.add("dark-mode");
+        localStorage.setItem("darkMode", "on");
+      } else {
+        document.body.classList.remove("dark-mode");
+        localStorage.setItem("darkMode", "off");
+      }
+    }
+
+    // Khi load trang, set radio và class body theo trạng thái lưu
+    window.addEventListener("DOMContentLoaded", () => {
+      const darkModeStatus = localStorage.getItem("darkMode") || "off";
+      setDarkMode(darkModeStatus === "on");
+
+      darkModeRadios.forEach((radio) => {
+        radio.checked = radio.value === darkModeStatus;
+      });
+    });
+
+    // Bắt sự kiện thay đổi radio để bật/tắt dark mode
+    darkModeRadios.forEach((radio) => {
+      radio.addEventListener("change", () => {
+        setDarkMode(radio.value === "on");
+      });
     });
   </script>
 </html>
