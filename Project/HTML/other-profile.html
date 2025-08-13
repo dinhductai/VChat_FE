@@ -10,7 +10,6 @@
   <link href="../CSS/profile.css" rel="stylesheet">
   <link href="../CSS/modal_profile.css" rel="stylesheet">
   <link href="../CSS/post-container-profile.css" rel="stylesheet">
-  <link href="../CSS/post-container-profile.css" rel="stylesheet">
 
 
   <!-- Font Awesome for beautiful icons -->
@@ -1045,9 +1044,9 @@
       }
 
       // Chỉ load Story nếu là tab story
-      if (section === 'story') {
-        loadOwnStories();
-      }
+      // if (section === 'story') {
+      //   loadOwnStories();
+      // }
 
       // Xử lý ẩn/hiện left panel
       const leftPanel = document.getElementById('left-panel');
@@ -1070,16 +1069,18 @@
   <script src="../Js/Thiep/story.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../Js/Thiep/profile-post-modal.js"></script>
-  <script src="../Js/Thiep/post-container.js"></script>
+
   <script src="../Js/api-like.js"></script>
   <script src="../Js/api-reaction.js"></script>
   <script src="../Js/comment.js"></script>
   <script src="../Js/api-share-save-post.js"></script>
-  <script src="../Js/socket.js"></script>
+
+
   <script src="../Js/Thiep/update-post.js"></script>
+  <script src="../Js/Thiep/post-container-other-profile.js"></script>
   <script>
     // Kiểm tra token khi tải trang
-    const token = localStorage.getItem('accessToken');
+
     if (!token) {
       alert('Vui lòng đăng nhập để tiếp tục!');
       window.location.href = 'login.html';

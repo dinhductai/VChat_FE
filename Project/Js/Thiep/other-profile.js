@@ -1,40 +1,35 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  const token = localStorage.getItem("accessToken");
-  try {
-    // Lấy fullName và profileUrl
-    const res = await fetch('http://localhost:8080/api/user-name-profile', {
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    });
-    if (res.status === 401) {
-      alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-      localStorage.removeItem("accessToken");
-      window.location.href = 'login.html';
-      return;
-    }
+function getUserIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('user-id');
+}
+const userId = getUserIdFromUrl();
+var token = localStorage.getItem('accessToken');// Nếu không có userId, vẫn cho phép xem profile của chính mình (hoặc chuyển hướng nếu muốn)
+if (!token) {
+  alert('Vui lòng đăng nhập để tiếp tục!');
+  window.location.href = 'login.html';
+}
 
+document.addEventListener('DOMContentLoaded', async () => {
+  // Lấy ảnh đại diện
+  try {
+    const res = await fetch(`http://localhost:8080/api/profile-photo${userId ? '?userId=' + userId : ''}`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
     const json = await res.json();
     if (json.success && json.data) {
-      const d = json.data;
-      localStorage.setItem("userAvatar", d.profileUrl || '');
-      localStorage.setItem("userFullName", d.fullName || '');
       const avatarEl = document.getElementById('profile-avatar');
-      if (avatarEl) avatarEl.src = d.profileUrl || '';
+      if (avatarEl) avatarEl.src = json.data || '';
       const fbAvatar = document.querySelector('.fb-avatar');
-      if (fbAvatar) fbAvatar.src = d.profileUrl || '';
-      const nameEl = document.getElementById('profile-fullname');
-      if (nameEl) nameEl.textContent = d.fullName || '';
+      if (fbAvatar) fbAvatar.src = json.data || '';
     }
   } catch (err) {
     console.error('Lỗi lấy avatar:', err);
   }
 
+  // Lấy thông tin cá nhân
   try {
-    const res = await fetch('http://localhost:8080/api/user-profile', {
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
+    const res = await fetch(`http://localhost:8080/api/user-profile${userId ? '?userId=' + userId : ''}`, {
+      headers: { 'Authorization': 'Bearer ' + token }
     });
     const json = await res.json();
     if (json.success && json.data) {
@@ -65,16 +60,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
         `;
 
-        // Giữ lại chức năng xem thêm thông tin cá nhân
+        // Xem thêm thông tin cá nhân
         const btnShowMore = document.getElementById('btn-show-more-details');
         const more = userDetail.querySelector('.user-info-more');
         const textEl = btnShowMore.querySelector('.banner-text');
         const iconEl = btnShowMore.querySelector('i');
-
         btnShowMore.style.display = 'flex';
-
         let expanded = false;
-
         btnShowMore.onclick = function (e) {
           e.stopPropagation();
           if (!expanded) {
@@ -97,14 +89,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Lỗi lấy thông tin người dùng:', err);
   }
 
-  // PHÂN TRANG ẢNH TAB PHOTO
+  // PHÂN TRANG ẢNH
   const PHOTO_PAGE_SIZE = 9;
   async function loadPhotos(page = 0, size = PHOTO_PAGE_SIZE) {
     try {
-      const res = await fetch(`http://localhost:8080/api/photo?page=${page}&size=${size}`, {
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
+      const res = await fetch(`http://localhost:8080/api/photo${userId ? '?userId=' + userId : ''}&page=${page}&size=${size}`, {
+        headers: { 'Authorization': 'Bearer ' + token }
       });
       const json = await res.json();
       if (json.success && json.data && Array.isArray(json.data.content)) {
@@ -123,7 +113,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function renderPhotos(photoUrls) {
     const row = document.getElementById('photo-row');
-    // Sắp xếp ngược lại: mới nhất lên trước
     const reversed = [...photoUrls].reverse();
     row.innerHTML = reversed.map(url =>
       `<div class="photo-item" style="position:relative;">
@@ -135,12 +124,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   function renderPhotoPagination(pageInfo, size) {
     const paginationContainer = document.getElementById('photo-pagination');
     paginationContainer.innerHTML = '';
-
     const totalPages = pageInfo.totalPages;
     const currentPage = pageInfo.number;
-
     if (!totalPages || totalPages <= 1) return;
-
     const createButton = (text, page, isActive = false) => {
       const btn = document.createElement('button');
       btn.textContent = text;
@@ -149,36 +135,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       btn.onclick = () => loadPhotos(page, size);
       return btn;
     };
-
-    if (currentPage > 0) {
-      paginationContainer.appendChild(createButton('«', 0));
-    }
-
+    if (currentPage > 0) paginationContainer.appendChild(createButton('«', 0));
     const visiblePages = 2;
     let start = Math.max(0, currentPage - visiblePages);
     let end = Math.min(totalPages - 1, currentPage + visiblePages);
-
     if (start > 0) {
       paginationContainer.appendChild(createButton('1', 0));
-      if (start > 1) {
-        paginationContainer.appendChild(document.createTextNode('...'));
-      }
+      if (start > 1) paginationContainer.appendChild(document.createTextNode('...'));
     }
-
     for (let i = start; i <= end; i++) {
       paginationContainer.appendChild(createButton((i + 1).toString(), i, i === currentPage));
     }
-
     if (end < totalPages - 1) {
-      if (end < totalPages - 2) {
-        paginationContainer.appendChild(document.createTextNode('...'));
-      }
+      if (end < totalPages - 2) paginationContainer.appendChild(document.createTextNode('...'));
       paginationContainer.appendChild(createButton(totalPages.toString(), totalPages - 1));
     }
-
-    if (currentPage < totalPages - 1) {
-      paginationContainer.appendChild(createButton('»', totalPages - 1));
-    }
+    if (currentPage < totalPages - 1) paginationContainer.appendChild(createButton('»', totalPages - 1));
   }
 
   document.getElementById('tab-photo').addEventListener('click', function () {
@@ -193,10 +165,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const VIDEO_PAGE_SIZE = 4;
   async function loadVideos(page = 0, size = VIDEO_PAGE_SIZE) {
     try {
-      const res = await fetch(`http://localhost:8080/api/video?page=${page}&size=${size}`, {
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
+      const res = await fetch(`http://localhost:8080/api/video${userId ? '?userId=' + userId : ''}&page=${page}&size=${size}`, {
+        headers: { 'Authorization': 'Bearer ' + token }
       });
       const json = await res.json();
       if (json.success && json.data && Array.isArray(json.data.content)) {
@@ -216,7 +186,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   function renderVideos(videoList) {
     const row = document.getElementById('video-row');
     if (!row) return;
-    // Sắp xếp ngược lại: mới nhất lên trước
     const reversed = [...videoList].reverse();
     row.innerHTML = reversed.map(v => `
       <div class="video-item" style="position:relative;">
@@ -228,12 +197,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   function renderVideoPagination(pageInfo, size) {
     const paginationContainer = document.getElementById('video-pagination');
     paginationContainer.innerHTML = '';
-
     const totalPages = pageInfo.totalPages;
     const currentPage = pageInfo.number;
-
     if (!totalPages || totalPages <= 1) return;
-
     const createButton = (text, page, isActive = false) => {
       const btn = document.createElement('button');
       btn.textContent = text;
@@ -242,49 +208,35 @@ document.addEventListener('DOMContentLoaded', async () => {
       btn.onclick = () => loadVideos(page, size);
       return btn;
     };
-
-    if (currentPage > 0) {
-      paginationContainer.appendChild(createButton('«', 0));
-    }
-
+    if (currentPage > 0) paginationContainer.appendChild(createButton('«', 0));
     const visiblePages = 2;
     let start = Math.max(0, currentPage - visiblePages);
     let end = Math.min(totalPages - 1, currentPage + visiblePages);
-
     if (start > 0) {
       paginationContainer.appendChild(createButton('1', 0));
-      if (start > 1) {
-        paginationContainer.appendChild(document.createTextNode('...'));
-      }
+      if (start > 1) paginationContainer.appendChild(document.createTextNode('...'));
     }
-
     for (let i = start; i <= end; i++) {
       paginationContainer.appendChild(createButton((i + 1).toString(), i, i === currentPage));
     }
-
     if (end < totalPages - 1) {
-      if (end < totalPages - 2) {
-        paginationContainer.appendChild(document.createTextNode('...'));
-      }
+      if (end < totalPages - 2) paginationContainer.appendChild(document.createTextNode('...'));
       paginationContainer.appendChild(createButton(totalPages.toString(), totalPages - 1));
     }
-
-    if (currentPage < totalPages - 1) {
-      paginationContainer.appendChild(createButton('»', totalPages - 1));
-    }
+    if (currentPage < totalPages - 1) paginationContainer.appendChild(createButton('»', totalPages - 1));
   }
 
   document.getElementById('tab-video').addEventListener('click', function () {
     loadVideos();
   });
 
-  // HIỂN THỊ DANH SÁCH BẠN BÈ Ở TAB BẠN BÈ
+  // BẠN BÈ
   async function loadFriends() {
     const listEl = document.getElementById('friend-list');
     if (!listEl) return;
     listEl.innerHTML = '<div style="text-align:center;color:#aaa;">Đang tải danh sách bạn bè...</div>';
     try {
-      const res = await fetch('http://localhost:8080/api/user/friends', {
+      const res = await fetch(`http://localhost:8080/api/user/friends${userId ? '?userId=' + userId : ''}`, {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const json = await res.json();

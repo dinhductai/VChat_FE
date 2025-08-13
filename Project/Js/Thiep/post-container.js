@@ -65,19 +65,88 @@ function renderPost(post, insert = true) {
   const postContainer = document.getElementById("postContainer");
 
   // Hàm xử lý hiển thị ảnh theo số lượng
-  function renderImages(photos) {
+  function renderImages(photos, postId) {
     if (!Array.isArray(photos) || photos.length === 0) return "";
-    let html = `<div class="fb-photo-grid">`;
-    for (let i = 0; i < photos.length; i += 2) {
-      html += `<div class="fb-photo-row">`;
-      html += `<img src="${photos[i]}" class="fb-photo-img" />`;
-      if (photos[i + 1]) {
-        html += `<img src="${photos[i + 1]}" class="fb-photo-img" />`;
-      }
-      html += `</div>`;
+
+    if (photos.length === 1) {
+      return `
+      <div class="post-images-grid single-image mb-2">
+        <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${postId}')" style="width: 666px; height: 100%; object-fit: cover;" />
+      </div>
+    `;
     }
-    html += `</div>`;
-    return html;
+
+    if (photos.length === 2) {
+      return `
+      <div class="post-images-grid mb-2" style="max-width: 700px; margin: auto; display: flex; flex-direction: row; gap: 4px; height: 500px;">
+        <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+          <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+        <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+          <img src="${photos[1]}" onclick="openImageModal('${photos[1]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+      </div>
+    `;
+    }
+
+    if (photos.length === 3) {
+      return `
+      <div class="post-images-grid mb-2" style="display: flex; flex-direction: column; gap: 4px; max-width: 700px; margin: auto;">
+        <div style="width: 100%; height: 400px; overflow: hidden; border-radius: 8px;">
+          <img src="${photos[0]}" onclick="openImageModal('${photos[0]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+        <div style="display: flex; gap: 4px; height: 300px;">
+          <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+            <img src="${photos[1]}" onclick="openImageModal('${photos[1]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+          <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+            <img src="${photos[2]}" onclick="openImageModal('${photos[2]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+        </div>
+      </div>
+    `;
+    }
+
+    // ≥4 ảnh: grid 2x2, giới hạn 4 ảnh đầu
+    const limitedPhotos = photos.slice(0, 4);
+    return `
+    <div class="post-images-grid mb-2" style="max-width: 700px; margin: auto; display: flex; flex-direction: column; gap: 4px;">
+      <div style="display: flex; gap: 4px; height: 240px;">
+        <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+          <img src="${limitedPhotos[0]}" onclick="openImageModal('${limitedPhotos[0]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+        <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+          <img src="${limitedPhotos[1]}" onclick="openImageModal('${limitedPhotos[1]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+      </div>
+      <div style="display: flex; gap: 4px; height: 240px;">
+        <div style="flex: 1; overflow: hidden; border-radius: 8px;">
+          <img src="${limitedPhotos[2]}" onclick="openImageModal('${limitedPhotos[2]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+        <div style="flex: 1; overflow: hidden; border-radius: 8px; position: relative;">
+          <img src="${limitedPhotos[3]}" onclick="openImageModal('${limitedPhotos[3]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+          ${photos.length > 4
+        ? `<div style="
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  background-color: rgba(0, 0, 0, 0.4);
+                  color: white;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 32px;
+                  font-weight: bold;
+                  border-radius: 8px;
+                ">+${photos.length - 4}</div>`
+        : ""
+      }
+        </div>
+      </div>
+    </div>
+  `;
   }
 
   // HTML video
@@ -188,7 +257,7 @@ function renderPost(post, insert = true) {
       <p class="post-text" style="color: #bdc3c7;">${post.content}</p>
 
 
-      ${renderImages(post.photosUrl)}
+      ${renderImages(post.photosUrl, post.postId)}
       ${renderVideosHTML(post.videosUrl)}
 
       <div class="d-flex justify-content-around mt-3 border-top pt-2 position-relative">
@@ -667,7 +736,7 @@ function renderVideosHTML(videos) {
   if (!Array.isArray(videos) || videos.length === 0) return "";
   return videos.map(url => `
     <div class="fb-video-row">
-      <video controls class="fb-video">
+      <video controls class="fb-video" style="width: 100%; max-height: 450px; border-radius: 8px;">
         <source src="${url}" type="video/mp4" />
         Trình duyệt không hỗ trợ video.
       </video>

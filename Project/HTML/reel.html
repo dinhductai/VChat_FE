@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Facebook Reels Clone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> Reels </title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     * {
@@ -11,7 +12,9 @@
       padding: 0;
       box-sizing: border-box;
     }
-    body, html {
+
+    body,
+    html {
       width: 100%;
       height: 100%;
       font-family: Arial, sans-serif;
@@ -21,6 +24,7 @@
       justify-content: center;
       align-items: center;
     }
+
     .reel-wrapper {
       width: 100%;
       max-width: 420px;
@@ -91,13 +95,14 @@
       margin-top: 4px;
       line-height: 1.4;
     }
-    #reactionBtn i {
-  color: #f02849;
-}
 
-#commentBtn i {
-  color: #45bd62;
-}
+    #reactionBtn i {
+      color: #f02849;
+    }
+
+    #commentBtn i {
+      color: #45bd62;
+    }
 
 
     .nav-buttons {
@@ -152,75 +157,72 @@
     }
 
     .end-message.show {
-  display: block;
-}
+      display: block;
+    }
 
-.back-button {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  font-size: 25px; 
-  color: white;
-  text-decoration: none;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  line-height: 50px;
-  z-index: 10000;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 25px;
+      color: white;
+      text-decoration: none;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      line-height: 50px;
+      z-index: 10000;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
 
-.back-button:hover {
-  background: rgba(255, 255, 255, 0.9);
-  color: black;
-  transform: scale(1.05); 
-}
+    .back-button:hover {
+      background: rgba(255, 255, 255, 0.9);
+      color: black;
+      transform: scale(1.05);
+    }
 
-.nav-scroll {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  z-index: 1000;
-}
+    .nav-scroll {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 1000;
+    }
 
-.nav-actions {
-  position: absolute;
-  bottom: 20%;
-  right: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  z-index: 10;
-}
-
-
-
-#reactionBtn i {
-  color: #f02849;
-}
-
-#commentBtn i {
-  color: #45bd62;
-}
+    .nav-actions {
+      position: absolute;
+      bottom: 20%;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      z-index: 10;
+    }
 
 
 
-    
+    #reactionBtn i {
+      color: #f02849;
+    }
+
+    #commentBtn i {
+      color: #45bd62;
+    }
   </style>
 </head>
+
 <body>
-    <a href="index.html" class="back-button" title="Quay lại">
-        &#8592;
-      </a>
-      
+  <a href="index.html" class="back-button" title="Quay lại">
+    &#8592;
+  </a>
+
   <div class="reel-wrapper">
     <div class="reel-video-container">
       <div id="loading" class="loading">Đang tải...</div>
@@ -247,54 +249,105 @@
 
   <!-- Nút mũi tên (bên phải video) -->
   <!-- Nút điều hướng lên/xuống -->
-<div class="nav-buttons nav-scroll">
-  <button id="prevBtn" title="Video trước"><i class="fas fa-chevron-up"></i></button>
-  <button id="nextBtn" title="Video sau"><i class="fas fa-chevron-down"></i></button>
-</div>
+  <div class="nav-buttons nav-scroll">
+    <button id="prevBtn" title="Video trước"><i class="fas fa-chevron-up"></i></button>
+    <button id="nextBtn" title="Video sau"><i class="fas fa-chevron-down"></i></button>
+  </div>
 
 
 
 
   <script>
-    // luot video
+    // Lấy token từ localStorage
+    const token = localStorage.getItem('accessToken');
+    console.log("Token FE:", token);
+
     let lastScroll = 0;
-let scrollTimeout = null;
-
-// Scroll bằng chuột
-document.addEventListener("wheel", (e) => {
-  const now = Date.now();
-  if (now - lastScroll < 600) return; // tránh lướt quá nhanh
-
-  if (e.deltaY > 0) {
-    // kéo xuống
-    currentPage++;
-    fetchVideo(currentPage);
-  } else if (e.deltaY < 0 && currentPage > 0) {
-    // kéo lên
-    currentPage--;
-    fetchVideo(currentPage);
-  }
-
-  lastScroll = now;
-});
+    let currentPage = 0;
+    const pageSize = 10;
+    let videoList = [];
+    let currentVideoIndex = 0;
 
     const videoElement = document.getElementById("reelVideo");
     const loadingText = document.getElementById("loading");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
-
     const fullNameDiv = document.getElementById("fullName");
     const captionDiv = document.getElementById("caption");
     const profilePictureImg = document.getElementById("profilePicture");
     const uploadDateDiv = document.getElementById("uploadDate");
     const endMessage = document.getElementById("endMessage");
 
-    let currentPage = 0;
-    const pageSize = 1;
+    // Scroll bằng chuột để chuyển video
+    document.addEventListener("wheel", (e) => {
+      const now = Date.now();
+      if (now - lastScroll < 600) return; // tránh lướt quá nhanh
 
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      alert("Không tìm thấy token! Hãy đăng nhập trước.");
+      if (e.deltaY > 0) {
+        // kéo xuống
+        if (currentVideoIndex < videoList.length - 1) {
+          currentVideoIndex++;
+          showVideo(currentVideoIndex);
+        } else {
+          currentPage++;
+          fetchVideoPage(currentPage);
+        }
+      } else if (e.deltaY < 0) {
+        // kéo lên
+        if (currentVideoIndex > 0) {
+          currentVideoIndex--;
+          showVideo(currentVideoIndex);
+        } else if (currentPage > 0) {
+          currentPage--;
+          fetchVideoPage(currentPage);
+        }
+      }
+
+      lastScroll = now;
+    });
+
+    async function fetchVideoPage(page) {
+      loadingText.style.display = "block";
+      endMessage.classList.remove("show");
+      videoElement.style.display = "none";
+      videoElement.pause();
+
+      try {
+        const response = await fetch(`http://localhost:8080/api/reel?page=${page}&size=${pageSize}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Lỗi server:", errorText);
+          endMessage.innerText = "Lỗi server: " + errorText;
+          showEndMessage();
+          return;
+        }
+
+        const result = await response.json();
+
+        // Lấy tất cả post có videosUrl khác null
+        videoList = result.data.content.filter(post => post.videosUrl);
+        currentVideoIndex = 0;
+
+        if (result.success && result.data && videoList.length > 0) {
+          showVideo(currentVideoIndex);
+        } else {
+          showEndMessage();
+          if (page > 0) currentPage--;
+        }
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+        endMessage.innerText = "Không thể kết nối tới server hoặc server trả về lỗi.";
+        showEndMessage();
+      } finally {
+        loadingText.style.display = "none";
+        videoElement.style.display = "block";
+      }
     }
 
     function formatDate(dateStr) {
@@ -310,62 +363,46 @@ document.addEventListener("wheel", (e) => {
       setTimeout(() => endMessage.classList.remove("show"), 3000);
     }
 
-    async function fetchVideo(page) {
-      loadingText.style.display = "block";
-      endMessage.classList.remove("show");
-      videoElement.style.display = "none";
-      videoElement.pause();
-
-      try {
-        const response = await fetch(`http://localhost:8080/api/reel?page=${page}&size=${pageSize}`, {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        });
-
-        const text = await response.text();
-        try {
-          const result = JSON.parse(text);
-
-          if (result.success && result.data && result.data.content.length > 0) {
-            const videoData = result.data.content[0];
-            videoElement.src = videoData.videosUrl || "";
-            videoElement.load();
-            videoElement.play();
-
-            profilePictureImg.src = videoData.profilePicture || "";
-            fullNameDiv.innerText = videoData.fullName || "";
-            captionDiv.innerText = videoData.content || "";
-            uploadDateDiv.innerText = formatDate(videoData.uploadDate || "");
-          } else {
-            showEndMessage();
-            if (page > 0) currentPage--;
-          }
-        } catch (jsonError) {
-          console.error("Không thể parse JSON:", text);
-        }
-      } catch (error) {
-        console.error("Lỗi khi gọi API:", error);
-      } finally {
-        loadingText.style.display = "none";
-        videoElement.style.display = "block";
+    function showVideo(index) {
+      if (videoList.length === 0 || index < 0 || index >= videoList.length) {
+        showEndMessage();
+        return;
       }
+      const videoPost = videoList[index];
+      videoElement.src = videoPost.videosUrl;
+      videoElement.load();
+      videoElement.play();
+
+      profilePictureImg.src = videoPost.profilePicture || "";
+      fullNameDiv.innerText = videoPost.fullName || "";
+      captionDiv.innerText = videoPost.content || "";
+      uploadDateDiv.innerText = formatDate(videoPost.uploadDate || "");
     }
 
+    // Điều hướng video trong trang hiện tại
     prevBtn.addEventListener("click", () => {
-      if (currentPage > 0) {
+      if (currentVideoIndex > 0) {
+        currentVideoIndex--;
+        showVideo(currentVideoIndex);
+      } else if (currentPage > 0) {
         currentPage--;
-        fetchVideo(currentPage);
+        fetchVideoPage(currentPage);
       }
     });
 
     nextBtn.addEventListener("click", () => {
-      currentPage++;
-      fetchVideo(currentPage);
+      if (currentVideoIndex < videoList.length - 1) {
+        currentVideoIndex++;
+        showVideo(currentVideoIndex);
+      } else {
+        currentPage++;
+        fetchVideoPage(currentPage);
+      }
     });
 
-    fetchVideo(currentPage);
+    // Gọi lần đầu
+    fetchVideoPage(currentPage);
   </script>
 </body>
+
 </html>
