@@ -1,0 +1,16 @@
+    .head {
+      width: 100px;
+      height: 80px;
+      background-color: gray;
+      border-radius: 50% 50% 0 0;
+    }
+
+    @keyframes hover {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    .robot {
+      animation: hover 2s infinite alternate;
+    }
