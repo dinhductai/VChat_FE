@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Đăng ký tài khoản</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts: Montserrat & Roboto -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .signup-card {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            padding: 2.5rem 2rem;
+            max-width: 480px;
+            width: 100%;
+            animation: fadeInDown 0.8s;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .signup-title {
+            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+            font-weight: 700;
+            color: #2575fc;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .signup-btn {
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            border: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+        }
+
+        .signup-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(90deg, #2575fc 0%, #6a11cb 100%);
+        }
+
+        .input-group-text {
+            background: #f0f4ff;
+            border: none;
+        }
+
+        .form-label {
+            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+            font-weight: 500;
+            color: #2575fc;
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+            text-align: center;
+            animation: shake 0.3s;
+            font-family: 'Roboto', 'Montserrat', Arial, sans-serif;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+
+            75% {
+                transform: translateX(-5px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .interest-tag {
+            display: inline-block;
+            background: #e3e8ff;
+            color: #2575fc;
+            border-radius: 20px;
+            padding: 2px 12px;
+            margin: 2px 4px 2px 0;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .interest-tag:hover {
+            background: #d1d8ff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-card shadow-lg">
+        <div class="signup-title mb-4">
+            <i class="bi bi-person-plus fs-2"></i><br>
+            Đăng ký tài khoản
+        </div>
+        <form id="signupForm" autocomplete="off">
+            <div id="error" class="error"></div>
+            <div class="mb-3">
+                <label class="form-label fw-bold" for="fullName">Họ và tên</label>
+                <input type="text" class="form-control" id="fullName" placeholder="Nhập họ và tên" required
+                    minlength="2" maxlength="50">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold" for="email">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Nhập email" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold" for="password">Mật khẩu</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" class="form-control" id="password" placeholder="Tối thiểu 8 ký tự" required
+                        minlength="8">
+                    <button type="button" class="btn btn-outline-secondary" id="togglePassword" tabindex="-1">
+                        <i class="bi bi-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold" for="passwordConfirm">Nhập lại mật khẩu</label>
+                <input type="password" class="form-control" id="passwordConfirm" placeholder="Nhập lại mật khẩu"
+                    required minlength="8">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold" for="birthDate">Ngày sinh</label>
+                <input type="date" class="form-control" id="birthDate" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold" for="location">Địa chỉ</label>
+                <input type="text" class="form-control" id="location" placeholder="Nhập địa chỉ" maxlength="255">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold" for="description">Giới thiệu bản thân</label>
+                <textarea class="form-control" id="description" rows="2" maxlength="500"
+                    placeholder="Giới thiệu ngắn về bạn"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Sở thích</label>
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control" id="interestInput" placeholder="Nhập sở thích và Enter">
+                    <button type="button" class="btn btn-outline-primary" id="addInterestBtn"><i
+                            class="bi bi-plus"></i></button>
+                </div>
+                <div id="interestTags"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold" for="phoneNumber">Số điện thoại</label>
+                <input type="text" class="form-control" id="phoneNumber" placeholder="Nhập số điện thoại">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Giới tính</label>
+                <select class="form-select" id="gender" required>
+                    <option value="">Chọn giới tính</option>
+                    <option value="MALE">Nam</option>
+                    <option value="FEMALE">Nữ</option>
+                    <option value="OTHER">Khác</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn signup-btn w-100 py-2 mt-2">
+                <i class="bi bi-person-plus"></i> Đăng ký
+            </button>
+        </form>
+        <div class="mt-3 text-center">
+            <a href="login.html" class="text-decoration-none text-primary">Đã có tài khoản? Đăng nhập</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Ẩn/hiện mật khẩu
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+        const eyeIcon = document.getElementById("eyeIcon");
+        togglePassword.addEventListener("click", function () {
+            const type = passwordInput.type === "password" ? "text" : "password";
+            passwordInput.type = type;
+            eyeIcon.className = type === "password" ? "bi bi-eye" : "bi bi-eye-slash";
+        });
+
+        // Sở thích (interest)
+        const interestInput = document.getElementById("interestInput");
+        const addInterestBtn = document.getElementById("addInterestBtn");
+        const interestTags = document.getElementById("interestTags");
+        let interests = [];
+
+        function renderInterests() {
+            interestTags.innerHTML = '';
+            interests.forEach((interest, idx) => {
+                interestTags.innerHTML += `<span class="interest-tag" onclick="removeInterest(${idx})">${interest} <i class="bi bi-x"></i></span>`;
+            });
+        }
+        function removeInterest(idx) {
+            interests.splice(idx, 1);
+            renderInterests();
+        }
+        window.removeInterest = removeInterest;
+
+        addInterestBtn.addEventListener("click", () => {
+            const val = interestInput.value.trim();
+            if (val && !interests.includes(val)) {
+                interests.push(val);
+                renderInterests();
+                interestInput.value = '';
+            }
+        });
+        interestInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                addInterestBtn.click();
+            }
+        });
+
+        // Validate ngày sinh không lớn hơn hôm nay
+        document.getElementById("birthDate").max = new Date().toISOString().split('T')[0];
+
+        // Xử lý submit form
+        document.getElementById("signupForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const errorDiv = document.getElementById("error");
+            errorDiv.textContent = "";
+            errorDiv.style.color = "#dc3545";
+
+            // Lấy dữ liệu
+            const fullName = document.getElementById("fullName").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = passwordInput.value;
+            const passwordConfirm = document.getElementById("passwordConfirm").value;
+            const birthDate = document.getElementById("birthDate").value;
+            const location = document.getElementById("location").value.trim();
+            const description = document.getElementById("description").value.trim();
+            const phoneNumber = document.getElementById("phoneNumber").value.trim();
+            const gender = document.getElementById("gender").value;
+
+            // Validate FE
+            if (!fullName || fullName.length < 2 || fullName.length > 50) {
+                errorDiv.textContent = "Họ tên phải từ 2 đến 50 ký tự.";
+                console.error("FE validation: Full name invalid");
+                return;
+            }
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errorDiv.textContent = "Email không hợp lệ.";
+                console.error("FE validation: Email invalid");
+                return;
+            }
+            if (!password || password.length < 8) {
+                errorDiv.textContent = "Mật khẩu phải từ 8 ký tự trở lên.";
+                console.error("FE validation: Password invalid");
+                return;
+            }
+            if (password !== passwordConfirm) {
+                errorDiv.textContent = "Mật khẩu xác nhận không khớp.";
+                console.error("FE validation: Password confirm mismatch");
+                return;
+            }
+            if (!birthDate) {
+                errorDiv.textContent = "Vui lòng chọn ngày sinh.";
+                console.error("FE validation: Birth date missing");
+                return;
+            }
+            if (interests.length === 0) {
+                errorDiv.textContent = "Vui lòng nhập ít nhất một sở thích.";
+                console.error("FE validation: Interests missing");
+                return;
+            }
+            if (!gender) {
+                errorDiv.textContent = "Vui lòng chọn giới tính.";
+                console.error("FE validation: Gender missing");
+                return;
+            }
+            if (phoneNumber && !/^(\+?\d{1,3}[- ]?)?\d{9,15}$/.test(phoneNumber)) {
+                errorDiv.textContent = "Số điện thoại không hợp lệ.";
+                console.error("FE validation: Phone number invalid");
+                return;
+            }
+
+            // Gửi dữ liệu
+            try {
+                const response = await fetch("http://localhost:8080/api/auth/sign-up", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNiIsInNjb3BlIjoiQURNSU4gbnVsbCIsImlzcyI6IndlYnNpdGUuY29tIiwiZXhwIjoxNzU1MjQ4MTI2LCJpYXQiOjE3NTUyNDQ1MjYsImp0aSI6IjViNGMwZDNhLWMyMDMtNGYxNS04MGNhLTViMTNmZmEwNDZiNCIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIn0.kOrnr3WNfJfSbwkaynuTiSgTbD1m9X_nfX8lYb2tjemOzU9jKWT8-7ZH4SotEdGxyiKuOB6UxdsBfc9Vx4D5mA"
+                    },
+                    body: JSON.stringify({
+                        fullName,
+                        email,
+                        password,
+                        passwordConfirm,
+                        birthDate,
+                        location,
+                        description,
+                        interestName: interests,
+                        phoneNumber,
+                        gender,
+                        roleName: "USER",           // Thêm dòng này
+                        accountStatus: "ACTIVE"     // Thêm dòng này
+                    })
+                });
+
+                let data;
+                try {
+                    data = await response.json();
+                } catch (err) {
+                    console.error("FE: Không thể parse JSON từ response", err);
+                    errorDiv.textContent = "Có lỗi xảy ra khi nhận phản hồi từ server.";
+                    return;
+                }
+
+                if (response.ok && data.success) {
+                    errorDiv.style.color = "#198754";
+                    errorDiv.textContent = "Đăng ký thành công! Đang chuyển hướng...";
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 1200);
+                } else {
+                    // Log lỗi chi tiết từ backend
+                    console.error("BE error:", data);
+                    errorDiv.textContent = data.message || "Đăng ký thất bại.";
+                }
+            } catch (err) {
+                console.error("FE: Lỗi khi gửi request đăng ký", err);
+                errorDiv.textContent = "Có lỗi xảy ra khi kết nối tới server.";
+            }
+        });
+    </script>
+</body>
+
+</html>
