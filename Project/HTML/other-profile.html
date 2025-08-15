@@ -996,7 +996,7 @@
     };
     document.getElementById('tab-story').onclick = function (e) {
       e.preventDefault();
-      window.location.href = 'story-owner.html';
+      window.location.href = 'other-story.html?userId=' + encodeURIComponent(userId);
     };
     document.getElementById('tab-friends').onclick = function (e) {
       e.preventDefault();

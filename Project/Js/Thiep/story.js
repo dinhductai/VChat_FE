@@ -1,5 +1,5 @@
 // --- HIỂN THỊ STORY Ở TAB STORY (OWNER) ---
-
+// file rác
 function renderOwnStoryItem(story, idx) {
   const photoIdx = (window.storyPhotoIndexes && window.storyPhotoIndexes[idx]) || 0;
   const total = story.listStoryPhoto.length;
@@ -19,7 +19,7 @@ function renderOwnStoryItem(story, idx) {
           <img src="${photoUrl}" class="story-photo" alt="Story">
           <button class="story-trash-btn" onclick="deleteStoryPhoto('${encodedPhotoUrl}')" title="Xóa story"><i class="fas fa-trash"></i></button>
         </div>
-        <button id="story-arrow-down-${idx}" class="story-arrow-btn" ${photoIdx === total-1 ? 'disabled' : ''}>&darr;</button>
+        <button id="story-arrow-down-${idx}" class="story-arrow-btn" ${photoIdx === total - 1 ? 'disabled' : ''}>&darr;</button>
       </div>
     </div>
   `;
@@ -40,8 +40,8 @@ function renderOwnStories(apiData) {
 
   const upBtn = document.getElementById('story-arrow-up-0');
   const downBtn = document.getElementById('story-arrow-down-0');
-  if (upBtn) upBtn.onclick = function() { changeStoryPhoto(0, -1, [storyData]); };
-  if (downBtn) downBtn.onclick = function() { changeStoryPhoto(0, 1, [storyData]); };
+  if (upBtn) upBtn.onclick = function () { changeStoryPhoto(0, -1, [storyData]); };
+  if (downBtn) downBtn.onclick = function () { changeStoryPhoto(0, 1, [storyData]); };
 }
 
 // function loadOwnStories() {
@@ -60,20 +60,20 @@ function renderOwnStories(apiData) {
 //     });
 // }
 
-window.changeStoryPhoto = function(idx, delta, data) {
+window.changeStoryPhoto = function (idx, delta, data) {
   if (!window.storyPhotoIndexes) return;
   const story = data[idx];
   let cur = window.storyPhotoIndexes[idx];
   const total = story.listStoryPhoto.length;
-  cur = Math.max(0, Math.min(total-1, cur + delta));
+  cur = Math.max(0, Math.min(total - 1, cur + delta));
   window.storyPhotoIndexes[idx] = cur;
   const row = document.getElementById('own-story-row');
   if (!row) return;
   row.children[idx].outerHTML = renderOwnStoryItem(story, idx);
   const upBtn = document.getElementById('story-arrow-up-' + idx);
   const downBtn = document.getElementById('story-arrow-down-' + idx);
-  if (upBtn) upBtn.onclick = function() { changeStoryPhoto(idx, -1, data); };
-  if (downBtn) downBtn.onclick = function() { changeStoryPhoto(idx, 1, data); };
+  if (upBtn) upBtn.onclick = function () { changeStoryPhoto(idx, -1, data); };
+  if (downBtn) downBtn.onclick = function () { changeStoryPhoto(idx, 1, data); };
 };
 
 // xoa story owner
@@ -99,8 +99,8 @@ window.changeStoryPhoto = function(idx, delta, data) {
 
 const tabStory = document.getElementById('tab-story');
 if (tabStory) {
-  tabStory.addEventListener('click', function() {
-    showSection("story");  
+  tabStory.addEventListener('click', function () {
+    showSection("story");
   });
 }
 
