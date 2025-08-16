@@ -74,71 +74,61 @@ function sendMessage() {
   chatInput.value = "";
   chatInput.style.height = "auto";
 }
-
 function showMessage(msg, isMe) {
   const wrapper = document.createElement("div");
+  // Hàng full width + canh trái/phải bằng flex
+  wrapper.className = `d-flex w-100 mb-2 ${
+    isMe ? "justify-content-end" : "justify-content-start"
+  }`;
 
-  wrapper.className = isMe ? "text-end mb-2" : "text-start mb-2";
+  const bubble = document.createElement("div");
+  bubble.className = `${
+    isMe ? "bg-primary text-white" : "bg-light text-dark"
+  } px-3 py-2 rounded-3`;
+  bubble.style.maxWidth = "70%";
+  bubble.style.wordBreak = "break-word";
+  bubble.style.whiteSpace = "pre-wrap"; // giữ xuống dòng
 
-  wrapper.innerHTML = `
-    <div
-      class="${isMe ? "bg-primary text-white" : "bg-light "} 
-                 px-3 py-2 rounded-3 d-inline-block"
-      style="max-width: 70%; word-break: break-word;"
-    >
-      ${msg.message}
-    </div>
-  `;
+  // An toàn: không innerHTML
+  bubble.textContent = msg.message ?? "";
 
-  const chatMessages = document.getElementById("chatMessages");
+  wrapper.appendChild(bubble);
+
+  const chatMessages = document.getElementById("chatMessages"); // container cuộn chính
   chatMessages.appendChild(wrapper);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+  chatMessages.scrollTop = chatMessages.scrollHeight; // auto scroll
 }
 
-function getHistoryChat(currentUserId, receiverId) {
+async function getHistoryChat(currentUserId, receiverId) {
   const token = localStorage.getItem("accessToken");
-  console.log(token);
-  fetch(
+
+  const res = await fetch(
     `http://localhost:8080/api/message/history?receiverId=${receiverId}&page=0&size=20`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-    }
-  )
-    .then(async (res) => {
-      if (!res.ok) {
-        const text = await res.text(); // lấy nội dung để debug nếu là lỗi
-        throw new Error(`❌ Server error (${res.status}): ${text}`);
-      }
+    { headers: { Authorization: "Bearer " + token } }
+  );
 
-      const text = await res.text();
-      if (!text) {
-        throw new Error("❌ Empty response from server");
-      }
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Server error ${res.status}: ${text}`);
+  }
 
-      let resJson;
-      try {
-        resJson = JSON.parse(text);
-      } catch (e) {
-        throw new Error("❌ Response is not valid JSON:\n" + text);
-      }
+  const json = await res.json();
+  if (!json.success) {
+    console.error("Lỗi lấy lịch sử:", json.message);
+    return;
+  }
 
-      if (resJson.success) {
-        const messages = resJson.data.content;
-        const chatBox = document.getElementById("chatBox");
+  const messages = json.data.content ?? [];
+  const chatMessages = document.getElementById("chatMessages");
+  chatMessages.innerHTML = ""; // clear cũ nếu cần
 
-        messages.forEach((msg) => {
-          const isMe = msg.senderId === currentUserId;
-          showMessage(msg, isMe);
-        });
+  // Nếu API trả mới->cũ, có thể đảo lại để hiển thị từ cũ->mới:
+  // messages.reverse();
 
-        chatBox.scrollTop = chatBox.scrollHeight;
-      } else {
-        console.error("❌ Lỗi lấy lịch sử:", resJson.message);
-      }
-    })
-    .catch((err) => console.error("❌ Lỗi fetch:", err.message));
+  messages.forEach((m) => {
+    const isMe = String(m.senderId) === String(currentUserId);
+    showMessage(m, isMe);
+  });
+
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 }

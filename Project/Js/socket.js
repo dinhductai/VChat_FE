@@ -41,7 +41,7 @@ function connectWebSocket(callback) {
   stompClient = Stomp.over(socket);
 
   stompClient.connect({ Authorization: "Bearer " + token }, (frame) => {
-    console.log("✅ WebSocket connected:", frame);
+    console.log("✅ WebSocket connected:", frame); 
     callback();
   });
 }
