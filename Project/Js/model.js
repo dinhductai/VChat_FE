@@ -144,7 +144,7 @@ fetch("http://localhost:8080/api/user-name-profile", {
     return response.json();
   })
   .then((data) => {
-    const profileUrl = data.data.profileUrl || "/images/user-default.webp";
+    const profileUrl = data.data.profileUrl || "../images/user-default.webp";
     const fullName = data.data.fullName || "Người dùng";
 
     // Gán avatar

@@ -780,26 +780,6 @@
     </div>
 
     <!-- Bootstrap & Dark Mode JS -->
-    <script>
-      const btn = document.getElementById("toggleDarkBtn");
-
-      // Khi bấm nút
-      btn.addEventListener("click", () => {
-        const isDark = document.body.classList.toggle("dark-mode");
-        localStorage.setItem("darkMode", isDark ? "on" : "off");
-        btn.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
-      });
-
-      // Khi tải trang
-      // window.addEventListener("DOMContentLoaded", () => {
-      //   if (localStorage.getItem("darkMode") === "on") {
-      //     document.body.classList.add("dark-mode");
-      //     btn.textContent = "☀️ Light Mode";
-      //   } else {
-      //     btn.textContent = "🌙 Dark Mode";
-      //   }
-      // });
-    </script>
 
     <script>
       const menuItems = document.querySelectorAll("#menuTabs .menu-item");

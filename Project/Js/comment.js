@@ -201,36 +201,36 @@ function toggleReplyBox(commentId) {
   box.style.display = box.style.display === "none" ? "block" : "none";
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const modalElement = document.getElementById("imageModal");
-  if (modalElement) {
-    modalElement.addEventListener("hidden.bs.modal", function () {
-      console.log("❌ Modal bị đóng. Ngắt kết nối WebSocket nếu cần.");
+// document.addEventListener("DOMContentLoaded", () => {
+//   const modalElement = document.getElementById("imageModal");
+//   if (modalElement) {
+//     modalElement.addEventListener("hidden.bs.modal", function () {
+//       console.log("❌ Modal bị đóng. Ngắt kết nối WebSocket nếu cần.");
 
-      if (stompClient && stompClient.connected) {
-        stompClient.disconnect(() => {
-          console.log("🔌 WebSocket đã được ngắt.");
-        });
-      }
+//       if (stompClient && stompClient.connected) {
+//         stompClient.disconnect(() => {
+//           console.log("🔌 WebSocket đã được ngắt.");
+//         });
+//       }
 
-      currentSubscribedPostId = null;
-      resetModalState();
-    });
-  }
-});
+//       currentSubscribedPostId = null;
+//       resetModalState();
+//     });
+//   }
+// });
 
 async function loadComments(postId, level = 0, parentCommentId = null) {
   const commentList = document.getElementById(`commentListAll`);
   const noComment = document.getElementById(`noCommentPlaceholder`);
-  if (commentList) {
-    // Xóa comment cũ giữ lại placeholder
-    Array.from(commentList.querySelectorAll(".comment-item")).forEach((el) =>
-      el.remove()
-    );
-    // Tiếp tục load comment...
-  } else {
-    console.warn("commentListAll chưa tồn tại trong DOM");
-  }
+  // if (commentList) {
+  //   // Xóa comment cũ giữ lại placeholder
+  //   Array.from(commentList.querySelectorAll(".comment-item")).forEach((el) =>
+  //     el.remove()
+  //   );
+  //   // Tiếp tục load comment...
+  // } else {
+  //   console.warn("commentListAll chưa tồn tại trong DOM");
+  // }
 
   try {
     const url = new URL("http://localhost:8080/api/comments");
@@ -251,18 +251,18 @@ async function loadComments(postId, level = 0, parentCommentId = null) {
     });
 
     const result = await res.json();
-    console.log(result.data.content);
     if (!result.data || result.data.content.length === 0) {
       if (noComment) {
         noComment.style.display = "block";
       }
       return;
     }
-    console.log(noComment);
     if (noComment != null) {
       noComment.style.display = "none";
     }
     displayComments(result.data.content, "commentListAll");
+
+    // Đệ quy load các comment con (cấp 2, 3...)
   } catch (error) {
     console.error("Error loading comments:", error);
     if (noComment) {
@@ -290,3 +290,4 @@ document
       commentInput.style.height = "auto";
     }
   });
+
