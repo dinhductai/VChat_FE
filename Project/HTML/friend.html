@@ -461,12 +461,12 @@
           >
             <!-- Các phần tử bạn bè sẽ hiển thị ở đây -->
           </div>
-          <div
-            id="friend-request"
-            class="friend-section d-none row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3"
-          >
+          <div id="friend-request" class="friend-section d-none">
             <h5 class="fw-bold mb-3">Friend request</h5>
-            <div id="friendRequests" class="row g-3"></div>
+            <div
+              id="friendRequests"
+              class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3"
+            ></div>
           </div>
           <div id="all-friend" class="friend-section d-none">
             <h5 class="fw-bold mb-3">All Friends</h5>
@@ -770,4 +770,6 @@
   <script src="../Js/mess.js"></script>
   <script src="../Js/api-get-friends.js"></script>
   <script src="../Js/model.js"></script>
+  <!-- nhớ thêm nếu bạn dùng SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </html>
