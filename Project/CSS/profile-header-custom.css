@@ -1,0 +1,18 @@
+/* body #profile-header a:hover,
+body #profile-header a.active,
+body #profile-header .rounded-circle:hover,
+body #profile-header .menu-item:hover,
+body #profile-header .bi:hover,
+body #profile-header .fa:hover,
+body #profile-header .userAvatar:hover,
+body #profile-header .dropdown-item:hover,
+body #profile-header .btn:hover,
+body #profile-header .menu-item a:hover,
+#profile-header a[href="reel.html"]:hover,
+#profile-header a[href="reel.html"]:active,
+#profile-header a[href="reel.html"] .bi:hover {
+    background: transparent !important;
+    color: inherit !important;
+    transform: none !important;
+    box-shadow: none !important;
+} */
