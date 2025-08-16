@@ -1,133 +1,217 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Đăng nhập</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        display: flex;
-        height: 100vh;
-        justify-content: center;
-        align-items: center;
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Đăng nhập</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Fonts: Montserrat & Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+      padding: 2.5rem 2rem;
+      max-width: 350px;
+      width: 100%;
+      animation: fadeInDown 0.8s;
+      font-family: 'Roboto', 'Montserrat', Arial, sans-serif;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-40px);
       }
 
-      .login-form {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 300px;
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-card .form-control:focus {
+      box-shadow: 0 0 0 0.2rem #2575fc40;
+      border-color: #2575fc;
+    }
+
+    .login-title {
+      font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+      font-weight: 700;
+      color: #2575fc;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      letter-spacing: 1px;
+    }
+
+    .login-btn {
+      background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+      border: none;
+      font-weight: 600;
+      transition: transform 0.2s;
+      font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+    }
+
+    .login-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #2575fc 0%, #6a11cb 100%);
+    }
+
+    .input-group-text {
+      background: #f0f4ff;
+      border: none;
+    }
+
+    .form-label {
+      font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+      font-weight: 500;
+      color: #2575fc;
+    }
+
+    .error {
+      color: #dc3545;
+      font-size: 0.95em;
+      margin-bottom: 10px;
+      text-align: center;
+      animation: shake 0.3s;
+      font-family: 'Roboto', 'Montserrat', Arial, sans-serif;
+    }
+
+    @keyframes shake {
+      0% {
+        transform: translateX(0);
       }
 
-      .login-form h2 {
-        text-align: center;
-        margin-bottom: 20px;
+      25% {
+        transform: translateX(-5px);
       }
 
-      .form-group {
-        margin-bottom: 15px;
+      50% {
+        transform: translateX(5px);
       }
 
-      label {
-        display: block;
-        margin-bottom: 5px;
+      75% {
+        transform: translateX(-5px);
       }
 
-      input[type="email"],
-      input[type="password"] {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
+      100% {
+        transform: translateX(0);
       }
+    }
+  </style>
+</head>
 
-      .error {
-        color: red;
-        font-size: 0.9em;
-        margin-bottom: 10px;
-      }
-
-      button {
-        width: 100%;
-        padding: 10px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-
-      button:hover {
-        background-color: #0056b3;
-      }
-    </style>
-  </head>
-  <body>
-    <form class="login-form" onsubmit="return handleLogin(event)">
-      <h2>Đăng nhập</h2>
-
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" required />
-      </div>
-
-      <div class="form-group">
-        <label for="password">Mật khẩu:</label>
-        <input type="password" id="password" required />
-      </div>
-
+<body>
+  <div class="login-card shadow-lg">
+    <div class="login-title mb-4">
+      <i class="bi bi-person-circle fs-2"></i><br>
+      Đăng nhập
+    </div>
+    <form onsubmit="return handleLogin(event)">
       <div id="error" class="error"></div>
-
-      <button type="submit">Đăng nhập</button>
+      <div class="mb-3">
+        <label for="email" class="form-label fw-bold">Email</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+          <input type="email" class="form-control" id="email" placeholder="Nhập email" required>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label fw-bold">Mật khẩu</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu" required>
+          <button type="button" class="btn btn-outline-secondary" id="togglePassword" tabindex="-1">
+            <i class="bi bi-eye" id="eyeIcon"></i>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="btn login-btn w-100 py-2 mt-2">
+        <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+      </button>
     </form>
+    <div class="mt-3 text-center">
+      <a href="sign-up.html" class="text-decoration-none text-primary">Bạn chưa có tài khoản?</a>
+    </div>
+  </div>
 
-    <script>
-      async function handleLogin(event) {
-        event.preventDefault();
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    async function handleLogin(event) {
+      event.preventDefault();
 
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
-        const errorDiv = document.getElementById("error");
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorDiv = document.getElementById("error");
 
-        // Kiểm tra đơn giản
-        if (!email || !password) {
-          errorDiv.textContent = "Vui lòng nhập đầy đủ email và mật khẩu.";
+      errorDiv.textContent = "";
+
+      if (!email || !password) {
+        errorDiv.textContent = "Vui lòng nhập đầy đủ email và mật khẩu.";
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "http://localhost:8080/api/auth/log-in",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          }
+        );
+
+        if (!response.ok) {
+          let errorMsg = "Đăng nhập thất bại.";
+          try {
+            const errorData = await response.json();
+            errorMsg = errorData.message || errorMsg;
+          } catch { }
+          errorDiv.textContent = errorMsg;
           return;
         }
 
-        try {
-          const response = await fetch(
-            "http://localhost:8080/api/auth/log-in",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ email, password }),
-            }
-          );
+        const data = await response.json();
+        localStorage.setItem("accessToken", data.data.token);
 
-          if (!response.ok) {
-            const errorData = await response.json();
-            errorDiv.textContent = errorData.message || "Đăng nhập thất bại.";
-            return;
-          }
-
-          const data = await response.json();
-          console.log("Đăng nhập thành công:", data);
-
-          // Ví dụ: lưu token vào localStorage
-          localStorage.setItem("accessToken", data.data.token);
-
-          // Chuyển trang hoặc thông báo
-          alert("Đăng nhập thành công!");
-          window.location.href = "index.html"; // chuyển hướng nếu cần
-        } catch (error) {
-          console.error("Lỗi khi gửi yêu cầu:", error);
-          errorDiv.textContent = "Có lỗi xảy ra khi kết nối tới server.";
-        }
+        // Hiệu ứng chuyển trang
+        document.querySelector(".login-card").style.animation = "fadeInDown 0.8s reverse";
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 500);
+      } catch (error) {
+        errorDiv.textContent = "Có lỗi xảy ra khi kết nối tới server.";
       }
-    </script>
-  </body>
+    }
+
+    // Ẩn/hiện mật khẩu
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+    const eyeIcon = document.getElementById("eyeIcon");
+
+    togglePassword.addEventListener("click", function () {
+      const type = passwordInput.type === "password" ? "text" : "password";
+      passwordInput.type = type;
+      eyeIcon.className = type === "password" ? "bi bi-eye" : "bi bi-eye-slash";
+    });
+  </script>
+</body>
+
 </html>

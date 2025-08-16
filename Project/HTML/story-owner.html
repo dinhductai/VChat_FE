@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Story Facebook Clone</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background-color: #000;
+        color: #fff;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .story-box {
+        width: 400px;
+        height: 700px;
+        background-color: #000;
+        border-radius: 10px;
+        position: relative;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .story-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .story-header {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .story-header img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+
+      .story-header .info {
+        font-size: 14px;
+        color: white;
+      }
+
+      .reaction-bar {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 24px;
+      }
+
+      .reply-box {
+        position: absolute;
+        bottom: 60px;
+        left: 10px;
+        right: 10px;
+      }
+
+      .story-progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+
+      .story-progress .progress-bar {
+        height: 100%;
+        width: 70%;
+        background-color: white;
+        animation: progress 5s linear forwards;
+      }
+
+      @keyframes progress {
+        from {
+          width: 0%;
+        }
+        to {
+          width: 100%;
+        }
+      }
+
+      .story-list .user {
+        padding: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .story-list .user img {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 2px solid #1877f2;
+      }
+
+      .sidebar {
+        background-color: #f0f2f5;
+        height: 100vh;
+        overflow-y: auto;
+        color: #000;
+      }
+
+      .content-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .dark-mode {
+        background-color: #121212;
+        color: #e4e6eb;
+      }
+
+      .dark-mode .sidebar {
+        background-color: #242526 !important;
+        color: #e4e6eb;
+      }
+
+      .dark-mode .story-box {
+        background-color: #000 !important;
+      }
+
+      .dark-mode .story-box .info,
+      .dark-mode .story-box .reply-box input,
+      .dark-mode .reaction-bar,
+      .dark-mode .btn-close-story {
+        color: #e4e6eb !important;
+      }
+
+      .dark-mode .reply-box input {
+        background-color: #2c2c2c;
+        border-color: #555;
+      }
+
+      .dark-mode .send-icon:hover {
+        color: #0d6efd;
+      }
+
+      /* 👉 Hover trong light mode */
+      .story-list .user:hover {
+        background-color: #e4e6eb; /* Màu sáng nhẹ */
+      }
+
+      /* 👉 Hover trong dark mode */
+      .dark-mode .story-list .user:hover {
+        background-color: #3a3b3c; /* Màu tối nhẹ hơn */
+      }
+
+      .dark-mode .custom-input::placeholder {
+        color: #aaa;
+      }
+      .icon {
+        font-size: 30px;
+      }
+      .icon-bar .icon {
+        display: inline-block;
+        font-size: 28px;
+        margin: 0 5px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+      }
+
+      .icon-bar .icon:hover {
+        transform: scale(1.5) translateY(-5px);
+      }
+      .send-icon:hover {
+        color: #0d6efd;
+        transform: scale(1.2);
+        transition: 0.2s ease;
+      }
+      .btn-close-story {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        font-size: 24px;
+        color: white;
+        cursor: pointer;
+        z-index: 10;
+        transition: transform 0.2s ease;
+      }
+
+      .btn-close-story:hover {
+        transform: scale(1.2);
+        color: #f66;
+      }
+      .custom-input::placeholder {
+        color: #cccccc; /* Màu placeholder bạn muốn */
+        opacity: 1; /* Đảm bảo không bị mờ */
+      }
+      .story-box img {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain; /* chuyển từ cover sang contain để không bị cắt */
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Nút điều hướng story */
+      .btn-story-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 20;
+        background: rgba(0, 0, 0, 0.4);
+        border: none;
+        color: #fff;
+        font-size: 2rem;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .btn-story-nav:hover {
+        background: rgba(24, 119, 242, 0.8);
+        color: #fff;
+      }
+
+      .btn-story-nav.btn-prev {
+        left: 10px;
+      }
+
+      .btn-story-nav.btn-next {
+        right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row h-100">
+        <!-- Sidebar -->
+        <div class="col-3 sidebar p-3">
+          <h3>Stories</h3>
+          <div
+            class="mb-3 d-flex align-items-center gap-2"
+            style="cursor: pointer"
+            onclick="makeStory()"
+          >
+            <div
+              class="rounded-circle d-flex justify-content-center align-items-center"
+              style="width: 45px; height: 45px; background-color: #333334"
+            >
+              <span class="fs-4" style="color: #1877f2; margin-bottom: 5px"
+                >+</span
+              >
+            </div>
+            <span>Create Story</span>
+          </div>
+          <hr />
+          <div class="story-list">
+            <!-- <div class="user bg-secondary-subtle rounded">
+              <img src="../images/Nitro_Wallpaper_5000x2813.jpg" alt="avatar" />
+              <div>
+                <strong>Trần Bảo Long</strong><br />
+                <small>23 giờ</small>
+              </div>
+            </div> -->
+
+            <!-- Thêm user khác nếu muốn -->
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col-9 bg-black content-wrapper">
+          <button class="btn-close-story" onclick="goHome()">✖</button>
+
+          <div class="story-box" style="border: 2px solid white">
+            <div class="story-header">
+              <div class="story-progress mb-3" style="margin-bottom: 20px">
+                <div class="progress-bar"></div>
+              </div>
+              <img src="../images/OIP.jpg" class="rounded-circle mt-3" />
+              <div class="info mt-3">
+                <strong>Trần Bảo Long</strong><br />
+                <small>23 giờ • 🎵 Linh Tuổi Thìn</small>
+              </div>
+            </div>
+            <img
+              src="../images/planet9_Wallpaper_5000x2813.jpg"
+              class="story-image"
+              alt=""
+            />
+
+            <div class="reply-box">
+              <div
+                class="d-flex align-items-center bg-dark rounded-5 px-3 py-1"
+                style="border: 1px solid #555; gap: 10px"
+              >
+                <input
+                  type="text"
+                  class="form-control border-0 bg-transparent text-white custom-input"
+                  placeholder="Trả lời..."
+                  style="box-shadow: none; outline: none"
+                />
+                <div class="send-icon text-white" style="cursor: pointer">
+                  <i class="bi bi-send-fill fs-5"></i>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="reaction-bar d-flex icon-bar"
+              style="justify-content: space-evenly"
+            >
+              <span class="icon"
+                ><img
+                  src="../images/like_thumbs_up_icon_178899.png"
+                  alt=""
+                  style="width: 35px; height: 35px"
+                />
+              </span>
+              <span class="icon">❤️</span>
+              <span class="icon">😍</span>
+              <span class="icon">😆</span>
+              <span class="icon">😮</span>
+              <span class="icon">😢</span>
+              <span class="icon">😡</span>
+            </div>
+
+            <!-- Nút Prev -->
+            <button
+              class="btn-story-nav btn-prev"
+              onclick="prevStoryPhoto(); event.stopPropagation();"
+              title="Trước"
+            >
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <!-- Nút Next -->
+            <button
+              class="btn-story-nav btn-next"
+              onclick="nextStoryPhoto(); event.stopPropagation();"
+              title="Tiếp"
+            >
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function goHome() {
+        window.location.href = "profile.html";
+      }
+      function makeStory() {
+        window.location.href = "tao_tin.html"; // hoặc '/index.html' nếu cần
+      }
+    </script>
+    <script>
+      // Tự động áp dụng dark mode nếu có lưu
+      window.addEventListener("DOMContentLoaded", () => {
+        if (localStorage.getItem("darkMode") === "on") {
+          document.body.classList.add("dark-mode");
+        }
+      });
+
+    //   window.addEventListener("DOMContentLoaded", () => {
+    //     const stories = JSON.parse(localStorage.getItem("allStories") || "[]");
+    //     const index = parseInt(
+    //       localStorage.getItem("currentStoryIndex") || "0"
+    //     );
+
+    //     const story = stories[index];
+    //     if (!story) return;
+
+    //     document.querySelector(".story-header img").src =
+    //       story.profileUrl || "../images/user-default.webp";
+    //     document.querySelector(".story-header .info strong").textContent =
+    //       story.fullName;
+    //     document.querySelector(".story-header .info small").textContent =
+    //       formatTimeAgo(story.listDateUpload[0]);
+    //     document.querySelector(".story-box > img").src =
+    //       story.listStoryPhoto[0];
+    //   });
+      function formatTimeAgo(dateString) {
+        const now = new Date();
+        const postDate = new Date(dateString);
+        const diffInSeconds = Math.floor((now - postDate) / 1000);
+
+        if (diffInSeconds < 60) {
+          return "Vừa xong";
+        } else if (diffInSeconds < 3600) {
+          const minutes = Math.floor(diffInSeconds / 60);
+          return `${minutes} phút trước`;
+        } else if (diffInSeconds < 86400) {
+          const hours = Math.floor(diffInSeconds / 3600);
+          return `${hours} giờ trước`;
+        } else if (diffInSeconds < 604800) {
+          const days = Math.floor(diffInSeconds / 86400);
+          return `${days} ngày trước`;
+        } else {
+          return postDate.toLocaleDateString("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+        }
+      }
+    </script>
+   <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const storyList = document.querySelector(".story-list");
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      storyList.innerHTML = "<p>Chưa đăng nhập.</p>";
+      return;
+    }
+
+    fetch("http://localhost:8080/api/story/owner", {
+      headers: { Authorization: "Bearer " + token },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.data) && json.data.length) {
+          window.allStories = json.data; // Lưu lại để chuyển story giữa các user
+          renderOwnStories(json.data);
+          showStory(json.data[0]);
+        } else {
+          storyList.innerHTML = "<p>Không có story nào.</p>";x
+        }
+      })
+      .catch((err) => {
+        console.error("Lỗi khi tải story:", err);
+        storyList.innerHTML = "<p>Lỗi khi tải dữ liệu.</p>";
+      });
+});
+
+function renderOwnStories(stories) {
+  const storyList = document.querySelector(".story-list");
+  storyList.innerHTML = ""; // Xóa cũ
+
+  if (!stories || !stories.length) {
+    storyList.innerHTML = "<p>Không có story nào.</p>";
+    return;
+  }
+
+  stories.forEach((user) => {
+    const fullName = user.fullName || "Không rõ tên";
+    const avatar = user.profileUrl || "../images/user-default.webp";
+    const times = user.listDateUpload || [];
+    const latestTime = times.length ? formatTimeAgo(times[0]) : "Vừa đăng";
+
+    const userDiv = document.createElement("div");
+    userDiv.className = "user rounded d-flex align-items-center p-2 mb-2";
+    userDiv.onclick = () => showStory(user);
+
+    userDiv.innerHTML = `
+      <img src="${avatar}" alt="avatar" class="me-2 rounded-circle"
+        style="width: 50px; height: 50px; object-fit: cover;" />
+      <div>
+        <strong>${fullName}</strong><br />
+        <small>${latestTime}</small>
+      </div>
+    `;
+    storyList.appendChild(userDiv);
+  });
+}
+    </script>
+    <script>
+      let currentStoryIndex = 0; // Chỉ số story đang xem trong listStoryPhoto
+let currentUser = null;    // User đang xem story
+
+function showStory(user, index = 0) {
+  if (!user || !user.listStoryPhoto || user.listStoryPhoto.length === 0) return;
+  currentUser = user;
+  currentStoryIndex = index;
+
+  // Cập nhật header
+  document.querySelector(".story-header img").src =
+    user.profileUrl || "../images/user-default.webp";
+  document.querySelector(".story-header .info strong").textContent =
+    user.fullName || "Không rõ tên";
+  document.querySelector(".story-header .info small").textContent =
+    formatTimeAgo(user.listDateUpload?.[index] || new Date());
+
+  // Cập nhật ảnh story
+  document.querySelector(".story-box > img").src =
+    user.listStoryPhoto?.[index] || "../images/default-story.jpg";
+
+  // Reset progress bar animation
+  const progressBar = document.querySelector(".progress-bar");
+  progressBar.style.animation = "none";
+  progressBar.offsetHeight;
+  progressBar.style.animation = null;
+}
+
+// Chuyển story tiếp theo của user hiện tại
+function nextStoryPhoto() {
+  if (!currentUser) return;
+  if (currentStoryIndex < currentUser.listStoryPhoto.length - 1) {
+    showStory(currentUser, currentStoryIndex + 1);
+  } else {
+    // Nếu hết story của user này, chuyển sang user tiếp theo (nếu có)
+    const users = window.allStories || [];
+    const currentUserIdx = users.findIndex(u => u.userId === currentUser.userId);
+    if (currentUserIdx !== -1 && currentUserIdx < users.length - 1) {
+      showStory(users[currentUserIdx + 1], 0);
+    }
+  }
+}
+
+// Chuyển story trước đó của user hiện tại
+function prevStoryPhoto() {
+  if (!currentUser) return;
+  if (currentStoryIndex > 0) {
+    showStory(currentUser, currentStoryIndex - 1);
+  } else {
+    // Nếu đang ở ảnh đầu, có thể chuyển sang user trước đó (nếu muốn)
+    const users = window.allStories || [];
+    const currentUserIdx = users.findIndex(u => u.userId === currentUser.userId);
+    if (currentUserIdx > 0) {
+      const prevUser = users[currentUserIdx - 1];
+      showStory(prevUser, prevUser.listStoryPhoto.length - 1);
+    }
+  }
+}
+
+// Gán sự kiện click cho story-box để chuyển ảnh (giống Facebook)
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelector(".story-box").onclick = function (e) {
+    // Nếu click bên phải story-box thì next, bên trái thì prev
+    const box = this.getBoundingClientRect();
+    if (e.clientX - box.left > box.width / 2) {
+      nextStoryPhoto();
+    } else {
+      prevStoryPhoto();
+    }
+  };
+});
+    </script>
+  </body>
+</html>

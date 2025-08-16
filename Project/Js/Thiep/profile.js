@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('form-upload-photo-modal').reset();
         document.getElementById('upload-photo-modal').style.display = 'none';
         isProfilePhotoUpload = false;
-        loadPhotos();
+        location.reload();
       } else {
         alert('Tải ảnh thất bại!');
       }
@@ -322,10 +322,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     let successCount = 0;
     for (const url of window.selectedPhotoUrls) {
       try {
-        const res = await fetch('http://localhost:8080/api/photo/delete?photoUrl=' + encodeURIComponent(url), {
+        console.log('Xóa ảnh:', url);
+        const res = await fetch('http://localhost:8080/api/photo/delete?photoUrl=' + url, {
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + token }
         });
+        
         const json = await res.json();
         if (json.success) successCount++;
       } catch {}
@@ -345,12 +347,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       window.selectedPhotoUrls.push(url);
       imgEl.style.opacity = "1";
       imgEl.style.border = "2px solid #1877F2";
-      imgEl.nextElementSibling.style.display = "flex";
+      // XÓA hoặc COMMENT dòng này nếu không có overlay tick
+      // if (imgEl.nextElementSibling) imgEl.nextElementSibling.style.display = "flex";
     } else {
       window.selectedPhotoUrls.splice(idx, 1);
       imgEl.style.opacity = "0.7";
       imgEl.style.border = "2px solid #ff4d4f";
-      imgEl.nextElementSibling.style.display = "none";
+      // XÓA hoặc COMMENT dòng này nếu không có overlay tick
+      // if (imgEl.nextElementSibling) imgEl.nextElementSibling.style.display = "none";
     }
   };
 
@@ -373,102 +377,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('btn-create-story').onclick = function() {
     window.location.href = 'tao_tin.html';
   };
-
-  
-
-
-//   // Xử lý nút "Tạo bài viết"
-// document.getElementById('btn-create-post').onclick = function() {
-//   document.getElementById('form-create-post-modal').reset();
-//   document.getElementById('create-post-modal').style.display = 'flex';
-//   // Lấy avatar và tên cho modal
-//   document.getElementById('profile-avatar-modal').src = document.getElementById('profile-avatar').src;
-//   document.getElementById('profile-fullname-modal').textContent = document.getElementById('profile-fullname').textContent;
-// };
-// document.getElementById('close-create-post-modal').onclick =
-// document.getElementById('btn-cancel-create-post-modal').onclick = function() {
-//   document.getElementById('form-create-post-modal').reset();
-//   document.getElementById('create-post-modal').style.display = 'none';
-// };
-// document.getElementById('form-create-post-modal').onsubmit = async function (e) {
-//   e.preventDefault();
-
-//   const content = document.getElementById('post-content').value.trim();
-//   const images = document.getElementById('post-images').files;
-//   const videos = document.getElementById('post-videos').files;
-//   const isPublic = document.getElementById('post-public').checked;
-//   const email = document.getElementById('post-email').value.trim(); // 👈 thêm lại dòng này
-//   const loading = document.getElementById('create-post-loading');
-
-//   // Kiểm tra hợp lệ
-//   if (!email) {
-//     alert('Vui lòng nhập email!');
-//     return;
-//   }
-
-//   if (!content && images.length === 0 && videos.length === 0) {
-//     alert('Bài viết phải có nội dung hoặc ảnh/video!');
-//     return;
-//   }
-
-//   // Tạo FormData
-//   const formData = new FormData();
-//   formData.append('content', content);
-//   formData.append('isPublic', isPublic.toString()); // "true" hoặc "false"
-//   formData.append('userEmail', email); // 👈 thêm để backend không lỗi
-
-//   for (let i = 0; i < images.length; i++) {
-//     formData.append('listImage', images[i]);
-//   }
-
-//   for (let i = 0; i < videos.length; i++) {
-//     formData.append('listVideo', videos[i]);
-//   }
-
-//   const token = localStorage.getItem('accessToken');
-//   if (!token) {
-//     alert('Không tìm thấy token đăng nhập!');
-//     return;
-//   }
-
-//   loading.style.display = 'flex';
-
-//   try {
-//     const res = await fetch('http://localhost:8080/api/post/create', {
-//       method: 'POST',
-//       headers: {
-//         Authorization: 'Bearer ' + token
-//         // KHÔNG thêm Content-Type khi dùng FormData
-//       },
-//       body: formData
-//     });
-
-//     const text = await res.text();
-//     console.log('Raw response:', text); // debug
-
-//     let json;
-//     try {
-//       json = JSON.parse(text);
-//     } catch (err) {
-//       throw new Error('Server không trả về JSON hợp lệ');
-//     }
-
-//     loading.style.display = 'none';
-
-//     if (json.success) {
-//       alert('Tạo bài viết thành công!');
-//       document.getElementById('form-create-post-modal').reset();
-//       document.getElementById('create-post-modal').style.display = 'none';
-//     } else {
-//       alert('Tạo bài viết thất bại: ' + (json.message || 'Không rõ lý do'));
-//       console.log(json);
-//     }
-//   } catch (err) {
-//     loading.style.display = 'none';
-//     console.error(err);
-//     alert('Lỗi kết nối hoặc xử lý phía client!');
-//   }
-// };
 
 
   // Khi ấn nút "Chỉnh sửa thông tin cá nhân"
