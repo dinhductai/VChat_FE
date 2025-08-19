@@ -37,7 +37,8 @@ function submitPost() {
     },
   })
     .then((response) => {
-      if (!response.ok) throw new Error("Lỗi khi gửi bài viết");
+      if (!response.ok)
+        throw new Error("Lỗi khi gửi bài viết, file ảnh hoặc video quá lớn");
       return response.json();
     })
     .then((data) => {
@@ -63,7 +64,7 @@ function submitPost() {
     })
     .catch((error) => {
       console.error("Lỗi:", error);
-      alert("Có lỗi xảy ra khi đăng bài viết");
+      alert("Có lỗi xảy ra khi đăng bài viết, file ảnh hoặc video quá lớn");
     })
     .finally(() => {
       // ✅ Tắt loading
@@ -325,14 +326,14 @@ function renderPost(post, insert = true) {
 
   <!-- Menu nhỏ hiện ra khi bấm -->
   <ul class="dropdown-menu dropdown-menu-end custom-shadow border-0">
-    <li>
+    <li style="cursor:pointer">
       <a class="dropdown-item" onclick="shareOrSavePost('SHARE', ${
         post.postId
       })"
         ><i class="bi bi-share-fill me-2"></i> <span>Share Post</span>
       </a>
     </li>
-    <li>
+    <li style="cursor:pointer">
       <a class="dropdown-item" onclick="shareOrSavePost('SAVE', ${post.postId})"
         ><i class="bi bi-bookmark-fill m2-2"></i> <span>Save Post</span>
       </a>
@@ -401,7 +402,9 @@ function renderPost(post, insert = true) {
   style="font-weight: bold; color: #65676b; font-size:15px;">
           <i class="bi bi-chat-left"></i> Comment
         </button>
-        <button class="btn btn-light w-100 btn-action"  style="font-weight: bold; color: #65676b; font-size:15px;">
+        <button class="btn btn-light w-100 btn-action"  style="font-weight: bold; color: #65676b; font-size:15px;"  onclick="shareOrSavePost('SHARE', ${
+          post.postId
+        })">
           <i class="bi bi-share"></i> Share
         </button>
       </div>
