@@ -82,8 +82,8 @@ async function loadHomeFriends(page = 0) {
             </p>
             <button class="btn btn-sm btn-primary w-100 mb-1" onclick="addFriend(${
               friend.userId
-            })">Add friend</button>
-            <button class="btn btn-sm btn-light w-100 border">Remove</button>
+            })">Thêm bạn bè</button>
+            <button class="btn btn-sm btn-secondary w-100 border">Gỡ/Xoá</button>
           </div>
         </div>
       `;
@@ -163,11 +163,11 @@ async function loadAllFriends(page = 0) {
             <div class="d-flex gap-1">
               <button class="btn btn-sm btn-secondary border w-50 d-flex align-items-center justify-content-center gap-1">
                 <i class="bi bi-person-fill-check"></i>
-                <span>Friend</span>
+                <span>Bạn bè</span>
               </button>
               <button class="btn btn-sm btn-primary w-50 d-flex align-items-center justify-content-center gap-1 text-white">
                 <i class="bi bi-chat-dots-fill"></i>
-                <span>Message</span>
+                <span>Nhắn tin</span>
               </button>
             </div>
           </div>
@@ -245,10 +245,10 @@ async function loadFriendsSuggest(page = 0) {
             <button class="btn btn-sm btn-primary w-100 mb-1" onclick="addFriend(${
               friend.userId
             })">
-              Add friend
+              Thêm bạn bè
             </button>
-            <button class="btn btn-sm btn-light w-100 border">
-              Remove
+            <button class="btn btn-sm btn-secondary w-100 border">
+              Gỡ/Xoá
             </button>
           </div>
         </div>
@@ -460,17 +460,17 @@ async function loadFriendRequests(page = 0) {
             </h6>
             ${mutual}
             <div class="d-flex gap-1">
-              <button class="btn btn-sm btn-success w-50 d-flex align-items-center justify-content-center gap-1" onclick="acceptFriend(${
+              <button class="btn btn-sm btn-primary w-50 d-flex align-items-center justify-content-center gap-1" onclick="acceptFriend(${
                 user.userId
               })">
                 <i class="bi bi-person-check-fill"></i>
-                <span>Accept</span>
+                <span>Đồng ý</span>
               </button>
               <button class="btn btn-sm btn-danger w-50 d-flex align-items-center justify-content-center gap-1" onclick="declineFriend(${
                 user.userId
               })">
                 <i class="bi bi-x-circle-fill"></i>
-                <span>Decline</span>
+                <span>Huỷ </span>
               </button>
             </div>
           </div>

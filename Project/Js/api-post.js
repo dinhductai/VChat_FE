@@ -325,20 +325,35 @@ function renderPost(post, insert = true) {
   </div>
 
   <!-- Menu nhỏ hiện ra khi bấm -->
-  <ul class="dropdown-menu dropdown-menu-end custom-shadow border-0">
-    <li style="cursor:pointer">
-      <a class="dropdown-item" onclick="shareOrSavePost('SHARE', ${
-        post.postId
-      })"
-        ><i class="bi bi-share-fill me-2"></i> <span>Share Post</span>
-      </a>
-    </li>
-    <li style="cursor:pointer">
-      <a class="dropdown-item" onclick="shareOrSavePost('SAVE', ${post.postId})"
-        ><i class="bi bi-bookmark-fill m2-2"></i> <span>Save Post</span>
-      </a>
-    </li>
-  </ul>
+  <!-- Menu nhỏ hiện ra khi bấm -->
+<ul class="dropdown-menu dropdown-menu-end border-0 shadow rounded-3 p-2"
+    style="min-width: 220px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;">
+  
+  <!-- Chia sẻ -->
+  <li>
+    <a class="dropdown-item d-flex align-items-center gap-2 rounded-3 py-2 px-3"
+       style="transition: background 0.2s; cursor: pointer;"
+       onmouseover="this.style.background='#f0f2f5'"
+       onmouseout="this.style.background='transparent'"
+       onclick="shareOrSavePost('SHARE', ${post.postId})">
+      <i class="bi bi-share-fill text-primary fs-5"></i>
+      <span style="font-size: 15px; font-weight: 500;">Chia sẻ bài viết</span>
+    </a>
+  </li>
+
+  <!-- Lưu -->
+  <li>
+    <a class="dropdown-item d-flex align-items-center gap-2 rounded-3 py-2 px-3"
+       style="transition: background 0.2s; cursor: pointer;"
+       onmouseover="this.style.background='#f0f2f5'"
+       onmouseout="this.style.background='transparent'"
+       onclick="shareOrSavePost('SAVE', ${post.postId})">
+      <i class="bi bi-bookmark-fill text-secondary fs-5"></i>
+      <span style="font-size: 15px; font-weight: 500;">Lưu bài viết</span>
+    </a>
+  </li>
+</ul>
+
 </div>
 
 
@@ -352,7 +367,7 @@ function renderPost(post, insert = true) {
         <div class="like-wrapper position-relative w-100 me-1">
           <button class="btn btn-light w-100 btn-action"  style="font-weight: bold; color: #65676b; font-size:15px;"
           id="like-btn-home-${post.postId}">
-            <i class="bi bi-hand-thumbs-up"></i> Like
+            <i class="bi bi-hand-thumbs-up"></i> Thích
           </button>
                               <div
                       class="reaction-popup d-flex gap-2 rounded-5 shadow border"
@@ -400,12 +415,12 @@ function renderPost(post, insert = true) {
           post.postId
         }"   onclick="openAllImagesModal('${post.postId}')"
   style="font-weight: bold; color: #65676b; font-size:15px;">
-          <i class="bi bi-chat-left"></i> Comment
+          <i class="bi bi-chat-left"></i> Bình luận
         </button>
         <button class="btn btn-light w-100 btn-action"  style="font-weight: bold; color: #65676b; font-size:15px;"  onclick="shareOrSavePost('SHARE', ${
           post.postId
         })">
-          <i class="bi bi-share"></i> Share
+          <i class="bi bi-share"></i> Chia sẻ
         </button>
       </div>
     </div>

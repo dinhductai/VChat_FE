@@ -1,4 +1,4 @@
-token = localStorage.getItem('accessToken');
+token = localStorage.getItem("accessToken");
 let isLoading = false;
 let isLastPage = false;
 let currentPage = 0;
@@ -113,20 +113,29 @@ function renderPost(post, insert = true) {
     <div class="post-images-grid mb-2" style="max-width: 700px; margin: auto; display: flex; flex-direction: column; gap: 4px;">
       <div style="display: flex; gap: 4px; height: 240px;">
         <div style="flex: 1; overflow: hidden; border-radius: 8px;">
-          <img src="${limitedPhotos[0]}" onclick="openImageModal('${limitedPhotos[0]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+          <img src="${limitedPhotos[0]}" onclick="openImageModal('${
+      limitedPhotos[0]
+    }','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
         </div>
         <div style="flex: 1; overflow: hidden; border-radius: 8px;">
-          <img src="${limitedPhotos[1]}" onclick="openImageModal('${limitedPhotos[1]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+          <img src="${limitedPhotos[1]}" onclick="openImageModal('${
+      limitedPhotos[1]
+    }','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
         </div>
       </div>
       <div style="display: flex; gap: 4px; height: 240px;">
         <div style="flex: 1; overflow: hidden; border-radius: 8px;">
-          <img src="${limitedPhotos[2]}" onclick="openImageModal('${limitedPhotos[2]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+          <img src="${limitedPhotos[2]}" onclick="openImageModal('${
+      limitedPhotos[2]
+    }','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
         </div>
         <div style="flex: 1; overflow: hidden; border-radius: 8px; position: relative;">
-          <img src="${limitedPhotos[3]}" onclick="openImageModal('${limitedPhotos[3]}','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
-          ${photos.length > 4
-        ? `<div style="
+          <img src="${limitedPhotos[3]}" onclick="openImageModal('${
+      limitedPhotos[3]
+    }','${postId}')" style="width: 100%; height: 100%; object-fit: cover;" />
+          ${
+            photos.length > 4
+              ? `<div style="
                   position: absolute;
                   top: 0;
                   left: 0;
@@ -141,8 +150,8 @@ function renderPost(post, insert = true) {
                   font-weight: bold;
                   border-radius: 8px;
                 ">+${photos.length - 4}</div>`
-        : ""
-      }
+              : ""
+          }
         </div>
       </div>
     </div>
@@ -152,8 +161,8 @@ function renderPost(post, insert = true) {
   // HTML video
   const videoHTML = Array.isArray(post.videosUrl)
     ? post.videosUrl
-      .map(
-        (url) => `
+        .map(
+          (url) => `
         <video
           controls
           class="img-fluid rounded post-video my-2"
@@ -163,8 +172,8 @@ function renderPost(post, insert = true) {
           Trình duyệt không hỗ trợ phát video.
         </video>
       `
-      )
-      .join("")
+        )
+        .join("")
     : "";
 
   // Khung bài đăng
@@ -174,17 +183,21 @@ function renderPost(post, insert = true) {
   const html = `
     <div class="post shadow-sm rounded text-white col-10"
     style="background-color: #2f3337ff; margin: 10px auto; padding: 20px; position: relative;"    
-        data-post-id='${post.postId
-    }'>
+        data-post-id='${post.postId}'>
        <div class="d-flex justify-content-between">
               <div class="d-flex align-items-center mb-2">
-                <img src="${post.profilePicture || "../images/user-default.webp"
-    }"
+                <img src="${
+                  post.profilePicture || "../images/user-default.webp"
+                }"
                 class="rounded-circle me-2" style="width: 40px; height:
                 40px;cursor: pointer; border: 1px solid #bdc3c7" alt="Avatar" />
                 <div>
-                    <strong style="cursor: pointer; color: #bdc3c7;">${post.fullName}</strong><br />
-                     <small style="color: #bdc3c7;">${formatTimeAgo(post.uploadDate)}</small>
+                    <strong style="cursor: pointer; color: #bdc3c7;">${
+                      post.fullName
+                    }</strong><br />
+                     <small style="color: #bdc3c7;">${formatTimeAgo(
+                       post.uploadDate
+                     )}</small>
                 </div>
 
               </div>
@@ -271,7 +284,7 @@ function renderPost(post, insert = true) {
                     >
                       <span class="icon" data-emotion="LIKE">
                         <img
-                          src="../images/Animation/uv2XD2zFzt.gif"
+                          src="../images/Animation/like.gif"
                           alt="Like"
                           class="reaction-img"
                         />
@@ -308,8 +321,9 @@ function renderPost(post, insert = true) {
                       /></span>
                     </div>
         </div>
-        <button class="btn btn-light w-100 me-1 btn-action toggle-comment" data-post-id="${post.postId
-    }"   onclick="openAllImagesModal('${post.postId}')"
+        <button class="btn btn-light w-100 me-1 btn-action toggle-comment" data-post-id="${
+          post.postId
+        }"   onclick="openAllImagesModal('${post.postId}')"
   style="font-weight: bold; color: #bdc3c7; font-size:15px;">
           <i class="bi bi-chat-left"></i> Comment
         </button>
@@ -692,24 +706,29 @@ function renderPhotosHTML(photos) {
   <div class="post-images-grid mb-2" style="max-width: 700px; margin: auto; display: flex; flex-direction: column; gap: 4px;">
     <div style="display: flex; gap: 4px; height: 240px;">
       <div style="flex: 1; overflow: hidden; border-radius: 8px;">
-        <img src="${limitedPhotos[0]
-    }" style="width: 100%; height: 100%; object-fit: cover;" />
+        <img src="${
+          limitedPhotos[0]
+        }" style="width: 100%; height: 100%; object-fit: cover;" />
       </div>
       <div style="flex: 1; overflow: hidden; border-radius: 8px;">
-        <img src="${limitedPhotos[1]
-    }" style="width: 100%; height: 100%; object-fit: cover;" />
+        <img src="${
+          limitedPhotos[1]
+        }" style="width: 100%; height: 100%; object-fit: cover;" />
       </div>
     </div>
     <div style="display: flex; gap: 4px; height: 240px;">
       <div style="flex: 1; overflow: hidden; border-radius: 8px;">
-        <img src="${limitedPhotos[2]
-    }" style="width: 100%; height: 100%; object-fit: cover;" />
+        <img src="${
+          limitedPhotos[2]
+        }" style="width: 100%; height: 100%; object-fit: cover;" />
       </div>
       <div style="flex: 1; overflow: hidden; border-radius: 8px; position: relative;">
-        <img src="${limitedPhotos[3]
-    }" style="width: 100%; height: 100%; object-fit: cover;" />
-        ${photos.length > 4
-      ? `<div style="
+        <img src="${
+          limitedPhotos[3]
+        }" style="width: 100%; height: 100%; object-fit: cover;" />
+        ${
+          photos.length > 4
+            ? `<div style="
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -724,8 +743,8 @@ function renderPhotosHTML(photos) {
                 font-weight: bold;
                 border-radius: 8px;
               ">+${photos.length - 4}</div>`
-      : ""
-    }
+            : ""
+        }
       </div>
     </div>
   </div>
@@ -734,40 +753,49 @@ function renderPhotosHTML(photos) {
 
 function renderVideosHTML(videos) {
   if (!Array.isArray(videos) || videos.length === 0) return "";
-  return videos.map(url => `
+  return videos
+    .map(
+      (url) => `
     <div class="fb-video-row">
       <video controls class="fb-video" style="width: 100%; max-height: 450px; border-radius: 8px;">
         <source src="${url}" type="video/mp4" />
         Trình duyệt không hỗ trợ video.
       </video>
     </div>
-  `).join('');
+  `
+    )
+    .join("");
 }
 
 let postIdToDelete = null;
 
 function showDeletePostModal(postId) {
   postIdToDelete = postId;
-  const modal = new bootstrap.Modal(document.getElementById('deletePostModal'));
+  const modal = new bootstrap.Modal(document.getElementById("deletePostModal"));
   modal.show();
 }
 
-document.getElementById('btn-confirm-delete-post').onclick = async function () {
+document.getElementById("btn-confirm-delete-post").onclick = async function () {
   if (!postIdToDelete) return;
   try {
-    const token = localStorage.getItem('accessToken');
-    const res = await fetch(`http://localhost:8080/api/post/delete?postId=${postIdToDelete}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer ' + token
+    const token = localStorage.getItem("accessToken");
+    const res = await fetch(
+      `http://localhost:8080/api/post/delete?postId=${postIdToDelete}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
       }
-    });
+    );
 
     if (res.status === 204) {
       // Thành công, không có nội dung trả về
-      bootstrap.Modal.getInstance(document.getElementById('deletePostModal')).hide();
+      bootstrap.Modal.getInstance(
+        document.getElementById("deletePostModal")
+      ).hide();
       setTimeout(() => {
-        const btnCreatePost = document.getElementById('btn-create-post');
+        const btnCreatePost = document.getElementById("btn-create-post");
         if (btnCreatePost) {
           btnCreatePost.focus();
         } else {
@@ -775,9 +803,11 @@ document.getElementById('btn-confirm-delete-post').onclick = async function () {
         }
       }, 300);
       // Xóa post khỏi giao diện
-      const postDiv = document.querySelector(`[data-post-id='${postIdToDelete}']`);
+      const postDiv = document.querySelector(
+        `[data-post-id='${postIdToDelete}']`
+      );
       if (postDiv) postDiv.remove();
-      alert('Đã xóa bài viết!');
+      alert("Đã xóa bài viết!");
     } else {
       // Nếu không phải 204, thử parse JSON như cũ
       const text = await res.text();
@@ -788,24 +818,28 @@ document.getElementById('btn-confirm-delete-post').onclick = async function () {
         json = {};
       }
       if (json.success) {
-        bootstrap.Modal.getInstance(document.getElementById('deletePostModal')).hide();
+        bootstrap.Modal.getInstance(
+          document.getElementById("deletePostModal")
+        ).hide();
         setTimeout(() => {
-          const btnCreatePost = document.getElementById('btn-create-post');
+          const btnCreatePost = document.getElementById("btn-create-post");
           if (btnCreatePost) {
             btnCreatePost.focus();
           } else {
             document.body.focus();
           }
         }, 300);
-        const postDiv = document.querySelector(`[data-post-id='${postIdToDelete}']`);
+        const postDiv = document.querySelector(
+          `[data-post-id='${postIdToDelete}']`
+        );
         if (postDiv) postDiv.remove();
-        alert('Đã xóa bài viết!');
+        alert("Đã xóa bài viết!");
       } else {
-        alert(json.message || 'Xóa bài viết thất bại!');
+        alert(json.message || "Xóa bài viết thất bại!");
       }
     }
   } catch (err) {
-    alert('Lỗi khi xóa bài viết!');
+    alert("Lỗi khi xóa bài viết!");
     console.error(err);
   }
   postIdToDelete = null;

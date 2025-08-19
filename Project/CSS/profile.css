@@ -1,5 +1,5 @@
 body {
-  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-family: "Roboto", "Segoe UI", Arial, sans-serif;
   color: #e4e6eb;
   background: linear-gradient(135deg, #232526 0%, #414345 100%);
 }
@@ -12,19 +12,19 @@ header {
   position: sticky;
   top: 0;
   z-index: 999;
-  box-shadow: 0 2px 8px rgba(24,119,242,0.08);
+  box-shadow: 0 2px 8px rgba(24, 119, 242, 0.08);
 }
 .logo {
   font-size: 24px;
   font-weight: bold;
-  color: #1877F2;
+  color: #1877f2;
   font-family: Arial, Helvetica, sans-serif;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .search-box input {
-  background-color: #3A3B3C;
+  background-color: #3a3b3c;
   border: none;
   border-radius: 20px;
   padding: 8px 15px;
@@ -37,7 +37,7 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 8px 20px;
-  box-shadow: 0 2px 8px rgba(24,119,242,0.08);
+  box-shadow: 0 2px 8px rgba(24, 119, 242, 0.08);
 }
 .fb-logo {
   display: flex;
@@ -45,7 +45,7 @@ header {
   gap: 8px;
 }
 .fb-logo i {
-  color: #1877F2;
+  color: #1877f2;
   font-size: 32px;
   filter: drop-shadow(0 0 6px #1877f2aa);
 }
@@ -53,7 +53,7 @@ header {
   text-shadow: 0 2px 8px #1877f244;
 }
 .fb-search input {
-  background: linear-gradient(90deg, #3A3B3C 60%, #1877F2 100%);
+  background: linear-gradient(90deg, #3a3b3c 60%, #1877f2 100%);
   border: none;
   border-radius: 20px;
   padding: 7px 15px;
@@ -65,14 +65,16 @@ header {
 .fb-search input:focus {
   background: #fff;
   color: #242526;
-  outline: 2px solid #1877F2;
+  outline: 2px solid #1877f2;
 }
-.fb-icons, .fb-right {
+.fb-icons,
+.fb-right {
   display: flex;
   align-items: center;
   gap: 18px;
 }
-.fb-icons i, .fb-right i {
+.fb-icons i,
+.fb-right i {
   font-size: 22px;
   color: #b0b3b8;
   background: #242526;
@@ -82,8 +84,9 @@ header {
   cursor: pointer;
   box-shadow: 0 2px 8px #1877f211;
 }
-.fb-icons i:hover, .fb-right i:hover {
-  background: #1877F2;
+.fb-icons i:hover,
+.fb-right i:hover {
+  background: #1877f2;
   color: #fff;
   box-shadow: 0 2px 12px #1877f288;
 }
@@ -92,22 +95,22 @@ header {
   height: 36px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #1877F2;
+  border: 2px solid #1877f2;
   box-shadow: 0 2px 8px #1877f244;
 }
 .profile-header {
   display: flex;
   align-items: center;
   padding: 30px 20px 10px 20px;
-  background:  #242526;
-  border-bottom: 1px solid #3E4042;
+  background: #242526;
+  border-bottom: 1px solid #3e4042;
   box-shadow: 0 2px 8px #1877f211;
 }
 .avatar {
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  border: 4px solid #18191A;
+  border: 4px solid #18191a;
   object-fit: cover;
   box-shadow: 0 4px 16px #1877f244;
 }
@@ -120,7 +123,7 @@ header {
   text-shadow: 0 2px 8px #1877f244;
 }
 .profile-info p {
-  color: #B0B3B8;
+  color: #b0b3b8;
   margin: 4px 0;
   text-shadow: 0 1px 4px #0004;
 }
@@ -130,17 +133,18 @@ nav {
   gap: 25px;
   padding: 10px 20px;
   background: #242526;
-  border-bottom: 1px solid #3E4042;
+  border-bottom: 1px solid #3e4042;
   box-shadow: 0 2px 8px #1877f211;
 }
 nav a {
   padding: 8px 0;
-  color: #B0B3B8;
+  color: #b0b3b8;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s, border-bottom 0.2s;
 }
-nav a:hover, nav a.active {
+nav a:hover,
+nav a.active {
   border-bottom: 2px solid #fff;
   color: #fff;
 }
@@ -157,16 +161,18 @@ nav a:hover, nav a.active {
 .right-panel {
   flex: 2;
 }
-.intro-box, .post-box {
-  background:#242526 80%;
+.intro-box,
+.post-box {
+  background: #242526 80%;
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 20px;
   box-shadow: 0 2px 8px #1877f211;
 }
-.intro-box button, .post-box button {
+.intro-box button,
+.post-box button {
   margin-top: 5px;
-  background:  #3A3B3C 60%;
+  background: #3a3b3c 60%;
   color: white;
   border: none;
   border-radius: 6px;
@@ -175,8 +181,9 @@ nav a:hover, nav a.active {
   transition: background 0.2s, color 0.2s;
   box-shadow: 0 2px 8px #1877f211;
 }
-.intro-box button:hover, .post-box button:hover {
-  background: #1877F2;
+.intro-box button:hover,
+.post-box button:hover {
+  background: #1877f2;
   color: #fff;
 }
 .post-box {
@@ -193,7 +200,7 @@ nav a:hover, nav a.active {
   padding: 10px;
   border: none;
   border-radius: 6px;
-  background: #3A3B3C ;
+  background: #3a3b3c;
   color: white;
   box-shadow: 0 2px 8px #1877f211;
   margin-bottom: 8px;
@@ -202,17 +209,17 @@ nav a:hover, nav a.active {
 .post-box input:focus {
   background: #fff;
   color: #242526;
-  outline: 2px solid #1877F2;
+  outline: 2px solid #1877f2;
 }
 .user-details {
-  font-family: 'Roboto Slab', serif;
+  font-family: "Roboto Slab", serif;
   line-height: 1.8;
-  color: #E4E6EB;
+  color: #e4e6eb;
   margin-top: 10px;
   text-shadow: 0 1px 4px #0004;
 }
 .user-details strong {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 .photo-grid {
   display: grid;
@@ -243,7 +250,7 @@ nav a:hover, nav a.active {
   display: flex;
   align-items: center;
   gap: 14px;
-  background:  #242526 ;
+  background: #242526;
   border-radius: 10px;
   padding: 12px 18px;
   min-width: 260px;
@@ -256,7 +263,7 @@ nav a:hover, nav a.active {
   height: 56px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #1877F2;
+  border: 2px solid #1877f2;
 }
 .friend-item .post-author {
   font-weight: bold;
@@ -328,7 +335,7 @@ nav a:hover, nav a.active {
   max-width: 600px;
 }
 .add-friend-btn {
-  background: linear-gradient(90deg,#1877F2 60%,#42a5f5 100%);
+  background: linear-gradient(90deg, #1877f2 60%, #42a5f5 100%);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -368,7 +375,7 @@ nav a:hover, nav a.active {
   border-radius: 12px;
   cursor: pointer;
   transition: transform 0.2s, border 0.2s, opacity 0.2s;
-  box-shadow: 0 2px 8px rgba(24,119,242,0.08);
+  box-shadow: 0 2px 8px rgba(24, 119, 242, 0.08);
 }
 
 /* --- Bố cục 2 video 1 dòng cho other-profile (và profile) --- */
@@ -413,7 +420,7 @@ nav a:hover, nav a.active {
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #1877F2;
+  border: 2px solid #1877f2;
 }
 .post-author {
   font-weight: bold;
@@ -450,7 +457,7 @@ nav a:hover, nav a.active {
   box-shadow: 0 2px 8px #1877f211;
 }
 .edit-profile-btn {
-  background: linear-gradient(90deg,#1877F2 60%,#42a5f5 100%);
+  background: linear-gradient(90deg, #1877f2 60%, #42a5f5 100%);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -491,7 +498,8 @@ nav a:hover, nav a.active {
   box-shadow: 0 4px 16px #ff174488;
   transform: translateY(-2px) scale(1.04);
 }
-.edit-profile-btn, .delete-account-btn {
+.edit-profile-btn,
+.delete-account-btn {
   font-size: 14px;
 }
 
@@ -499,7 +507,7 @@ nav a:hover, nav a.active {
   display: flex;
   align-items: center;
   gap: 18px;
-  background:  #242526;
+  background: #242526;
   border-radius: 12px;
   padding: 14px 18px;
   margin-bottom: 18px;
@@ -510,7 +518,7 @@ nav a:hover, nav a.active {
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #1877F2;
+  border: 2px solid #1877f2;
 }
 .story-info {
   min-width: 120px;
@@ -538,7 +546,7 @@ nav a:hover, nav a.active {
 }
 .story-arrow-btn {
   background: #e4e6eb;
-  color: #1877F2;
+  color: #1877f2;
   border: none;
   border-radius: 50%;
   width: 36px;
@@ -557,7 +565,7 @@ nav a:hover, nav a.active {
   cursor: not-allowed;
 }
 .story-arrow-btn:hover:not(:disabled) {
-  background: #1877F2;
+  background: #1877f2;
   color: #fff;
 }
 .video-select-btn {
@@ -565,7 +573,7 @@ nav a:hover, nav a.active {
   top: 8px;
   right: 8px;
   background: #fff;
-  color: #1877F2;
+  color: #1877f2;
   border: none;
   border-radius: 50%;
   width: 32px;
@@ -580,7 +588,7 @@ nav a:hover, nav a.active {
   transition: background 0.2s, color 0.2s;
 }
 .video-select-btn.selected {
-  background: #1877F2;
+  background: #1877f2;
   color: #fff;
 }
 .video-select-btn:hover:not(.selected) {
@@ -607,9 +615,9 @@ nav a:hover, nav a.active {
   opacity: 1;
 }
 .video-trash-btn.selected {
-  background: #1877F2;
+  background: #1877f2;
   color: #fff;
-  border: 2px solid #1877F2;
+  border: 2px solid #1877f2;
 }
 .video-trash-btn:hover:not(.selected) {
   background: #e4e6eb;
@@ -640,7 +648,7 @@ nav a:hover, nav a.active {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(120deg, #232526 80%, #1877F2 100%);
+  background: linear-gradient(120deg, #232526 80%, #1877f2 100%);
   border-radius: 14px;
   box-shadow: 0 2px 12px #1877f211;
   width: 250px;
@@ -663,7 +671,7 @@ nav a:hover, nav a.active {
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid #1877F2;
+  border: 1.5px solid #1877f2;
   margin-bottom: 2px;
 }
 .story-info {
@@ -740,7 +748,7 @@ nav a:hover, nav a.active {
   left: 10px;
   color: white;
   font-weight: bold;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
 }
 .story-card .story-avatar {
   position: absolute;
@@ -749,14 +757,14 @@ nav a:hover, nav a.active {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  border: 2px solid #1877F2;
+  border: 2px solid #1877f2;
   object-fit: cover;
   z-index: 2;
 }
 
 /* Font chữ cho toàn bộ trang */
 body {
-  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-family: "Roboto", "Segoe UI", Arial, sans-serif;
   color: #e4e6eb;
   background: linear-gradient(135deg, #232526 0%, #414345 100%);
 }
@@ -766,15 +774,20 @@ body {
 .intro-box h3,
 nav a.active {
   color: #fff;
-  font-family: 'Roboto Slab', 'Segoe UI', Arial, sans-serif;
+  font-family: "Roboto Slab", "Segoe UI", Arial, sans-serif;
   font-weight: 700;
   letter-spacing: 0.5px;
 }
 
 /* Tiêu đề nhỏ, label */
-label, .profile-info p, .user-details strong, .post-author, .story-author, .friend-item .post-author {
+label,
+.profile-info p,
+.user-details strong,
+.post-author,
+.story-author,
+.friend-item .post-author {
   color: #f5f6fa;
-  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-family: "Roboto", "Segoe UI", Arial, sans-serif;
   font-weight: 500;
 }
 
@@ -787,7 +800,7 @@ label, .profile-info p, .user-details strong, .post-author, .story-author, .frie
 .story-date,
 nav a {
   color: #b0b3b8;
-  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-family: "Roboto", "Segoe UI", Arial, sans-serif;
   font-size: 15px;
 }
 
@@ -795,7 +808,7 @@ nav a {
 button,
 .intro-box button,
 .post-box button {
-  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-family: "Roboto", "Segoe UI", Arial, sans-serif;
   font-weight: 550;
   letter-spacing: 0.2px;
 }
@@ -806,7 +819,7 @@ button,
 .modal-content textarea,
 .modal-content select {
   color: #232526;
-  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-family: "Roboto", "Segoe UI", Arial, sans-serif;
 }
 
 /* Chữ placeholder */
@@ -821,14 +834,14 @@ textarea::placeholder {
 .add-friend-btn,
 .delete-account-btn {
   color: #fff !important;
-  font-family: 'Roboto Slab', 'Segoe UI', Arial, sans-serif;
+  font-family: "Roboto Slab", "Segoe UI", Arial, sans-serif;
   font-weight: 700;
 }
 
 /* Chữ trong các modal tiêu đề */
 .modal-content h3 {
-  color: #1877F2;
-  font-family: 'Roboto Slab', 'Segoe UI', Arial, sans-serif;
+  color: #1877f2;
+  font-family: "Roboto Slab", "Segoe UI", Arial, sans-serif;
   font-weight: 700;
   letter-spacing: 0.5px;
 }
@@ -840,22 +853,25 @@ textarea::placeholder {
 #photo-row p,
 #video-row p {
   color: #b0b3b8;
-  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-family: "Roboto", "Segoe UI", Arial, sans-serif;
   font-size: 15px;
 }
 
 /* Chữ trong các tab khi hover hoặc active */
-nav a:hover, nav a.active {
-  color: #1877F2;
-  border-bottom: 2px solid #1877F2;
+nav a:hover,
+nav a.active {
+  color: #1877f2;
+  border-bottom: 2px solid #1877f2;
   background: none;
 }
 
 /* Chữ trong các input khi focus */
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   color: #232526;
   background: #fff;
-  outline: 2px solid #1877F2;
+  outline: 2px solid #1877f2;
 }
 
 /* Chữ trong các nút xác nhận/xóa */
@@ -880,7 +896,7 @@ input:focus, textarea:focus, select:focus {
 /* Chữ trong các nút phân trang */
 .page-btn {
   color: #232526;
-  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-family: "Roboto", "Segoe UI", Arial, sans-serif;
   font-weight: 600;
 }
 .page-btn.active {
@@ -891,7 +907,7 @@ input:focus, textarea:focus, select:focus {
 .post-content {
   color: #e4e6eb;
   font-size: 16px;
-  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-family: "Roboto", "Segoe UI", Arial, sans-serif;
   line-height: 1.6;
 }
 
@@ -900,7 +916,7 @@ input:focus, textarea:focus, select:focus {
   display: flex;
   align-items: center;
   background: #e4e6eb;
-  color: #1877F2;
+  color: #1877f2;
   border: none;
   padding: 7px 18px;
   border-radius: 6px;
@@ -946,8 +962,11 @@ input:focus, textarea:focus, select:focus {
 }
 .media-grid .media-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   color: #fff;
   font-size: 36px;
   font-weight: bold;
@@ -961,7 +980,8 @@ input:focus, textarea:focus, select:focus {
 /* Modal tạo bài viết Facebook style */
 #postModal .modal-content {
   border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(24,119,242,0.13), 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 12px 40px rgba(24, 119, 242, 0.13),
+    0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 24px 28px;
 }
 #postModal .modal-header {
@@ -971,7 +991,7 @@ input:focus, textarea:focus, select:focus {
 #postModal .modal-title {
   font-size: 20px;
   font-weight: bold;
-  color: #1877F2;
+  color: #1877f2;
 }
 #postModal .modal-body {
   padding-top: 0;
@@ -1008,8 +1028,11 @@ input:focus, textarea:focus, select:focus {
 }
 #imagePreviewContainer .media-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   color: #fff;
   font-size: 36px;
   font-weight: bold;
