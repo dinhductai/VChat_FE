@@ -1,366 +1,732 @@
 <!DOCTYPE html>
 <html lang="vi">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
-    <title>Đăng ký tài khoản</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Đăng ký tài khoản • LoveConnect</title>
+
     <!-- Bootstrap CSS & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Google Fonts: Montserrat & Roboto -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;500&display=swap"
-        rel="stylesheet">
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-        body {
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+      :root {
+        --brand-1: #6a11cb;
+        --brand-2: #2575fc;
+        --text-1: #0f172a;
+        --muted: #64748b;
+        --glass: rgba(255, 255, 255, 0.16);
+        --glass-border: rgba(255, 255, 255, 0.35);
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI,
+          Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text-1);
+        background: radial-gradient(
+            1200px 800px at 10% -10%,
+            #c3d3ff 0%,
+            transparent 60%
+          ),
+          radial-gradient(1000px 600px at 110% 10%, #ffd6e7 0%, transparent 50%),
+          linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
+        background-attachment: fixed;
+        display: grid;
+        place-items: center;
+        overflow-x: hidden;
+      }
+
+      /* Floating blobs */
+      .blob {
+        position: absolute;
+        filter: blur(50px);
+        opacity: 0.55;
+        z-index: 0;
+      }
+      .blob-1 {
+        width: 380px;
+        height: 380px;
+        border-radius: 50%;
+        background: #fff;
+        top: 6%;
+        left: 8%;
+        animation: float 12s ease-in-out infinite;
+      }
+      .blob-2 {
+        width: 460px;
+        height: 460px;
+        border-radius: 50%;
+        background: #e0f2fe;
+        bottom: -6%;
+        right: -4%;
+        animation: float 14s ease-in-out infinite reverse;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
         }
-
-        .signup-card {
-            background: rgba(255, 255, 255, 0.97);
-            border-radius: 1rem;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
-            padding: 2.5rem 2rem;
-            max-width: 480px;
-            width: 100%;
-            animation: fadeInDown 0.8s;
+        50% {
+          transform: translateY(-18px);
         }
+      }
 
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-40px);
-            }
+      /* Shell */
+      .page-wrap {
+        position: relative;
+        z-index: 1;
+        width: min(1080px, 92vw);
+      }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+      .card-glass {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.7),
+          rgba(255, 255, 255, 0.55)
+        );
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(16, 24, 40, 0.2);
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+      }
+
+      .hero-col {
+        background: radial-gradient(
+            600px 400px at 30% 20%,
+            rgba(255, 255, 255, 0.35) 0%,
+            transparent 60%
+          ),
+          linear-gradient(
+            160deg,
+            rgba(255, 255, 255, 0.35),
+            rgba(255, 255, 255, 0.05)
+          );
+        padding: clamp(28px, 5vw, 44px);
+      }
+      .brand-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--glass-border);
+        border-radius: 999px;
+        font-weight: 600;
+      }
+      .brand-badge i {
+        color: var(--brand-2);
+      }
+      .hero-title {
+        font-weight: 800;
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+        font-size: clamp(24px, 3.4vw, 36px);
+      }
+      .hero-sub {
+        color: var(--muted);
+        font-size: clamp(14px, 1.6vw, 16px);
+      }
+
+      .form-col {
+        padding: clamp(24px, 4.2vw, 40px);
+        background: rgba(255, 255, 255, 0.85);
+      }
+
+      .input-icon {
+        position: absolute;
+        inset-inline-start: 12px;
+        inset-block-start: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+      }
+      .form-control.ps-5 {
+        padding-left: 2.75rem !important;
+      }
+      .form-control,
+      .form-select {
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--brand-2);
+        box-shadow: 0 0 0 0.2rem rgba(37, 117, 252, 0.15);
+      }
+
+      .btn-gradient {
+        background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .btn-gradient:hover {
+        filter: brightness(0.96);
+        transform: translateY(-1px);
+      }
+      .btn-gradient:active {
+        transform: translateY(0);
+      }
+
+      .divider {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 12px;
+        color: #64748b;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        height: 1px;
+        background: #e2e8f0;
+      }
+
+      /* Interest tags */
+      .interest-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: #eef2ff;
+        color: var(--brand-2);
+        border-radius: 999px;
+        font-weight: 600;
+        margin: 4px;
+        font-size: 0.92rem;
+      }
+      .interest-tag button {
+        border: 0;
+        background: transparent;
+        line-height: 0;
+        opacity: 0.7;
+      }
+      .interest-tag button:hover {
+        opacity: 1;
+      }
+
+      /* Password strength */
+      .strength {
+        height: 8px;
+        border-radius: 999px;
+        background: #e2e8f0;
+        overflow: hidden;
+      }
+      .strength > span {
+        display: block;
+        height: 100%;
+        width: 0;
+        transition: width 0.3s ease;
+      }
+
+      /* Toast */
+      .toast-container {
+        z-index: 1080;
+      }
+
+      /* Small util */
+      .hint {
+        color: #64748b;
+        font-size: 0.9rem;
+      }
+      .small-link {
+        color: var(--brand-2);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .small-link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 992px) {
+        .hero-col {
+          display: none;
         }
-
-        .signup-title {
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            font-weight: 700;
-            color: #2575fc;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            letter-spacing: 1px;
-        }
-
-        .signup-btn {
-            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
-            border: none;
-            font-weight: 600;
-            transition: transform 0.2s;
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-        }
-
-        .signup-btn:hover {
-            transform: scale(1.05);
-            background: linear-gradient(90deg, #2575fc 0%, #6a11cb 100%);
-        }
-
-        .input-group-text {
-            background: #f0f4ff;
-            border: none;
-        }
-
-        .form-label {
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            font-weight: 500;
-            color: #2575fc;
-        }
-
-        .error {
-            color: #dc3545;
-            font-size: 0.95em;
-            margin-bottom: 10px;
-            text-align: center;
-            animation: shake 0.3s;
-            font-family: 'Roboto', 'Montserrat', Arial, sans-serif;
-        }
-
-        @keyframes shake {
-            0% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-5px);
-            }
-
-            50% {
-                transform: translateX(5px);
-            }
-
-            75% {
-                transform: translateX(-5px);
-            }
-
-            100% {
-                transform: translateX(0);
-            }
-        }
-
-        .interest-tag {
-            display: inline-block;
-            background: #e3e8ff;
-            color: #2575fc;
-            border-radius: 20px;
-            padding: 2px 12px;
-            margin: 2px 4px 2px 0;
-            font-size: 0.95em;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .interest-tag:hover {
-            background: #d1d8ff;
-        }
+      }
     </style>
-</head>
+  </head>
+  <body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
-<body>
-    <div class="signup-card shadow-lg">
-        <div class="signup-title mb-4">
-            <i class="bi bi-person-plus fs-2"></i><br>
-            Đăng ký tài khoản
-        </div>
-        <form id="signupForm" autocomplete="off">
-            <div id="error" class="error"></div>
-            <div class="mb-3">
-                <label class="form-label fw-bold" for="fullName">Họ và tên</label>
-                <input type="text" class="form-control" id="fullName" placeholder="Nhập họ và tên" required
-                    minlength="2" maxlength="50">
+    <div class="page-wrap">
+      <div class="card card-glass">
+        <div class="row g-0">
+          <!-- Left / Hero -->
+          <div
+            class="col-lg-5 hero-col d-flex flex-column justify-content-between"
+          >
+            <div>
+              <span class="brand-badge"
+                ><i class="bi bi-heart-fill"></i> VChat</span
+              >
+              <h1 class="hero-title mt-3">
+                Tạo tài khoản mới
+                <span class="d-block" style="color: var(--brand-2)"
+                  >Kết nối & chia sẻ ngay hôm nay</span
+                >
+              </h1>
+              <p class="hero-sub mt-3">
+                Gia nhập cộng đồng của chúng tôi để đăng bài, tạo tin 24h, chat
+                realtime và khám phá bạn bè xung quanh.
+              </p>
             </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold" for="email">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Nhập email" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold" for="password">Mật khẩu</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                    <input type="password" class="form-control" id="password" placeholder="Tối thiểu 8 ký tự" required
-                        minlength="8">
-                    <button type="button" class="btn btn-outline-secondary" id="togglePassword" tabindex="-1">
-                        <i class="bi bi-eye" id="eyeIcon"></i>
+            <ul class="list-unstyled mt-4 mb-0 small text-secondary">
+              <li class="mb-2">
+                <i class="bi bi-check2-circle me-2"></i>Miễn phí & bảo mật dữ
+                liệu
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-check2-circle me-2"></i>Đăng ký nhanh trong 1
+                phút
+              </li>
+              <li>
+                <i class="bi bi-check2-circle me-2"></i>Hỗ trợ đăng nhập xã hội
+                (sắp có)
+              </li>
+            </ul>
+          </div>
+
+          <!-- Right / Form -->
+          <div class="col-lg-7 form-col">
+            <form id="signupForm" autocomplete="off" novalidate>
+              <div id="error" class="mb-3"></div>
+
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label fw-semibold" for="fullName"
+                    >Họ và tên</label
+                  >
+                  <div class="position-relative">
+                    <i class="bi bi-person input-icon"></i>
+                    <input
+                      type="text"
+                      class="form-control ps-5"
+                      id="fullName"
+                      placeholder="Nguyễn Văn A"
+                      required
+                      minlength="2"
+                      maxlength="50"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label fw-semibold" for="email"
+                    >Email</label
+                  >
+                  <div class="position-relative">
+                    <i class="bi bi-envelope input-icon"></i>
+                    <input
+                      type="email"
+                      class="form-control ps-5"
+                      id="email"
+                      placeholder="ban@domain.com"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold" for="password"
+                    >Mật khẩu</label
+                  >
+                  <div class="input-group">
+                    <span class="input-group-text"
+                      ><i class="bi bi-lock"></i
+                    ></span>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      placeholder="Tối thiểu 8 ký tự"
+                      required
+                      minlength="8"
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary"
+                      id="togglePassword"
+                      tabindex="-1"
+                      aria-label="Ẩn/hiện mật khẩu"
+                    >
+                      <i class="bi bi-eye" id="eyeIcon"></i>
                     </button>
+                  </div>
+                  <div class="strength mt-2" aria-hidden="true">
+                    <span id="strengthBar"></span>
+                  </div>
+                  <div class="hint mt-1" id="strengthHint">
+                    Độ mạnh mật khẩu
+                  </div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold" for="passwordConfirm">Nhập lại mật khẩu</label>
-                <input type="password" class="form-control" id="passwordConfirm" placeholder="Nhập lại mật khẩu"
-                    required minlength="8">
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold" for="birthDate">Ngày sinh</label>
-                <input type="date" class="form-control" id="birthDate" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold" for="location">Địa chỉ</label>
-                <input type="text" class="form-control" id="location" placeholder="Nhập địa chỉ" maxlength="255">
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold" for="description">Giới thiệu bản thân</label>
-                <textarea class="form-control" id="description" rows="2" maxlength="500"
-                    placeholder="Giới thiệu ngắn về bạn"></textarea>
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold">Sở thích</label>
-                <div class="input-group mb-2">
-                    <input type="text" class="form-control" id="interestInput" placeholder="Nhập sở thích và Enter">
-                    <button type="button" class="btn btn-outline-primary" id="addInterestBtn"><i
-                            class="bi bi-plus"></i></button>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold" for="passwordConfirm"
+                    >Nhập lại mật khẩu</label
+                  >
+                  <div class="position-relative">
+                    <i class="bi bi-shield-check input-icon"></i>
+                    <input
+                      type="password"
+                      class="form-control ps-5"
+                      id="passwordConfirm"
+                      placeholder="Nhập lại mật khẩu"
+                      required
+                      minlength="8"
+                    />
+                  </div>
                 </div>
-                <div id="interestTags"></div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold" for="phoneNumber">Số điện thoại</label>
-                <input type="text" class="form-control" id="phoneNumber" placeholder="Nhập số điện thoại">
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold">Giới tính</label>
-                <select class="form-select" id="gender" required>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold" for="birthDate"
+                    >Ngày sinh</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="birthDate"
+                    required
+                  />
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold" for="phoneNumber"
+                    >Số điện thoại</label
+                  >
+                  <div class="position-relative">
+                    <i class="bi bi-telephone input-icon"></i>
+                    <input
+                      type="text"
+                      class="form-control ps-5"
+                      id="phoneNumber"
+                      placeholder="VD: 0912 345 678"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label fw-semibold" for="location"
+                    >Địa chỉ</label
+                  >
+                  <div class="position-relative">
+                    <i class="bi bi-geo-alt input-icon"></i>
+                    <input
+                      type="text"
+                      class="form-control ps-5"
+                      id="location"
+                      placeholder="Số nhà, đường, phường/xã, tỉnh/thành"
+                      maxlength="255"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label fw-semibold" for="description"
+                    >Giới thiệu bản thân</label
+                  >
+                  <textarea
+                    class="form-control"
+                    id="description"
+                    rows="2"
+                    maxlength="500"
+                    placeholder="Tóm tắt ngắn về bạn"
+                  ></textarea>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Sở thích</label>
+                  <div class="input-group mb-2">
+                    <span class="input-group-text"
+                      ><i class="bi bi-stars"></i
+                    ></span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="interestInput"
+                      placeholder="Nhập sở thích và Enter"
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary"
+                      id="addInterestBtn"
+                      title="Thêm"
+                    >
+                      <i class="bi bi-plus"></i>
+                    </button>
+                  </div>
+                  <div id="interestTags" class="d-flex flex-wrap"></div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Giới tính</label>
+                  <select class="form-select" id="gender" required>
                     <option value="">Chọn giới tính</option>
                     <option value="MALE">Nam</option>
                     <option value="FEMALE">Nữ</option>
                     <option value="OTHER">Khác</option>
-                </select>
-            </div>
+                  </select>
+                </div>
 
-            <button type="submit" class="btn signup-btn w-100 py-2 mt-2">
-                <i class="bi bi-person-plus"></i> Đăng ký
-            </button>
-        </form>
-        <div class="mt-3 text-center">
-            <a href="login.html" class="text-decoration-none text-primary">Đã có tài khoản? Đăng nhập</a>
+                <div class="col-md-6 d-flex align-items-end">
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value="1"
+                      id="agree"
+                    />
+                    <label class="form-check-label" for="agree"
+                      >Tôi đồng ý với
+                      <a href="#" class="small-link">Điều khoản</a> &
+                      <a href="#" class="small-link">Chính sách</a></label
+                    >
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <button
+                    type="submit"
+                    class="btn btn-gradient w-100 py-3"
+                    id="submitBtn"
+                  >
+                    <span class="me-2" id="btnIcon"
+                      ><i class="bi bi-person-plus"></i></span
+                    >Đăng ký
+                  </button>
+                </div>
+
+                <div class="col-12 text-center mt-2">
+                  <span class="hint">Đã có tài khoản?</span>
+                  <a href="login.html" class="small-link ms-1">Đăng nhập</a>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Toasts -->
+    <div class="position-fixed top-0 end-0 p-3 toast-container">
+      <div
+        id="toast"
+        class="toast align-items-center text-bg-success border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div class="toast-body" id="toastMsg">Đăng ký thành công!</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Ẩn/hiện mật khẩu
-        const passwordInput = document.getElementById("password");
-        const togglePassword = document.getElementById("togglePassword");
-        const eyeIcon = document.getElementById("eyeIcon");
-        togglePassword.addEventListener("click", function () {
-            const type = passwordInput.type === "password" ? "text" : "password";
-            passwordInput.type = type;
-            eyeIcon.className = type === "password" ? "bi bi-eye" : "bi bi-eye-slash";
+      // ===== Helpers =====
+      const qs = (s) => document.querySelector(s);
+      const byId = (id) => document.getElementById(id);
+
+      // Password toggle
+      const passwordInput = byId("password");
+      const togglePassword = byId("togglePassword");
+      const eyeIcon = byId("eyeIcon");
+      togglePassword.addEventListener("click", () => {
+        const type = passwordInput.type === "password" ? "text" : "password";
+        passwordInput.type = type;
+        eyeIcon.className =
+          type === "password" ? "bi bi-eye" : "bi bi-eye-slash";
+      });
+
+      // Password strength meter
+      const strengthBar = byId("strengthBar");
+      const strengthHint = byId("strengthHint");
+      const setStrength = (score) => {
+        const pct = [0, 25, 50, 75, 100][score];
+        strengthBar.style.width = pct + "%";
+        const colors = ["#e2e8f0", "#fca5a5", "#fdba74", "#fde047", "#4ade80"];
+        strengthBar.style.background = colors[score];
+        const label = ["Rất yếu", "Yếu", "Trung bình", "Khá", "Mạnh"];
+        strengthHint.textContent = "Độ mạnh mật khẩu: " + label[score];
+      };
+      passwordInput.addEventListener("input", () => {
+        const v = passwordInput.value;
+        let score = 0;
+        if (v.length >= 8) score++;
+        if (/[A-Z]/.test(v)) score++;
+        if (/[0-9]/.test(v)) score++;
+        if (/[^A-Za-z0-9]/.test(v)) score++;
+        if (v.length >= 12) score++;
+        score = Math.min(score, 4); // map to 0..4
+        setStrength(score);
+      });
+
+      // Interests
+      const interestInput = byId("interestInput");
+      const addInterestBtn = byId("addInterestBtn");
+      const interestTags = byId("interestTags");
+      let interests = [];
+
+      function renderInterests() {
+        interestTags.innerHTML = "";
+        interests.forEach((text, idx) => {
+          const tag = document.createElement("span");
+          tag.className = "interest-tag";
+          tag.innerHTML = `${text}<button type="button" aria-label="Xóa" onclick="removeInterest(${idx})"><i class="bi bi-x"></i></button>`;
+          interestTags.appendChild(tag);
         });
+      }
+      function removeInterest(idx) {
+        interests.splice(idx, 1);
+        renderInterests();
+      }
+      window.removeInterest = removeInterest;
 
-        // Sở thích (interest)
-        const interestInput = document.getElementById("interestInput");
-        const addInterestBtn = document.getElementById("addInterestBtn");
-        const interestTags = document.getElementById("interestTags");
-        let interests = [];
-
-        function renderInterests() {
-            interestTags.innerHTML = '';
-            interests.forEach((interest, idx) => {
-                interestTags.innerHTML += `<span class="interest-tag" onclick="removeInterest(${idx})">${interest} <i class="bi bi-x"></i></span>`;
-            });
+      const addInterest = () => {
+        const val = interestInput.value.trim();
+        if (val && !interests.includes(val)) {
+          interests.push(val);
+          renderInterests();
+          interestInput.value = "";
         }
-        function removeInterest(idx) {
-            interests.splice(idx, 1);
-            renderInterests();
+      };
+      addInterestBtn.addEventListener("click", addInterest);
+      interestInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          addInterest();
         }
-        window.removeInterest = removeInterest;
+      });
 
-        addInterestBtn.addEventListener("click", () => {
-            const val = interestInput.value.trim();
-            if (val && !interests.includes(val)) {
-                interests.push(val);
-                renderInterests();
-                interestInput.value = '';
-            }
-        });
-        interestInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                addInterestBtn.click();
-            }
-        });
+      // Date max today
+      const bd = byId("birthDate");
+      bd.max = new Date().toISOString().split("T")[0];
 
-        // Validate ngày sinh không lớn hơn hôm nay
-        document.getElementById("birthDate").max = new Date().toISOString().split('T')[0];
+      // Submit
+      byId("signupForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const err = byId("error");
+        err.className = "";
+        err.textContent = "";
 
-        // Xử lý submit form
-        document.getElementById("signupForm").addEventListener("submit", async function (e) {
-            e.preventDefault();
-            const errorDiv = document.getElementById("error");
-            errorDiv.textContent = "";
-            errorDiv.style.color = "#dc3545";
+        const fullName = byId("fullName").value.trim();
+        const email = byId("email").value.trim();
+        const password = byId("password").value;
+        const passwordConfirm = byId("passwordConfirm").value;
+        const birthDate = byId("birthDate").value;
+        const location = byId("location").value.trim();
+        const description = byId("description").value.trim();
+        const phoneNumber = byId("phoneNumber").value.trim();
+        const gender = byId("gender").value;
+        const agree = byId("agree").checked;
 
-            // Lấy dữ liệu
-            const fullName = document.getElementById("fullName").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const password = passwordInput.value;
-            const passwordConfirm = document.getElementById("passwordConfirm").value;
-            const birthDate = document.getElementById("birthDate").value;
-            const location = document.getElementById("location").value.trim();
-            const description = document.getElementById("description").value.trim();
-            const phoneNumber = document.getElementById("phoneNumber").value.trim();
-            const gender = document.getElementById("gender").value;
+        // FE validations
+        const showError = (msg) => {
+          err.className = "alert alert-danger";
+          err.textContent = msg;
+        };
+        if (!fullName || fullName.length < 2 || fullName.length > 50)
+          return showError("Họ tên phải từ 2 đến 50 ký tự.");
+        if (!email || !/^([^\s@]+)@([^\s@]+)\.[^\s@]+$/.test(email))
+          return showError("Email không hợp lệ.");
+        if (!password || password.length < 8)
+          return showError("Mật khẩu phải từ 8 ký tự trở lên.");
+        if (password !== passwordConfirm)
+          return showError("Mật khẩu xác nhận không khớp.");
+        if (!birthDate) return showError("Vui lòng chọn ngày sinh.");
+        if (interests.length === 0)
+          return showError("Vui lòng nhập ít nhất một sở thích.");
+        if (!gender) return showError("Vui lòng chọn giới tính.");
+        if (phoneNumber && !/^(\+?\d{1,3}[- ]?)?\d{9,15}$/.test(phoneNumber))
+          return showError("Số điện thoại không hợp lệ.");
+        if (!agree) return showError("Bạn cần đồng ý Điều khoản & Chính sách.");
 
-            // Validate FE
-            if (!fullName || fullName.length < 2 || fullName.length > 50) {
-                errorDiv.textContent = "Họ tên phải từ 2 đến 50 ký tự.";
+        // Loading state
+        const btn = byId("submitBtn");
+        const btnIcon = byId("btnIcon");
+        btn.disabled = true;
+        btn.classList.add("opacity-75");
+        btnIcon.innerHTML =
+          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
 
-                return;
-            }
-            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                errorDiv.textContent = "Email không hợp lệ.";
+        try {
+          const res = await fetch("http://localhost:8080/api/auth/sign-up", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              fullName,
+              email,
+              password,
+              passwordConfirm,
+              birthDate,
+              location,
+              description,
+              interestName: interests,
+              phoneNumber,
+              gender,
+              roleName: "USER",
+              accountStatus: "ACTIVE",
+            }),
+          });
 
-                return;
-            }
-            if (!password || password.length < 8) {
-                errorDiv.textContent = "Mật khẩu phải từ 8 ký tự trở lên.";
+          let data;
+          try {
+            data = await res.json();
+          } catch (parseErr) {
+            data = {
+              success: false,
+              message: "Không đọc được phản hồi từ server.",
+            };
+          }
 
-                return;
-            }
-            if (password !== passwordConfirm) {
-                errorDiv.textContent = "Mật khẩu xác nhận không khớp.";
-
-                return;
-            }
-            if (!birthDate) {
-                errorDiv.textContent = "Vui lòng chọn ngày sinh.";
-
-                return;
-            }
-            if (interests.length === 0) {
-                errorDiv.textContent = "Vui lòng nhập ít nhất một sở thích.";
-
-                return;
-            }
-            if (!gender) {
-                errorDiv.textContent = "Vui lòng chọn giới tính.";
-                return;
-            }
-            if (phoneNumber && !/^(\+?\d{1,3}[- ]?)?\d{9,15}$/.test(phoneNumber)) {
-                errorDiv.textContent = "Số điện thoại không hợp lệ.";
-                return;
-            }
-
-
-            // Gửi dữ liệu
-            try {
-                const token = localStorage.getItem("accessToken");
-                const response = await fetch("http://localhost:8080/api/auth/sign-up", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + token
-                    },
-                    body: JSON.stringify({
-                        fullName,
-                        email,
-                        password,
-                        passwordConfirm,
-                        birthDate,
-                        location,
-                        description,
-                        interestName: interests,
-                        phoneNumber,
-                        gender,
-                        roleName: "USER",
-                        accountStatus: "ACTIVE"
-                    })
-                });
-
-                let data;
-                try {
-                    data = await response.json();
-                } catch (err) {
-                    console.error("FE: Không thể parse JSON từ response", err);
-                    errorDiv.textContent = "Có lỗi xảy ra khi nhận phản hồi từ server.";
-                    return;
-                }
-
-                if (response.ok && data.success) {
-                    errorDiv.style.color = "#198754";
-                    errorDiv.textContent = "Đăng ký thành công! Đang chuyển hướng...";
-                    setTimeout(() => {
-                        window.location.href = "login.html";
-                    }, 1200);
-                } else {
-                    // Log lỗi chi tiết từ backend
-                    console.error("BE error:", data);
-                    errorDiv.textContent = data.message || "Đăng ký thất bại.";
-                }
-            } catch (err) {
-                console.error("FE: Lỗi khi gửi request đăng ký", err);
-                errorDiv.textContent = "Có lỗi xảy ra khi kết nối tới server.";
-            }
-        });
+          if (res.ok && data.success) {
+            // Success toast
+            const toastEl = byId("toast");
+            byId("toastMsg").textContent =
+              "Đăng ký thành công! Đang chuyển hướng...";
+            const toast = new bootstrap.Toast(toastEl, { delay: 1000 });
+            toast.show();
+            setTimeout(() => {
+              window.location.href = "login.html";
+            }, 1200);
+          } else {
+            throw new Error(data.message || "Đăng ký thất bại.");
+          }
+        } catch (error) {
+          err.className = "alert alert-danger";
+          err.textContent =
+            error.message || "Có lỗi xảy ra khi kết nối tới server.";
+        } finally {
+          btn.disabled = false;
+          btn.classList.remove("opacity-75");
+          btnIcon.innerHTML = '<i class="bi bi-person-plus"></i>';
+        }
+      });
     </script>
-</body>
-
+  </body>
 </html>

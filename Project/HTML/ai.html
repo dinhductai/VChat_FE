@@ -1,59 +1,80 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Xin Chào!</title>
+    <!-- Font đẹp hơn -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Sử dụng font chữ đẹp hơn */
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            
-            /* --- Thêm nhiều màu sắc hơn cho dải màu --- */
-            background: linear-gradient(-45deg, 
-                #ff0000, /* Đỏ */
-                #ff7300, /* Cam */
-                #fffb00, /* Vàng */
-                #48ff00, /* Xanh lá cây */
-                #00ffd5, /* Xanh ngọc */
-                #002bff, /* Xanh dương */
-                #7a00ff, /* Chàm */
-                #ff00c8  /* Tím */
-            );
-            background-size: 600% 600%; /* Tăng kích thước nền để chứa nhiều màu hơn */
-            
-            /* --- Làm chậm hiệu ứng chuyển màu --- */
-            /* Tăng thời gian từ 10s lên 25s */
-            animation: gradientAnimation 25s ease infinite;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        background: linear-gradient(
+          -45deg,
+          #ff0000,
+          #ff7300,
+          #fffb00,
+          #48ff00,
+          #00ffd5,
+          #002bff,
+          #7a00ff,
+          #ff00c8
+        );
+        background-size: 600% 600%;
+        animation: gradientAnimation 25s ease infinite;
+      }
 
-        @keyframes gradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+      @keyframes gradientAnimation {
+        0% {
+          background-position: 0% 50%;
         }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
 
-        h1 {
-            font-size: 4.5rem;
-            text-align: center;
-            /* Làm cho bóng của chữ mềm mại và đẹp hơn */
-            text-shadow: 0 0 15px rgba(0, 0, 0, 0.7); 
+      h1 {
+        font-size: 3rem;
+        text-align: center;
+        text-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+        overflow: hidden;
+        white-space: nowrap;
+        border-right: 4px solid rgba(255, 255, 255, 0.75);
+        width: 0;
+        animation: typing 5s steps(30, end) forwards,
+          blink 0.75s step-end infinite;
+      }
+
+      /* Hiệu ứng đánh máy */
+      @keyframes typing {
+        from {
+          width: 0;
         }
+        to {
+          width: 100%;
+        }
+      }
+      @keyframes blink {
+        50% {
+          border-color: transparent;
+        }
+      }
     </style>
-</head>
-<body>
-    <h1>xin chào đinh đức tài</h1>
-</body>
+  </head>
+  <body>
+    <h1>Xin chào Đinh Đức Tài 👋</h1>
+  </body>
 </html>

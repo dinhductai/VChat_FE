@@ -1,3 +1,30 @@
-token =
-"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwic2NvcGUiOiJVU0VSIG51bGwiLCJpc3MiOiJ3ZWJzaXRlLmNvbSIsImV4cCI6MTc1MzYyODQzMiwiaWF0IjoxNzUzNjI0ODMyLCJqdGkiOiI2YTgyYTZiYy1jNmJmLTQ1NTAtOTFmZS1mMTYwODk5ZmE1ODAiLCJlbWFpbCI6ImJvYkBleGFtcGxlLmNvbSJ9.-KpD3EhIFcSo-9DfaNfyYz2IkVjarmLEmLdRAmG1jTPkywAF_ELd6I5ecIlptVQJ2CksQpIDckOUXoH8-Wejdw"
-localStorage.setItem("accessToken", token);
+function logoutUser() {
+  Swal.fire({
+    title: "Bạn có chắc chắn muốn đăng xuất?",
+    text: "Phiên đăng nhập hiện tại sẽ bị kết thúc.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Đăng xuất",
+    cancelButtonText: "Hủy",
+    reverseButtons: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#6c757d",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Xoá token + dữ liệu khác nếu cần
+      localStorage.removeItem("accessToken");
+      // localStorage.removeItem("userAvatar");
+      // localStorage.removeItem("rememberEmail");
+
+      Swal.fire({
+        title: "Đã đăng xuất",
+        text: "Bạn sẽ được chuyển về trang đăng nhập.",
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      }).then(() => {
+        window.location.href = "login.html";
+      });
+    }
+  });
+}

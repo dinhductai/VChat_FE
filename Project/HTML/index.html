@@ -3,11 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Facebook Trang chủ - Dark Mode</title>
+    <title>VChat Trang chủ</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link rel="icon" type="image/png" href="../images/logo.png" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
       rel="stylesheet"
@@ -66,7 +67,7 @@
             <input
               type="search"
               class="form-control form-control-sm rounded-5 border-0 ps-5 shadow-sm"
-              placeholder="Search"
+              placeholder="Tìm kiếm"
               style="background-color: #f0f2f5; height: 35px; width: 240px"
             />
           </form>
@@ -122,154 +123,97 @@
           </div>
 
           <!-- Dropdown menu -->
-          <div
-            id="menuDropdown"
-            class="position-absolute bg-white shadow rounded-4 p-3"
-            style="
-              top: 60px;
-              right: 10px;
-              width: 250px;
-              display: none;
-              z-index: 9999;
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-                'Helvetica Neue', Arial, sans-serif;
-            "
-          >
-            <h5 class="mb-2" style="font-weight: 700; font-size: 25px">Menu</h5>
-            <hr class="my-2" />
+          <div id="menuDropdown" class="dd-panel" style="display: none">
+            <div class="dd-head">
+              <span class="dd-title">Menu</span>
+            </div>
 
-            <div class="px-1">
-              <!-- 🔵 Post -->
-              <div
-                class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
-                style="cursor: pointer; transition: background 0.2s"
-                onmouseover="this.style.background='#f0f2f5'"
-                onmouseout="this.style.background='transparent'"
-                onclick="openPostModal()"
-              >
-                <div
-                  class="d-flex justify-content-center align-items-center"
-                  style="
-                    width: 44px;
-                    height: 44px;
-                    border-radius: 50%;
-                    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-                    margin-left: 10px;
-                  "
+            <div class="dd-list">
+              <!-- Post -->
+              <button class="dd-item" type="button" onclick="openPostModal()">
+                <span
+                  class="dd-icon"
+                  style="--grad: linear-gradient(135deg, #ff9a9e, #fad0c4)"
                 >
-                  <i class="bi bi-file-post text-white fs-5"></i>
-                </div>
-                <span style="font-size: 15px; font-weight: 500">Post</span>
-              </div>
+                  <i class="bi bi-file-post"></i>
+                </span>
+                <span class="dd-label">Post</span>
+              </button>
 
-              <!-- 🟠 Story -->
-              <div
-                class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
-                style="cursor: pointer; transition: background 0.2s"
-                onmouseover="this.style.background='#f0f2f5'"
-                onmouseout="this.style.background='transparent'"
+              <!-- Story -->
+              <button
+                class="dd-item"
+                type="button"
                 onclick="window.location.href='tao_tin.html'"
               >
-                <div
-                  class="d-flex justify-content-center align-items-center"
-                  style="
-                    width: 44px;
-                    height: 44px;
-                    border-radius: 50%;
-                    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
-                    margin-left: 10px;
-                  "
+                <span
+                  class="dd-icon"
+                  style="--grad: linear-gradient(135deg, #a18cd1, #fbc2eb)"
                 >
-                  <i class="bi bi-book-half text-white fs-5"></i>
-                </div>
-                <span style="font-size: 15px; font-weight: 500">Story</span>
-              </div>
+                  <i class="bi bi-book-half"></i>
+                </span>
+                <span class="dd-label">Story</span>
+              </button>
 
-              <!-- 🟣 Reel -->
-              <div
-                class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
-                style="cursor: pointer; transition: background 0.2s"
-                onmouseover="this.style.background='#f0f2f5'"
-                onmouseout="this.style.background='transparent'"
+              <!-- Reel -->
+              <button
+                class="dd-item"
+                type="button"
                 onclick="window.location.href='tao_tin.html'"
               >
-                <div
-                  class="d-flex justify-content-center align-items-center"
-                  style="
-                    width: 44px;
-                    height: 44px;
-                    border-radius: 50%;
-                    background: linear-gradient(135deg, #84fab0, #8fd3f4);
-                    margin-left: 10px;
-                  "
+                <span
+                  class="dd-icon"
+                  style="--grad: linear-gradient(135deg, #84fab0, #8fd3f4)"
                 >
-                  <i class="bi bi-fast-forward-btn-fill text-white fs-5"></i>
-                </div>
-                <span style="font-size: 15px; font-weight: 500">Reel</span>
-              </div>
-              <div>
-                <div
-                  class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
-                  style="cursor: pointer; transition: background 0.2s"
-                  onmouseover="this.style.background='#f0f2f5'"
-                  onmouseout="this.style.background='transparent'"
+                  <i class="bi bi-fast-forward-btn-fill"></i>
+                </span>
+                <span class="dd-label">Reel</span>
+              </button>
+              <button
+                class="dd-item dd-logout"
+                type="button"
+                onclick="logoutUser()"
+              >
+                <span
+                  class="dd-icon"
+                  style="--grad: linear-gradient(135deg, #ff6b6b, #ff4757)"
                 >
-                  <div
-                    class="d-flex justify-content-center align-items-center"
-                    style="
-                      width: 44px;
-                      height: 44px;
-                      border-radius: 50%;
-                      background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
-                      margin-left: 10px;
-                    "
-                  >
-                    <i class="bi bi-moon-fill text-white fs-5"></i>
-                  </div>
-                  <div>
-                    <span style="font-size: 15px; font-weight: 500"
-                      >Dark mode</span
+                  <i class="bi bi-box-arrow-right"></i>
+                </span>
+                <span class="dd-label">Đăng xuất</span>
+              </button>
+              <!-- Dark mode -->
+              <div class="dd-item dd-item-static">
+                <span
+                  class="dd-icon"
+                  style="--grad: linear-gradient(135deg, #ecf0f1, #bdc3c7)"
+                >
+                  <i class="bi bi-moon-fill"></i>
+                </span>
+                <div class="dd-col">
+                  <span class="dd-label">Dark mode</span>
+                  <div class="dd-radio">
+                    <label
+                      ><input
+                        type="radio"
+                        name="darkmode"
+                        value="off"
+                        checked
+                      />
+                      Off</label
                     >
-                    <form
-                      class="darkmode-options"
-                      style="display: flex; gap: 20px; font-size: 12px"
+                    <label
+                      ><input type="radio" name="darkmode" value="on" />
+                      On</label
                     >
-                      <label
-                        style="
-                          display: flex;
-                          align-items: center;
-                          cursor: pointer;
-                        "
-                      >
-                        <input
-                          type="radio"
-                          name="darkmode"
-                          value="off"
-                          checked
-                          style="margin-right: 6px"
-                        />
-                        Off
-                      </label>
-                      <label
-                        style="
-                          display: flex;
-                          align-items: center;
-                          cursor: pointer;
-                        "
-                      >
-                        <input
-                          type="radio"
-                          name="darkmode"
-                          value="on"
-                          style="margin-right: 6px"
-                        />
-                        On
-                      </label>
-                    </form>
                   </div>
                 </div>
               </div>
             </div>
+
+            <hr class="dd-divider" />
+
+            <!-- Logout -->
           </div>
 
           <!-- Messenger -->
@@ -397,6 +341,7 @@
           <div
             class="rounded-circle d-flex align-items-center justify-content-center position-relative"
             style="width: 40px; height: 40px; overflow: hidden; cursor: pointer"
+            onclick="window.location.href='profile.html'"
           >
             <img
               src="../images/OIP.jpg"
@@ -513,7 +458,7 @@
               <a
                 href="friend.html"
                 class="text-decoration-none text-dark fw-bold flex-grow-1"
-                >Friends</a
+                >Bạn bè</a
               >
             </div>
 
@@ -538,7 +483,7 @@
               <a
                 href="friend.html"
                 class="text-decoration-none text-dark fw-bold flex-grow-1"
-                >Saved</a
+                >Đã lưu</a
               >
             </div>
 
@@ -586,7 +531,7 @@
               <a
                 href="story.html"
                 class="text-decoration-none text-dark fw-bold flex-grow-1"
-                >Story</a
+                >Tin</a
               >
             </div>
           </div>
@@ -611,7 +556,7 @@
                   style="background-color: #f0f2f5; height: 40px"
                   onclick="openPostModal()"
                 >
-                  What's on your mind
+                  Bạn đang nghĩ gì?
                 </button>
               </div>
               <div class="d-flex justify-content-around mt-3 border-top pt-2">
@@ -620,7 +565,7 @@
                     class="bi bi-camera-reels-fill"
                     style="font-size: 20px; color: #e74c3c"
                   ></i>
-                  Live video
+                  Phát trực tiếp
                 </button>
                 <button
                   class="btn btn-light w-100 me-1 btn-action"
@@ -630,14 +575,14 @@
                     class="bi bi-images"
                     style="font-size: 20px; color: #27ae60"
                   ></i>
-                  Photo/video
+                  Ảnh/Video
                 </button>
                 <button class="btn btn-light w-100 btn-action">
                   <i
                     class="bi bi-emoji-heart-eyes-fill"
                     style="font-size: 20px; color: #f39c12"
                   ></i>
-                  Activity
+                  Hoạt động
                 </button>
               </div>
             </div>
@@ -711,7 +656,7 @@
                       >
                     </div>
                     <p class="mb-0 text-white" style="font-size: 13px">
-                      Create Story
+                      Tạo tin
                     </p>
                   </div>
                 </div>
@@ -758,7 +703,7 @@
             style="background-color: transparent"
           >
             <div class="d-flex justify-content-between contact-header mb-2">
-              <div><strong>Contacts</strong></div>
+              <div><strong>Người liên hệ</strong></div>
               <div class="d-flex">
                 <div
                   class="rounded-circle contact-icon d-flex justify-content-center align-items-center"
@@ -1075,7 +1020,7 @@
                       style="font-weight: bold; color: #65676b; font-size: 13px"
                     >
                       <i class="fa-solid fa-thumbs-up"></i>
-                      Like
+                      Thích
                     </button>
 
                     <div
@@ -1125,14 +1070,14 @@
                     class="btn btn-light w-100 me-1 btn-action toggle-comment"
                     style="font-weight: bold; color: #65676b; font-size: 13px"
                   >
-                    <i class="bi bi-chat-left"></i> Comment
+                    <i class="bi bi-chat-left"></i> Bình luận
                   </button>
 
                   <button
                     class="btn btn-light w-100 btn-action"
                     style="font-weight: bold; color: #65676b; font-size: 13px"
                   >
-                    <i class="bi bi-share"></i> Share
+                    <i class="bi bi-share"></i> Chia sẻ
                   </button>
                 </div>
               </div>
@@ -1172,7 +1117,7 @@
                   <textarea
                     id="commentInput"
                     class="form-control dark-mode-textarea"
-                    placeholder="Write a comment..."
+                    placeholder="Bình luận..."
                     rows="1"
                     style="
                       max-height: 292px;
@@ -1290,11 +1235,16 @@
       style="width: 380px; display: none; z-index: 9999"
     >
       <div
-        class="card shadow border rounded d-flex flex-column"
-        style="height: 550px"
+        class="card shadow border-0 d-flex flex-column"
+        style="height: 550px; border-radius: 18px; overflow: hidden"
       >
+        <!-- Header -->
         <div
           class="card-header d-flex justify-content-between align-items-center p-2"
+          style="
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: #fff;
+          "
         >
           <div class="d-flex align-items-center">
             <img
@@ -1305,81 +1255,67 @@
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
-                border: 0.5px solid #65676b;
+                border: 2px solid #fff;
               "
             />
-            <span id="friendName" style="font-weight: bold; margin-left: 10px"
-              >Người dùng</span
-            >
+            <span id="friendName" class="ms-2 fw-semibold">Người dùng</span>
           </div>
-          <button id="closeChatBtn" class="btn btn-sm btn-light rounded-circle">
+          <button
+            id="closeChatBtn"
+            class="btn btn-sm btn-light rounded-circle border-0"
+            style="width: 32px; height: 32px; line-height: 1"
+          >
             ✕
           </button>
         </div>
 
-        <!-- Phần body chiếm phần lớn không gian -->
+        <!-- Messages -->
         <div
-          class="card-body flex-grow-1 overflow-auto"
+          class="card-body flex-grow-1 overflow-auto px-3 py-2"
           id="chatMessages"
-          style="min-height: 0"
+          style="background-color: #f9fafb"
         ></div>
 
-        <!-- Phần nhập -->
+        <!-- Footer / Input -->
         <div
-          class="card-footer p-2 d-flex"
-          style="
-            align-items: center;
-            justify-content: space-around;
-            background-color: transparent;
-          "
+          class="card-footer p-2 d-flex align-items-center gap-2"
+          style="background-color: #fff"
         >
-          <div
-            class="icon-hover align-self-end"
-            style="
-              display: flex;
-              width: 40px;
-              height: 40px;
-              border-radius: 50%;
-              align-items: center;
-              justify-content: center;
-              margin-right: 10px;
-            "
+          <!-- Upload icon -->
+          <button
+            class="btn btn-light d-flex align-items-center justify-content-center shadow-sm rounded-circle"
+            style="width: 40px; height: 40px"
           >
-            <i class="bi bi-images" style="font-size: 25px; color: #00b894"></i>
-          </div>
-          <div class="rounded-5">
-            <textarea
-              id="chatInput"
-              class="form-control form-control-sm rounded-5 px-3"
-              placeholder="Nhập tin nhắn..."
-              rows="1"
-              style="
-                resize: none;
-                overflow-y: auto;
-                max-height: 140px;
-                width: 250px;
-                height: auto;
-                min-height: 45px;
-                border: none;
-                background-color: #b2bec3;
-                padding-top: 12px;
-                padding-bottom: 12px;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
-                  Roboto, Helvetica, Arial, sans-serif;
-                flex-shrink: 0;
-              "
-            ></textarea>
-          </div>
-          <div
-            class="send-hover align-self-end"
-            style="width: 40px; height: 40px; border-radius: 50%; padding: 10px"
+            <i class="bi bi-images fs-5 text-success"></i>
+          </button>
+
+          <!-- Input -->
+          <textarea
+            id="chatInput"
+            class="form-control rounded-pill px-3"
+            placeholder="Nhập tin nhắn..."
+            rows="1"
+            style="
+              resize: none;
+              max-height: 140px;
+              min-height: 45px;
+              font-family: inherit;
+              background-color: #f1f3f5;
+            "
+          ></textarea>
+
+          <!-- Send button -->
+          <button
+            class="btn btn-primary d-flex align-items-center justify-content-center shadow-sm rounded-circle"
+            style="width: 40px; height: 40px"
             onclick="sendMessage()"
           >
-            <i class="bi bi-send-fill fs-5" style="color: #0984e3"></i>
-          </div>
+            <i class="bi bi-send-fill fs-6"></i>
+          </button>
         </div>
       </div>
     </div>
+
     <!-- Modal hiển thị tất cả ảnh và bình luận -->
     <div
       class="modal fade"
@@ -1509,6 +1445,8 @@
       textarea.style.height = textarea.scrollHeight + "px";
     }
   </script>
+  <!-- CDN SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="../Js/socket.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
@@ -1570,4 +1508,5 @@
       });
     });
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </html>

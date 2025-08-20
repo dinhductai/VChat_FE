@@ -444,3 +444,144 @@
   background-color: #f8f9fa;
   border-radius: 5px;
 }
+
+/* Dropdown panel */
+.dd-panel {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  width: 260px;
+  z-index: 9999;
+  background: #fff;
+  border: 1px solid #e6e8ec;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(16, 24, 40, 0.12);
+  padding: 10px 10px 8px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+}
+.dd-panel::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  right: 22px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-left: 1px solid #e6e8ec;
+  border-top: 1px solid #e6e8ec;
+  transform: rotate(45deg);
+}
+
+/* Header */
+.dd-head {
+  padding: 4px 8px 6px 8px;
+}
+.dd-title {
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.2px;
+}
+
+/* Items */
+.dd-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dd-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.03s ease;
+}
+.dd-item:hover {
+  background: #f5f7fb;
+}
+.dd-item:active {
+  transform: scale(0.995);
+}
+
+.dd-item-static {
+  cursor: default;
+}
+.dd-item-static:hover {
+  background: transparent;
+}
+
+.dd-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: var(--grad, #999);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.dd-icon i {
+  font-size: 18px;
+}
+
+.dd-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Dark mode radio row */
+.dd-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dd-radio {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #374151;
+}
+.dd-radio input {
+  margin-right: 6px;
+}
+
+/* Divider & logout */
+.dd-divider {
+  margin: 10px 0 8px 0;
+  border-color: #eef2f7;
+}
+.dd-logout .dd-label {
+  color: #e84118;
+}
+.dd-logout:hover {
+  background: #fff5f5;
+}
+
+/* (Optional) dark mode support for dropdown if bạn có body.dark */
+body.dark .dd-panel {
+  background: #242526;
+  border-color: #3a3b3c;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+body.dark .dd-panel::before {
+  background: #242526;
+  border-color: #3a3b3c;
+}
+body.dark .dd-item:hover {
+  background: #2f3136;
+}
+body.dark .dd-label {
+  color: #e4e6eb;
+}
+body.dark .dd-radio {
+  color: #b0b3b8;
+}
+body.dark .dd-divider {
+  border-color: #3a3b3c;
+}

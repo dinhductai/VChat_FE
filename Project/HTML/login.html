@@ -1,217 +1,495 @@
 <!DOCTYPE html>
 <html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Đăng nhập • LoveConnect</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>Đăng nhập</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap CSS & Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <!-- Google Fonts: Montserrat & Roboto -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;500&display=swap"
-    rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    <!-- Bootstrap CSS & Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
 
-    .login-card {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 1rem;
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
-      padding: 2.5rem 2rem;
-      max-width: 350px;
-      width: 100%;
-      animation: fadeInDown 0.8s;
-      font-family: 'Roboto', 'Montserrat', Arial, sans-serif;
-    }
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-40px);
+    <style>
+      :root {
+        --brand-1: #6a11cb;
+        --brand-2: #2575fc;
+        --text-1: #0f172a;
+        --muted: #64748b;
+        --glass-border: rgba(255, 255, 255, 0.35);
       }
 
-      to {
-        opacity: 1;
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI,
+          Roboto, "Helvetica Neue", Arial;
+        color: var(--text-1);
+        background: radial-gradient(
+            1200px 800px at 10% -10%,
+            #c3d3ff 0%,
+            transparent 60%
+          ),
+          radial-gradient(1000px 600px at 110% 10%, #ffd6e7 0%, transparent 50%),
+          linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
+        background-attachment: fixed;
+        display: grid;
+        place-items: center;
+        overflow-x: hidden;
+      }
+
+      .blob {
+        position: absolute;
+        filter: blur(60px);
+        opacity: 0.55;
+        z-index: 0;
+      }
+      .blob-1 {
+        width: 340px;
+        height: 340px;
+        border-radius: 50%;
+        background: #fff;
+        top: 6%;
+        left: 8%;
+        animation: float 12s ease-in-out infinite;
+      }
+      .blob-2 {
+        width: 420px;
+        height: 420px;
+        border-radius: 50%;
+        background: #e0f2fe;
+        bottom: -6%;
+        right: -4%;
+        animation: float 14s ease-in-out infinite reverse;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-14px);
+        }
+      }
+
+      .page-wrap {
+        position: relative;
+        z-index: 1;
+        width: min(1040px, 92vw);
+      }
+
+      .card-glass {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.78),
+          rgba(255, 255, 255, 0.62)
+        );
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 60px rgba(16, 24, 40, 0.25);
+        animation: fadeIn 0.6s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hero-col {
+        padding: clamp(28px, 5vw, 44px);
+        background: radial-gradient(
+            600px 400px at 30% 20%,
+            rgba(255, 255, 255, 0.35) 0%,
+            transparent 60%
+          ),
+          linear-gradient(
+            160deg,
+            rgba(255, 255, 255, 0.35),
+            rgba(255, 255, 255, 0.05)
+          );
+      }
+      .brand-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--glass-border);
+        border-radius: 999px;
+        font-weight: 700;
+      }
+      .brand-badge i {
+        color: var(--brand-2);
+      }
+      .hero-title {
+        font-weight: 800;
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+        font-size: clamp(24px, 3.4vw, 36px);
+      }
+      .hero-sub {
+        color: var(--muted);
+        font-size: clamp(14px, 1.6vw, 16px);
+      }
+
+      .form-col {
+        padding: clamp(24px, 4.2vw, 40px);
+        background: rgba(255, 255, 255, 0.92);
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+      }
+      .form-control.ps-5 {
+        padding-left: 2.75rem !important;
+      }
+      .form-control,
+      .form-check-input {
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+      }
+      .form-control:focus {
+        border-color: var(--brand-2);
+        box-shadow: 0 0 0 0.2rem rgba(37, 117, 252, 0.15);
+      }
+
+      .btn-gradient {
+        background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+      }
+      .btn-gradient:hover {
+        filter: brightness(0.96);
+        transform: translateY(-1px);
+      }
+      .btn-gradient:active {
         transform: translateY(0);
       }
-    }
 
-    .login-card .form-control:focus {
-      box-shadow: 0 0 0 0.2rem #2575fc40;
-      border-color: #2575fc;
-    }
-
-    .login-title {
-      font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-      font-weight: 700;
-      color: #2575fc;
-      text-align: center;
-      margin-bottom: 1.5rem;
-      letter-spacing: 1px;
-    }
-
-    .login-btn {
-      background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
-      border: none;
-      font-weight: 600;
-      transition: transform 0.2s;
-      font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-    }
-
-    .login-btn:hover {
-      transform: scale(1.05);
-      background: linear-gradient(90deg, #2575fc 0%, #6a11cb 100%);
-    }
-
-    .input-group-text {
-      background: #f0f4ff;
-      border: none;
-    }
-
-    .form-label {
-      font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-      font-weight: 500;
-      color: #2575fc;
-    }
-
-    .error {
-      color: #dc3545;
-      font-size: 0.95em;
-      margin-bottom: 10px;
-      text-align: center;
-      animation: shake 0.3s;
-      font-family: 'Roboto', 'Montserrat', Arial, sans-serif;
-    }
-
-    @keyframes shake {
-      0% {
-        transform: translateX(0);
+      .divider {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 12px;
+        color: #64748b;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        height: 1px;
+        background: #e2e8f0;
       }
 
-      25% {
-        transform: translateX(-5px);
+      .hint {
+        color: #64748b;
+        font-size: 0.9rem;
+      }
+      .small-link {
+        color: var(--brand-2);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .small-link:hover {
+        text-decoration: underline;
       }
 
-      50% {
-        transform: translateX(5px);
-      }
-
-      75% {
-        transform: translateX(-5px);
-      }
-
-      100% {
-        transform: translateX(0);
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <div class="login-card shadow-lg">
-    <div class="login-title mb-4">
-      <i class="bi bi-person-circle fs-2"></i><br>
-      Đăng nhập
-    </div>
-    <form onsubmit="return handleLogin(event)">
-      <div id="error" class="error"></div>
-      <div class="mb-3">
-        <label for="email" class="form-label fw-bold">Email</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-          <input type="email" class="form-control" id="email" placeholder="Nhập email" required>
-        </div>
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label fw-bold">Mật khẩu</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-lock"></i></span>
-          <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu" required>
-          <button type="button" class="btn btn-outline-secondary" id="togglePassword" tabindex="-1">
-            <i class="bi bi-eye" id="eyeIcon"></i>
-          </button>
-        </div>
-      </div>
-      <button type="submit" class="btn login-btn w-100 py-2 mt-2">
-        <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
-      </button>
-    </form>
-    <div class="mt-3 text-center">
-      <a href="sign-up.html" class="text-decoration-none text-primary">Bạn chưa có tài khoản?</a>
-    </div>
-  </div>
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    async function handleLogin(event) {
-      event.preventDefault();
-
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const errorDiv = document.getElementById("error");
-
-      errorDiv.textContent = "";
-
-      if (!email || !password) {
-        errorDiv.textContent = "Vui lòng nhập đầy đủ email và mật khẩu.";
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          "http://localhost:8080/api/auth/log-in",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-          }
-        );
-
-        if (!response.ok) {
-          let errorMsg = "Đăng nhập thất bại.";
-          try {
-            const errorData = await response.json();
-            errorMsg = errorData.message || errorMsg;
-          } catch { }
-          errorDiv.textContent = errorMsg;
-          return;
+      @media (max-width: 992px) {
+        .hero-col {
+          display: none;
         }
-
-        const data = await response.json();
-        localStorage.setItem("accessToken", data.data.token);
-
-        // Hiệu ứng chuyển trang
-        document.querySelector(".login-card").style.animation = "fadeInDown 0.8s reverse";
-        setTimeout(() => {
-          window.location.href = "index.html";
-        }, 500);
-      } catch (error) {
-        errorDiv.textContent = "Có lỗi xảy ra khi kết nối tới server.";
       }
-    }
+    </style>
+  </head>
+  <body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
-    // Ẩn/hiện mật khẩu
-    const passwordInput = document.getElementById("password");
-    const togglePassword = document.getElementById("togglePassword");
-    const eyeIcon = document.getElementById("eyeIcon");
+    <div class="page-wrap">
+      <div class="card card-glass">
+        <div class="row g-0">
+          <!-- Left / Hero -->
+          <div
+            class="col-lg-6 hero-col d-flex flex-column justify-content-between"
+          >
+            <div>
+              <span class="brand-badge"
+                ><i class="bi bi-heart-fill"></i> VChat</span
+              >
+              <h1 class="hero-title mt-3">
+                Chào mừng trở lại!
+                <span class="d-block" style="color: var(--brand-2)"
+                  >Đăng nhập để tiếp tục kết nối</span
+                >
+              </h1>
+              <p class="hero-sub mt-3">
+                Cập nhật tin 24h, trò chuyện realtime và khám phá cộng đồng của
+                bạn.
+              </p>
+            </div>
+            <ul class="list-unstyled mt-4 mb-0 small text-secondary">
+              <li class="mb-2">
+                <i class="bi bi-check2-circle me-2"></i>Giao diện tối ưu, mượt
+                mà
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-check2-circle me-2"></i>Bảo mật & an toàn thông
+                tin
+              </li>
+              <li>
+                <i class="bi bi-check2-circle me-2"></i>Hỗ trợ đăng nhập xã hội
+                (sắp có)
+              </li>
+            </ul>
+          </div>
 
-    togglePassword.addEventListener("click", function () {
-      const type = passwordInput.type === "password" ? "text" : "password";
-      passwordInput.type = type;
-      eyeIcon.className = type === "password" ? "bi bi-eye" : "bi bi-eye-slash";
-    });
-  </script>
-</body>
+          <!-- Right / Form -->
+          <div class="col-lg-6 form-col">
+            <form id="loginForm" novalidate>
+              <div id="error" class="mb-3"></div>
 
+              <div class="mb-3">
+                <label for="email" class="form-label fw-semibold">Email</label>
+                <div class="position-relative">
+                  <i class="bi bi-envelope input-icon"></i>
+                  <input
+                    type="email"
+                    class="form-control ps-5"
+                    id="email"
+                    placeholder="ban@domain.com"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <label for="password" class="form-label fw-semibold"
+                  >Mật khẩu</label
+                >
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="bi bi-lock"></i
+                  ></span>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="Nhập mật khẩu"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    id="togglePassword"
+                    tabindex="-1"
+                    aria-label="Ẩn/hiện mật khẩu"
+                  >
+                    <i class="bi bi-eye" id="eyeIcon"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="1"
+                    id="rememberMe"
+                  />
+                  <label class="form-check-label" for="rememberMe"
+                    >Ghi nhớ tôi</label
+                  >
+                </div>
+                <a href="#" class="small-link">Quên mật khẩu?</a>
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-gradient w-100 py-3"
+                id="submitBtn"
+              >
+                <span class="me-2" id="btnIcon"
+                  ><i class="bi bi-box-arrow-in-right"></i></span
+                >Đăng nhập
+              </button>
+
+              <div class="divider my-4"><span class="small">hoặc</span></div>
+
+              <div class="d-grid gap-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  disabled
+                >
+                  <i class="bi bi-google me-2"></i>Đăng nhập bằng Google (sắp
+                  có)
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  disabled
+                >
+                  <i class="bi bi-facebook me-2"></i>Đăng nhập bằng Facebook
+                  (sắp có)
+                </button>
+              </div>
+
+              <p class="text-center mt-3 mb-0 hint">
+                Chưa có tài khoản?
+                <a href="sign-up.html" class="small-link">Đăng ký</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toasts -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080">
+      <div
+        id="toast"
+        class="toast align-items-center text-bg-success border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div class="toast-body" id="toastMsg">Đăng nhập thành công!</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const byId = (id) => document.getElementById(id);
+
+      // Toggle password visibility
+      const passwordInput = byId("password");
+      const togglePassword = byId("togglePassword");
+      const eyeIcon = byId("eyeIcon");
+      togglePassword.addEventListener("click", () => {
+        const type = passwordInput.type === "password" ? "text" : "password";
+        passwordInput.type = type;
+        eyeIcon.className =
+          type === "password" ? "bi bi-eye" : "bi bi-eye-slash";
+      });
+
+      // Persist email if Remember Me was used
+      const emailInput = byId("email");
+      const rememberMe = byId("rememberMe");
+      const savedEmail = localStorage.getItem("rememberEmail");
+      if (savedEmail) {
+        emailInput.value = savedEmail;
+        rememberMe.checked = true;
+      }
+
+      // Submit handler
+      byId("loginForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const err = byId("error");
+        err.className = "";
+        err.textContent = "";
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        const showError = (msg) => {
+          err.className = "alert alert-danger";
+          err.textContent = msg;
+        };
+        if (!email || !/^([^\s@]+)@([^\s@]+)\.[^\s@]+$/.test(email))
+          return showError("Email không hợp lệ.");
+        if (!password) return showError("Vui lòng nhập mật khẩu.");
+
+        const btn = byId("submitBtn");
+        const btnIcon = byId("btnIcon");
+        btn.disabled = true;
+        btn.classList.add("opacity-75");
+        btnIcon.innerHTML =
+          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+
+        try {
+          const res = await fetch("http://localhost:8080/api/auth/log-in", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          let data;
+          try {
+            data = await res.json();
+          } catch {
+            data = {};
+          }
+
+          if (!res.ok) {
+            const code = res.status;
+            let msg = (data && data.message) || "Đăng nhập thất bại.";
+            if (code === 401) msg = "Sai email hoặc mật khẩu.";
+            if (code === 429) msg = "Thao tác quá nhanh. Vui lòng thử lại sau.";
+            throw new Error(msg);
+          }
+
+          // Save token(s)
+          if (data?.data?.token)
+            localStorage.setItem("accessToken", data.data.token);
+          if (data?.data?.refreshToken)
+            localStorage.setItem("refreshToken", data.data.refreshToken);
+
+          // Remember email
+          if (rememberMe.checked) localStorage.setItem("rememberEmail", email);
+          else localStorage.removeItem("rememberEmail");
+
+          // Success toast & redirect
+          const toastEl = byId("toast");
+          byId("toastMsg").textContent =
+            "Đăng nhập thành công! Đang chuyển hướng...";
+          new bootstrap.Toast(toastEl, { delay: 1000 }).show();
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 900);
+        } catch (error) {
+          showError(error.message || "Có lỗi xảy ra khi kết nối tới server.");
+        } finally {
+          btn.disabled = false;
+          btn.classList.remove("opacity-75");
+          btnIcon.innerHTML = '<i class="bi bi-box-arrow-in-right"></i>';
+        }
+      });
+    </script>
+  </body>
 </html>
