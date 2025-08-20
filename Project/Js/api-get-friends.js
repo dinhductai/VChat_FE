@@ -505,12 +505,12 @@ async function updateRequestFriend(receiverId, matchStatus) {
       ? "accept this friend request?"
       : "reject this friend request?";
   const confirm = await Swal.fire({
-    title: "Confirm",
-    text: `Are you sure you want to ${actionText}`,
+    title: "Xác nhận",
+    text: `Bạn có chắc chắn muốn ${actionText}`,
     icon: "question",
     showCancelButton: true,
-    confirmButtonText: "Yes",
-    cancelButtonText: "No",
+    confirmButtonText: "Có",
+    cancelButtonText: "Không",
     reverseButtons: true,
   });
   if (!confirm.isConfirmed) return;
@@ -518,8 +518,8 @@ async function updateRequestFriend(receiverId, matchStatus) {
   try {
     // Loading
     Swal.fire({
-      title: "Processing...",
-      html: "Please wait.",
+      title: "Đang xử lí...",
+      html: "Vui lòng chờ.",
       allowOutsideClick: false,
       allowEscapeKey: false,
       didOpen: () => Swal.showLoading(),
@@ -549,8 +549,8 @@ async function updateRequestFriend(receiverId, matchStatus) {
     }
 
     await Swal.fire({
-      title: "Success!",
-      text: payload?.message || "Update request friend successful.",
+      title: "Thành công !",
+      text: payload?.message || "Yêu cầu cập nhật bạn bè thành công.",
       icon: "success",
       timer: 1600,
       showConfirmButton: false,
@@ -570,8 +570,8 @@ async function updateRequestFriend(receiverId, matchStatus) {
     }
   } catch (err) {
     Swal.fire({
-      title: "Update Failed!",
-      text: err.message || "An error occurred while updating.",
+      title: "Cập nhật không thành công!",
+      text: err.message || "Đã xảy ra lỗi trong quá trình cập nhật.",
       icon: "error",
       confirmButtonText: "OK",
     });
