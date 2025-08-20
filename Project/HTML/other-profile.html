@@ -461,12 +461,25 @@
   </nav>
 
 
-  <div class="profile-header">
-    <img src="" alt="avatar" class="avatar" id="profile-avatar">
-    <div class="profile-info">
-      <h1 id="profile-fullname">Đang tải...</h1>
-      <p id="profile-bio"><i class="fas fa-quote-left"></i></p>
+  <div class="profile-header" style="display: flex; align-items: center; justify-content: space-between;">
+    <div style="display: flex; align-items: center;">
+      <img src="" alt="avatar" class="avatar" id="profile-avatar">
+      <div class="profile-info">
+        <h1 id="profile-fullname">Đang tải...</h1>
+        <p id="profile-bio"><i class="fas fa-quote-left"></i></p>
+      </div>
     </div>
+    <div style="width: 300px; display: flex; flex-direction: column; align-items: center;">
+      <button id="btn-add-friend" class="btn btn-primary d-flex align-items-center"
+        style="gap: 8px; font-weight: 500; margin-bottom: 12px;">
+        <i class="fas fa-user-plus"></i> Kết bạn
+      </button>
+
+      <button id="btn-report-user" class="btn btn-danger d-flex align-items-center" style="gap: 8px; font-weight: 500;">
+        <i class="fas fa-exclamation-triangle"></i> Báo cáo
+      </button>
+    </div>
+
   </div>
   <nav>
     <a class="active" id="tab-info" href="#"><i class="fas fa-info-circle"></i> Giới thiệu</a>
@@ -1148,11 +1161,10 @@
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
   <script src="../Js/Thiep/other-profile.js"></script>
-  <script src="../Js/Thiep/createReel.js"></script>
+
 
   <script src="../Js/Thiep/story.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../Js/Thiep/profile-post-modal.js"></script>
 
   <script src="../Js/api-like.js"></script>
   <script src="../Js/api-reaction.js"></script>
@@ -1162,6 +1174,8 @@
 
   <script src="../Js/Thiep/update-post.js"></script>
   <script src="../Js/Thiep/post-container-other-profile.js"></script>
+
+
   <script>
     // Kiểm tra token khi tải trang
 
@@ -1260,7 +1274,7 @@
       box-shadow: 0 2px 8px rgba(24, 119, 242, 0.13);
     }
   </style>
-
+  <script src="../Js/Thiep/match-other-profile.js"></script>
 </body>
 
 </html>
