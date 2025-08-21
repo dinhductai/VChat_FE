@@ -71,7 +71,11 @@ async function loadHomeFriends(page = 0) {
       const div = document.createElement("div");
       div.className = "col";
       div.innerHTML = `
-        <div class="card h-100 shadow-sm friend-card text-center border-0">
+        <div class="card h-100 shadow-sm friend-card text-center border-0"        style="cursor:pointer;" 
+              onclick="window.location.href='other-profile.html?user-id=${
+                friend.userId
+              }'"
+>
           <img src="${avatar}" class="card-img-top" style="height: 180px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px;" />
           <div class="card-body p-2" data-id="${friend.userId}">
             <h6 class="card-title mb-1 text-truncate text-start">
@@ -83,7 +87,7 @@ async function loadHomeFriends(page = 0) {
             <button class="btn btn-sm btn-primary w-100 mb-1" onclick="addFriend(${
               friend.userId
             })">Thêm bạn bè</button>
-            <button class="btn btn-sm btn-secondary w-100 border">Gỡ/Xoá</button>
+            <button class="btn btn-sm btn-secondary w-100 border remove-btn">Gỡ/Xoá</button>
           </div>
         </div>
       `;
@@ -150,7 +154,12 @@ async function loadAllFriends(page = 0) {
       div.className = "col";
 
       div.innerHTML = `
-        <div class="card h-100 shadow-sm friend-card text-center border-0">
+        <div class="card h-100 shadow-sm friend-card text-center border-0"        style="cursor:pointer;" 
+               onclick="window.location.href='other-profile.html?user-id=${
+                 friend.userId
+               }'"
+
+>
           <img src="${avatar}" alt="avatar"
                loading="lazy"
                class="card-img-top"
@@ -230,7 +239,11 @@ async function loadFriendsSuggest(page = 0) {
       div.className = "col";
 
       div.innerHTML = `
-        <div class="card h-100 shadow-sm friend-card text-center border-0">
+        <div class="card h-100 shadow-sm friend-card text-center border-0"        style="cursor:pointer;" 
+             onclick="window.location.href='other-profile.html?user-id=${
+               friend.userId
+             }'"
+>
           <img src="${avatar}" alt="avatar"
                loading="lazy"
                class="card-img-top"
@@ -267,7 +280,6 @@ async function loadFriendsSuggest(page = 0) {
 }
 
 function addFriend(receiverId) {
-  console.log(token);
   fetch(`http://localhost:8080/api/match/create?receiverId=${receiverId}`, {
     method: "POST",
     headers: {
@@ -284,24 +296,89 @@ function addFriend(receiverId) {
       return response.json();
     })
     .then((data) => {
-      alert("🎉 Gửi lời mời kết bạn thành công!");
+      Swal.fire({
+        icon: "success",
+        title: "🎉 Thành công!",
+        text: "Gửi lời mời kết bạn thành công!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
       console.log("✅ Server trả về:", data);
-      // 👉 Ví dụ: disable nút gửi lời mời hoặc thay đổi giao diện
+
       const cardBody = document.querySelector(`[data-id="${receiverId}"]`);
       if (cardBody) {
-        cardBody.querySelector(".btn-primary").remove(); // Xóa nút Add friend
+        // Xóa nút Add friend
+        const addBtn = cardBody.querySelector(".btn-primary");
+        if (addBtn) addBtn.remove();
 
+        // Tạo nút Cancel
         const cancelBtn = document.createElement("button");
         cancelBtn.className = "btn btn-sm btn-warning w-100 mb-1";
         cancelBtn.innerHTML = '<i class="bi bi-x-circle"></i> Cancel';
         cancelBtn.onclick = () => cancelRequest(receiverId);
 
-        cardBody.insertBefore(cancelBtn, cardBody.children[2]); // Chèn lên trên nút "Remove"
+        cardBody.insertBefore(cancelBtn, cardBody.children[2]);
       }
     })
     .catch((error) => {
       console.error("❌ Gửi lời mời thất bại:", error.message);
-      alert("❌ Gửi lời mời kết bạn thất bại!");
+      Swal.fire({
+        icon: "error",
+        title: "Lỗi!",
+        text: "❌ Gửi lời mời kết bạn thất bại!",
+      });
+    });
+}
+
+function cancelRequest(receiverId) {
+  fetch(
+    `http://localhost:8080/api/match/update?receiverId=${receiverId}&matchStatus=CANCEL`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  )
+    .then(async (response) => {
+      if (!response.ok) {
+        const err = await response.text();
+        throw new Error(err);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      Swal.fire({
+        icon: "info",
+        title: "🚫 Đã hủy!",
+        text: "Bạn đã hủy lời mời kết bạn.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      console.log("✅ Server trả về:", data);
+
+      const cardBody = document.querySelector(`[data-id="${receiverId}"]`);
+      if (cardBody) {
+        // Xóa nút Cancel
+        const cancelBtn = cardBody.querySelector(".btn-warning");
+        if (cancelBtn) cancelBtn.remove();
+
+        // Thêm lại nút Add friend
+        const addBtn = document.createElement("button");
+        addBtn.className = "btn btn-sm btn-primary w-100 mb-1";
+        addBtn.innerHTML = '<i class="bi bi-person-plus"></i> Add Friend';
+        addBtn.onclick = () => addFriend(receiverId);
+
+        cardBody.insertBefore(addBtn, cardBody.children[2]);
+      }
+    })
+    .catch((error) => {
+      console.error("❌ Hủy lời mời thất bại:", error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Lỗi!",
+        text: "❌ Hủy lời mời kết bạn thất bại!",
+      });
     });
 }
 
@@ -449,7 +526,11 @@ async function loadFriendRequests(page = 0) {
       div.className = "col";
 
       div.innerHTML = `
-        <div class="card h-100 shadow-sm friend-card text-center border-0">
+        <div class="card h-100 shadow-sm friend-card text-center border-0"        style="cursor:pointer;" 
+                onclick="window.location.href='other-profile.html?user-id=${
+                  user.userId
+                }'"
+>
           <img src="${avatar}" alt="avatar"
                loading="lazy"
                class="card-img-top"

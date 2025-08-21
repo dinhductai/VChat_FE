@@ -302,6 +302,9 @@ function renderPost(post, insert = true) {
                 <img src="${
                   post.profilePicture || "../images/user-default.webp"
                 }"
+                 onclick="window.location.href='other-profile.html?user-id=${
+                   post.userId
+                 }'"
                 class="rounded-circle me-2" style="width: 40px; height:
                 40px;cursor: pointer; border: 1px solid #bdc3c7" alt="Avatar" />
                 <div>
@@ -480,21 +483,12 @@ async function openImageModal(srcImg, postId) {
     if (!response.ok) throw new Error("Lỗi khi gọi API");
 
     const post = await response.json();
-    resetModalState(); // Reset UI
-    renderPostToModal(srcImg, post); // Hiển thị
+    resetModalState();
+    renderPostToModal(srcImg, post);
     fetchReactionState(postId);
-    // 👉 Logic xử lý kết nối WebSocket
 
-    if (stompClient && stompClient.connected) {
-      stompClient.disconnect(() => {
-        console.log("🔌 Ngắt kết nối cũ để kết nối lại với postId mới");
-        // connect(postId);
-        connectComment(postId);
-      });
-    } else {
-      // connect(postId);
-      connectComment(postId);
-    }
+    // 👉 Chỉ cần gọi connectComment, nó tự xử lý unsub cũ & sub mới
+    connectComment(postId);
   } catch (error) {
     console.error("Lỗi load chi tiết bài viết:", error);
     alert("Không thể tải nội dung bài viết");

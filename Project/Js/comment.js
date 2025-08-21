@@ -1,35 +1,48 @@
+let commentSub = null;
+let queueSub = null;
+
 function connectComment(postId) {
   connectWebSocket(() => {
-    if (!stompClient.connected) {
-      console.warn("WebSocket chưa sẵn sàng.");
+    if (!stompClient || !stompClient.connected) {
+      console.warn("⚠️ WebSocket chưa sẵn sàng.");
       return;
     }
 
-    // Nếu đã sub post khác, hủy sub cũ
+    // Nếu đổi sang post khác → hủy sub cũ và tạo sub mới
     if (currentSubscribedPostId !== postId) {
-      if (currentSubscribedPostId) {
-        stompClient.unsubscribe(
-          `/topic/posts/${currentSubscribedPostId}/comments`
-        );
+      if (commentSub) {
+        commentSub.unsubscribe();
+        commentSub = null;
       }
 
       currentSubscribedPostId = postId;
 
-      // Sub nhận bình luận mới
-      stompClient.subscribe(`/topic/posts/${postId}/comments`, (message) => {
-        const comment = JSON.parse(message.body);
-        appendSingleComment(comment);
-      });
+      // Sub nhận comment mới của post
+      commentSub = stompClient.subscribe(
+        `/topic/posts/${postId}/comments`,
+        (message) => {
+          const comment = JSON.parse(message.body);
+          appendSingleComment(comment);
+        }
+      );
 
-      // Sub nhận danh sách comment từ server
-      stompClient.subscribe("/user/queue/comments", (message) => {
-        displayComments(JSON.parse(message.body), "commentList");
-      });
-
-      // Gửi yêu cầu danh sách comment
-      stompClient.send(`/app/comments.fetchAll/${postId}`, {}, {});
+      // Sub queue user (chỉ cần 1 lần duy nhất)
+      if (!queueSub) {
+        queueSub = stompClient.subscribe("/user/queue/comments", (message) => {
+          displayComments(JSON.parse(message.body), "commentList");
+        });
+      }
     }
+
+    // 👉 luôn reset UI và yêu cầu load lại comment khi mở modal
+    resetCommentUI();
+    stompClient.send(`/app/comments.fetchAll/${postId}`, {}, "");
   });
+}
+
+function resetCommentUI() {
+  const list = document.getElementById("commentList");
+  if (list) list.innerHTML = "";
 }
 
 function sendComment(postId, content) {
@@ -290,4 +303,3 @@ document
       commentInput.style.height = "auto";
     }
   });
-
