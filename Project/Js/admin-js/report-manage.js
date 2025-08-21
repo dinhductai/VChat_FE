@@ -37,6 +37,9 @@ function renderTable() {
     const end = start + reportsPerPage;
     const paginatedReports = reports.slice(start, end);
 
+    // Tính số lần bị báo cáo cho mỗi người bị báo cáo
+    const reportedCountMap = countReportedTimes(reports);
+
     paginatedReports.forEach(r => {
         let statusIcon = r.reportStatus === 'PENDING'
             ? '<span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Đang chờ</span>'
@@ -48,11 +51,11 @@ function renderTable() {
 
         let actionBtn = '';
         if (r.reportStatus === 'PENDING') {
-            actionBtn = `<button class="btn btn-sm btn-success" onclick="updateStatus(${r.reportId})" title="Duyệt báo cáo">
-                <i class="bi bi-check-lg"></i> Duyệt
+            actionBtn = `<button class="btn btn-sm btn-success" onclick="updateStatus('${r.reportedUserId}', 'block')" title="Block tài khoản">
+                <i class="bi bi-person-x"></i> Block
                </button>`;
         } else if (r.reportStatus === 'RESOLVED') {
-            actionBtn = `<button class="btn btn-sm btn-warning" onclick="undoStatus(${r.reportId})" title="Hoàn tác">
+            actionBtn = `<button class="btn btn-sm btn-warning" onclick="undoStatus('${r.reportedUserId}')" title="Hoàn tác">
                 <i class="bi bi-arrow-counterclockwise"></i> Hoàn tác
                </button>`;
         } else {
@@ -68,8 +71,7 @@ function renderTable() {
                 <td class="text-center">${r.detail}</td>
                 <td class="text-center">${statusIcon}</td>
                 <td class="text-center"><i class="bi bi-calendar"></i> ${r.reportDate ? new Date(r.reportDate).toLocaleString() : ''}</td>
-                <td class="text-center"><i class="bi bi-calendar-check"></i> ${r.reviewDate ? new Date(r.reviewDate).toLocaleString() : ''}</td>
-                <td class="text-center"><i class="bi bi-person-badge"></i> ${r.reviewerFullName ?? ''}</td>
+                <td class="text-center"><span class="badge bg-danger">${reportedCountMap[r.reportedFullName]}</span></td>
                 <td class="text-center">${actionBtn}</td>
             </tr>
         `;
@@ -81,13 +83,51 @@ function renderPagination() {
     const pagination = document.getElementById("pagination");
     pagination.innerHTML = "";
 
-    for (let i = 1; i <= totalPages; i++) {
+    if (totalPages <= 1) return;
+
+    // Nút prev
+    pagination.innerHTML += `
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+            <button class="page-link" onclick="goToPage(${currentPage - 1})" aria-label="Previous" type="button">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+        </li>
+    `;
+
+    // Hiển thị tối đa 5 trang, có dấu ... nếu nhiều trang
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(totalPages, currentPage + 2);
+
+    if (start > 1) {
+        pagination.innerHTML += `
+            <li class="page-item"><button class="page-link" onclick="goToPage(1)" type="button">1</button></li>
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+        `;
+    }
+
+    for (let i = start; i <= end; i++) {
         pagination.innerHTML += `
             <li class="page-item ${i === currentPage ? 'active' : ''}">
-                <a class="page-link" onclick="goToPage(${i})">${i}</a>
+                <button class="page-link" onclick="goToPage(${i})" type="button">${i}</button>
             </li>
         `;
     }
+
+    if (end < totalPages) {
+        pagination.innerHTML += `
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            <li class="page-item"><button class="page-link" onclick="goToPage(${totalPages})" type="button">${totalPages}</button></li>
+        `;
+    }
+
+    // Nút next
+    pagination.innerHTML += `
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+            <button class="page-link" onclick="goToPage(${currentPage + 1})" aria-label="Next" type="button">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </li>
+    `;
 }
 
 function goToPage(page) {
@@ -96,53 +136,54 @@ function goToPage(page) {
     renderPagination();
 }
 
-async function updateStatus(reportId) {
+async function undoStatus(userId) {
     const token = localStorage.getItem("accessToken");
     if (!token) {
         alert("Bạn chưa đăng nhập!");
         return;
     }
 
-    const res = await fetch("http://localhost:8080/api/admin/reports/check", {
-        method: "PUT",
+    const res = await fetch(`http://localhost:8080/api/admin/users/${userId}?status=active`, {
+        method: "PATCH",
         headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ reportId: reportId, statusReport: "RESOLVED" })
+            "Authorization": `Bearer ${token}`
+        }
     });
 
     const data = await res.json();
     if (data.success) {
-        showToast("Duyệt báo cáo thành công!");
+        showToast("Kích hoạt lại tài khoản thành công!");
     } else {
-        showToast("Có lỗi xảy ra, vui lòng thử lại sau.", "danger");
+        showToast("Có lỗi khi kích hoạt lại tài khoản!", "danger");
     }
 
     await fetchReports();
 }
 
-async function undoStatus(reportId) {
+// Sửa lại hàm updateStatus để gọi API PATCH /api/admin/users/{userId}?status=block
+async function updateStatus(userId, status = "block") {
     const token = localStorage.getItem("accessToken");
     if (!token) {
         alert("Bạn chưa đăng nhập!");
         return;
     }
 
-    const res = await fetch("http://localhost:8080/api/admin/reports/check", {
-        method: "PUT",
+    const res = await fetch(`http://localhost:8080/api/admin/users/${userId}?status=${status}`, {
+        method: "PATCH",
         headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ reportId: reportId, statusReport: "PENDING" })
+            "Authorization": `Bearer ${token}`
+        }
     });
 
     const data = await res.json();
     if (data.success) {
-        showToast("Hoàn tác báo cáo thành công!");
+        showToast(
+            status === "block"
+                ? "Block tài khoản thành công!"
+                : "Active tài khoản thành công!"
+        );
     } else {
-        showToast("Có lỗi khi hoàn tác!", "danger");
+        showToast("Có lỗi xảy ra, vui lòng thử lại sau.", "danger");
     }
 
     await fetchReports();
@@ -180,7 +221,19 @@ function showToast(message, type = "success") {
     }, 3200);
 }
 
+function countReportedTimes(reports) {
+    // Đếm số lần bị báo cáo theo tên người bị báo cáo
+    const countMap = {};
+    reports.forEach(r => {
+        const key = r.reportedFullName;
+        countMap[key] = (countMap[key] || 0) + 1;
+    });
+    return countMap;
+}
+
 // Đảm bảo hàm có thể gọi từ HTML
 window.undoStatus = undoStatus;
+window.updateStatus = updateStatus; window.updateStatus = updateStatus;
 
-fetchReports();
+fetchReports(); fetchReports();
+
