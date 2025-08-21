@@ -2,6 +2,16 @@
 <html lang="vi">
 
 <head>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const params = new URLSearchParams(window.location.search);
+      const otherUserId = params.get("user-id");
+      const userId = localStorage.getItem("userId");
+      if (otherUserId && userId && otherUserId === userId) {
+        window.location.href = "profile.html";
+      }
+    });
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Facebook | Trang cá nhân</title>
@@ -1275,6 +1285,7 @@
     }
   </style>
   <script src="../Js/Thiep/match-other-profile.js"></script>
+  <script src="../Js/Thiep/report-other-profile.js"></script>
 </body>
 
 </html>

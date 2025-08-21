@@ -16,15 +16,31 @@ document.addEventListener('DOMContentLoaded', async () => {
       headers: { 'Authorization': 'Bearer ' + token }
     });
     const json = await res.json();
+
+    const defaultAvatar = "../images/user-default.webp"; // ảnh avatar mặc định
+
+    const avatarEl = document.getElementById('profile-avatar');
+    const fbAvatar = document.querySelector('.fb-avatar');
+
     if (json.success && json.data) {
-      const avatarEl = document.getElementById('profile-avatar');
-      if (avatarEl) avatarEl.src = json.data || '';
-      const fbAvatar = document.querySelector('.fb-avatar');
-      if (fbAvatar) fbAvatar.src = json.data || '';
+      if (avatarEl) avatarEl.src = json.data || defaultAvatar;
+      if (fbAvatar) fbAvatar.src = json.data || defaultAvatar;
+    } else {
+      if (avatarEl) avatarEl.src = defaultAvatar;
+      if (fbAvatar) fbAvatar.src = defaultAvatar;
     }
   } catch (err) {
     console.error('Lỗi lấy avatar:', err);
+
+    const defaultAvatar = "../images/user-default.webp";
+    const avatarEl = document.getElementById('profile-avatar');
+    const fbAvatar = document.querySelector('.fb-avatar');
+
+    if (avatarEl) avatarEl.src = defaultAvatar;
+    if (fbAvatar) fbAvatar.src = defaultAvatar;
   }
+
+
 
   // Lấy thông tin cá nhân
   try {
