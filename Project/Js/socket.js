@@ -41,23 +41,20 @@ function connectWebSocket(callback) {
   stompClient = Stomp.over(socket);
 
   stompClient.connect({ Authorization: "Bearer " + token }, (frame) => {
-    console.log("✅ WebSocket connected:", frame); 
+    console.log("✅ WebSocket connected:", frame);
     callback();
   });
 }
 
 function disconnectWebSocket() {
-  connectWebSocket(() => {
-    // Nếu đã sub post khác, hủy sub cũ
-
-    stompClient.subscribe("/user/queue/notification.history", (message) => {
-      const pageData = JSON.parse(message.body);
-      renderNotifications(pageData.content || []);
-      currentPage = pageData.number;
+  if (stompClient && stompClient.connected) {
+    stompClient.disconnect(() => {
+      console.log("🔌 WebSocket disconnected");
     });
-
-    requestNotificationHistory(0, 10);
-  });
+    stompClient = null;
+    currentSubscribedPostId = null;
+    subscribedChannel = null;
+  }
 }
 
 // function appendSingleComment(comment) {
