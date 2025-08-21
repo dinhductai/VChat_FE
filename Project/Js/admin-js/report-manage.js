@@ -1,34 +1,39 @@
+// reports.js
 const reportsPerPage = 5;
 let currentPage = 1;
 let reports = [];
 
+/* ================= Fetch dữ liệu ================= */
 async function fetchReports() {
     const token = localStorage.getItem("accessToken");
     if (!token) {
         alert("Bạn chưa đăng nhập! Đang chuyển hướng...");
-        window.location.href = "login.html"; // Trang login
+        window.location.href = "login.html";
         return;
     }
 
-    const res = await fetch("http://localhost:8080/api/admin/reports", {
-        headers: {
-            "Authorization": `Bearer ${token}`
+    try {
+        const res = await fetch("http://localhost:8080/api/admin/reports", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+            console.error("Lỗi khi gọi API:", res.status, res.statusText);
+            return;
         }
-    });
 
-    if (!res.ok) {
-        console.error("Lỗi khi gọi API:", res.status, res.statusText);
-        return;
-    }
-
-    const data = await res.json();
-    if (data.success) {
-        reports = data.data;
-        renderTable();
-        renderPagination();
+        const data = await res.json();
+        if (data.success) {
+            reports = data.data || [];
+            renderTable();
+            renderPagination();
+        }
+    } catch (err) {
+        console.error("Có lỗi khi tải reports:", err);
     }
 }
 
+/* ================= Render bảng ================= */
 function renderTable() {
     const tbody = document.getElementById("reportTableBody");
     tbody.innerHTML = "";
@@ -37,27 +42,31 @@ function renderTable() {
     const end = start + reportsPerPage;
     const paginatedReports = reports.slice(start, end);
 
-    // Tính số lần bị báo cáo cho mỗi người bị báo cáo
+    // Đếm số lần bị báo cáo theo reportedId
     const reportedCountMap = countReportedTimes(reports);
 
     paginatedReports.forEach(r => {
-        let statusIcon = r.reportStatus === 'PENDING'
+        const statusIcon = r.reportStatus === 'PENDING'
             ? '<span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Đang chờ</span>'
-            : '<span class="badge bg-success"><i class="bi bi-check-circle"></i> Đã xử lý</span>';
+            : r.reportStatus === 'RESOLVED'
+                ? '<span class="badge bg-success"><i class="bi bi-check-circle"></i> Đã xử lý</span>'
+                : '<span class="badge bg-secondary"><i class="bi bi-x-circle"></i> Từ chối</span>';
 
-        let typeIcon = r.reportTypeName === 'Spam'
+        const typeIcon = r.reportTypeName === 'Spam'
             ? '<i class="bi bi-exclamation-circle text-danger"></i>'
             : '<i class="bi bi-flag text-primary"></i>';
 
         let actionBtn = '';
         if (r.reportStatus === 'PENDING') {
-            actionBtn = `<button class="btn btn-sm btn-success" onclick="updateStatus('${r.reportedUserId}', 'block')" title="Block tài khoản">
-                <i class="bi bi-person-x"></i> Block
-               </button>`;
+            actionBtn = `
+                <button class="btn btn-sm btn-success" onclick="updateStatus('${r.reportedId}', 'block')" title="Block tài khoản">
+                    <i class="bi bi-person-x"></i> Block
+                </button>`;
         } else if (r.reportStatus === 'RESOLVED') {
-            actionBtn = `<button class="btn btn-sm btn-warning" onclick="undoStatus('${r.reportedUserId}')" title="Hoàn tác">
-                <i class="bi bi-arrow-counterclockwise"></i> Hoàn tác
-               </button>`;
+            actionBtn = `
+                <button class="btn btn-sm btn-warning" onclick="undoStatus('${r.reportedId}')" title="Hoàn tác">
+                    <i class="bi bi-arrow-counterclockwise"></i> Hoàn tác
+                </button>`;
         } else {
             actionBtn = `<span class="text-muted"><i class="bi bi-lock"></i></span>`;
         }
@@ -71,13 +80,14 @@ function renderTable() {
                 <td class="text-center">${r.detail}</td>
                 <td class="text-center">${statusIcon}</td>
                 <td class="text-center"><i class="bi bi-calendar"></i> ${r.reportDate ? new Date(r.reportDate).toLocaleString() : ''}</td>
-                <td class="text-center"><span class="badge bg-danger">${reportedCountMap[r.reportedFullName]}</span></td>
+                <td class="text-center"><span class="badge bg-danger">${reportedCountMap[r.reportedId] || 0}</span></td>
                 <td class="text-center">${actionBtn}</td>
             </tr>
         `;
     });
 }
 
+/* ================= Render phân trang ================= */
 function renderPagination() {
     const totalPages = Math.ceil(reports.length / reportsPerPage);
     const pagination = document.getElementById("pagination");
@@ -94,7 +104,6 @@ function renderPagination() {
         </li>
     `;
 
-    // Hiển thị tối đa 5 trang, có dấu ... nếu nhiều trang
     let start = Math.max(1, currentPage - 2);
     let end = Math.min(totalPages, currentPage + 2);
 
@@ -136,59 +145,43 @@ function goToPage(page) {
     renderPagination();
 }
 
+/* ================= API cập nhật user ================= */
 async function undoStatus(userId) {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-        alert("Bạn chưa đăng nhập!");
-        return;
-    }
-
-    const res = await fetch(`http://localhost:8080/api/admin/users/${userId}?status=active`, {
-        method: "PATCH",
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
-    });
-
-    const data = await res.json();
-    if (data.success) {
-        showToast("Kích hoạt lại tài khoản thành công!");
-    } else {
-        showToast("Có lỗi khi kích hoạt lại tài khoản!", "danger");
-    }
-
-    await fetchReports();
+    await changeUserStatus(userId, "active", "Kích hoạt lại tài khoản thành công!");
 }
 
-// Sửa lại hàm updateStatus để gọi API PATCH /api/admin/users/{userId}?status=block
 async function updateStatus(userId, status = "block") {
+    const msg = status === "block" ? "Block tài khoản thành công!" : "Cập nhật trạng thái thành công!";
+    await changeUserStatus(userId, status, msg);
+}
+
+async function changeUserStatus(userId, status, successMsg) {
     const token = localStorage.getItem("accessToken");
     if (!token) {
         alert("Bạn chưa đăng nhập!");
         return;
     }
 
-    const res = await fetch(`http://localhost:8080/api/admin/users/${userId}?status=${status}`, {
-        method: "PATCH",
-        headers: {
-            "Authorization": `Bearer ${token}`
+    try {
+        const res = await fetch(`http://localhost:8080/api/admin/users/${userId}`, {
+            method: "PATCH",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        const data = await res.json();
+        if (data.success) {
+            showToast(successMsg);
+        } else {
+            showToast("Có lỗi xảy ra, vui lòng thử lại.", "danger");
         }
-    });
-
-    const data = await res.json();
-    if (data.success) {
-        showToast(
-            status === "block"
-                ? "Block tài khoản thành công!"
-                : "Active tài khoản thành công!"
-        );
-    } else {
-        showToast("Có lỗi xảy ra, vui lòng thử lại sau.", "danger");
+        await fetchReports();
+    } catch (err) {
+        console.error("Lỗi update status:", err);
+        showToast("Lỗi hệ thống!", "danger");
     }
-
-    await fetchReports();
 }
 
+/* ================= Toast ================= */
 function showToast(message, type = "success") {
     const toastContainer = document.getElementById("toastContainer");
     const toastId = "toast-" + Date.now() + Math.random();
@@ -205,10 +198,9 @@ function showToast(message, type = "success") {
     toast.setAttribute("aria-atomic", "true");
     toast.innerHTML = `
         <div class="d-flex">
-            <div class="toast-body">
-                ${icon} ${message}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            <div class="toast-body">${icon} ${message}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     `;
     toastContainer.appendChild(toast);
@@ -216,24 +208,22 @@ function showToast(message, type = "success") {
     const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
     bsToast.show();
 
-    setTimeout(() => {
-        toast.remove();
-    }, 3200);
+    setTimeout(() => toast.remove(), 3200);
 }
 
+/* ================= Helper ================= */
 function countReportedTimes(reports) {
-    // Đếm số lần bị báo cáo theo tên người bị báo cáo
+    // Đếm số lần bị báo cáo theo reportedId
     const countMap = {};
     reports.forEach(r => {
-        const key = r.reportedFullName;
+        const key = r.reportedId;
         countMap[key] = (countMap[key] || 0) + 1;
     });
     return countMap;
 }
 
-// Đảm bảo hàm có thể gọi từ HTML
+/* ================= Expose & Init ================= */
 window.undoStatus = undoStatus;
-window.updateStatus = updateStatus; window.updateStatus = updateStatus;
+window.updateStatus = updateStatus;
 
-fetchReports(); fetchReports();
-
+fetchReports();
