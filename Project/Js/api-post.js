@@ -78,10 +78,12 @@ function closeSuccessModal() {
   document.getElementById("customSuccessModal").classList.add("d-none");
 }
 
-let currentPage = 0;
-const pageSize = 4;
+let current_Page = 0;
+const pageSize = 10;
 let isLoading = false;
 let isLastPage = false;
+let totalPages = 0; // 🔥 thêm dòng này
+
 const renderedPostIds = new Set(); // 🔁 Lưu các postId đã render
 
 const postContainer = document.getElementById("postContainer");
@@ -93,10 +95,10 @@ async function loadPosts() {
 
   isLoading = true;
   loadingSpinner.classList.remove("d-none");
-
+  console.log(current_Page);
   try {
     const response = await fetch(
-      `http://localhost:8080/api/post?page=${currentPage}&size=${pageSize}`,
+      `http://localhost:8080/api/post?page=${current_Page}&size=${pageSize}`,
       {
         method: "GET",
         headers: {
@@ -106,42 +108,44 @@ async function loadPosts() {
       }
     );
 
-    // ✅ Kiểm tra HTTP status trước khi xử lý JSON
     if (!response.ok) {
-      const errorText = await response.text(); // Lấy nội dung trả về nếu có
-      console.error("API trả về lỗi HTTP", response.status, errorText);
-      throw new Error("API trả về lỗi");
+      console.error("API trả về lỗi HTTP", response.status);
+      isLastPage = true;
+      return;
     }
 
-    const data = await response.json(); // ✅ Không lỗi nữa
-    console.log(data);
-    if (data?.data?.content && Array.isArray(data.data.content)) {
+    const data = await response.json();
+    if (Array.isArray(data?.data?.content)) {
       data.data.content.forEach((post) => {
+        console.log("post id: " + post.postId);
+        console.log("renderedPostIds:", [...renderedPostIds].join(", "));
         if (!renderedPostIds.has(post.postId)) {
-          renderedPostIds.add(post.postId); // ✅ Ngăn trùng bài
+          renderedPostIds.add(post.postId);
           renderPost(post);
           fetchReactionState(post.postId);
         }
       });
+
+      // cập nhật số trang
+      const currentPageNumber = data.data.page.number;
+      totalPages = data.data.page.totalPages; // 🔥 cập nhật global
+      if (currentPageNumber + 1 >= totalPages) {
+        isLastPage = true;
+        console.log("currentPageNumber" + current_Page);
+      } else {
+        current_Page = currentPageNumber + 1; // 🔁 tăng lên để lần sau load trang mới
+        console.log("currentPageNumber" + current_Page);
+      }
     } else {
-      console.warn("Không có bài viết nào hoặc sai cấu trúc!");
-    }
-
-    // ✅ Kiểm tra trang cuối
-    const currentPageNumber = data.data.page.number;
-    const totalPages = data.data.page.totalPages;
-
-    if (currentPageNumber + 1 >= totalPages) {
       isLastPage = true;
-    } else {
-      currentPage++;
     }
   } catch (error) {
     console.error("Lỗi khi gọi API:", error);
+    isLastPage = true;
+  } finally {
+    isLoading = false;
+    loadingSpinner.classList.add("d-none");
   }
-
-  isLoading = false;
-  loadingSpinner.classList.add("d-none");
 }
 
 // Hàm hiển thị 1 bài post
@@ -439,8 +443,12 @@ loadPosts();
 
 // Lắng nghe cuộn trang
 window.addEventListener("scroll", () => {
-  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-  if (scrollTop + clientHeight >= scrollHeight - 100) {
+  if (
+    window.innerHeight + window.scrollY >= document.body.scrollHeight - 100 &&
+    !isLoading &&
+    !isLastPage
+  ) {
+    console.log("👉 gọi loadPosts trang", current_Page + 1);
     loadPosts();
   }
 });
