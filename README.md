@@ -1,30 +1,40 @@
-# 🌐 Facebook Clone - Frontend
+# 🌐 VChat - Frontend
 
-This is the **frontend** for a Facebook-like social networking platform, built with **HTML, CSS, JavaScript (vanilla)** and **Bootstrap**. It interacts with a REST API backend to perform all dynamic actions like authentication, post display, chat, and more.
+This repository contains the **frontend** of a Facebook-like social networking platform.  
+The UI is built with **HTML, CSS, JavaScript (vanilla)** and styled using **Bootstrap 5**, providing a **responsive and user-friendly experience**.  
 
 ---
 
-## 🛠️ Technologies Used
+## 🚀 Tech Stack
 
-- **HTML5**
-- **CSS3** + **Bootstrap 5**
-- **JavaScript** 
-- **WebSocket (Stomp.js)** for real-time messaging
-- **Modular design** with reusable components
+- 🖥️ **HTML5**
+- 🎨 **CSS3 + Bootstrap 5**
+- ⚡ **JavaScript (Vanilla)**
+- 🔌 **WebSocket (Stomp.js)** for real-time messaging
+- 🧩 **Modular & Component-based design**
 
 ---
 
 ## ✨ Features
 
-- ✅ User Login & Registration (JWT)
-- ✅ Post feed display with images/videos
-- ✅ Create new posts (multi-media support)
-- ✅ Like / Comment on posts
-- ✅ Edit Profile / Change Password
-- ✅ Real-time private chat via WebSocket
+### 👨‍💻 User Features
+- ✅ Authentication: Login & Registration (via JWT)
+- ✅ Responsive **Post Feed** with text, images & videos
+- ✅ Create, edit, and delete posts with multi-media support
+- ✅ Like 👍 & Comment 💬 on posts
+- ✅ Profile management: update info, change password, edit avatar/cover
+- ✅ Real-time private chat (WebSocket)
 - ✅ Follow / Unfollow users
-- ✅ Responsive UI using Bootstrap
+- ✅ Mobile-first responsive UI (Bootstrap Grid/Flex)
 ...
+---
 
+## 🎨 UI/UX Design
 
-Link Figma: https://www.figma.com/design/TmCz7p8DMLfrewWBQMKHiR/Untitled?node-id=0-1&p=f&t=1jNO9Pnke0VRoDPi-0
+The design prototype is available on **Figma**:  
+👉 [Figma Link](https://www.figma.com/design/TmCz7p8DMLfrewWBQMKHiR/Untitled?node-id=0-1&p=f&t=1jNO9Pnke0VRoDPi-0)
+
+---
+
+## 📂 Project Structure
+
