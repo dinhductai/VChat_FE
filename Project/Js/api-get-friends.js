@@ -1,6 +1,4 @@
-token = localStorage.getItem("accessToken");
-console.log(token);
-let currentPage = 0;
+let currentPageHome = 0;
 let totalPages = 1;
 let loading = false;
 
@@ -16,6 +14,10 @@ let friendRequestPage = 0;
 let friendRequestTotalPages = 1;
 let friendRequestLoading = false;
 
+function getToken() {
+  return localStorage.getItem("accessToken");
+}
+
 async function getFriends(page, type) {
   try {
     const response = await fetch(
@@ -23,7 +25,7 @@ async function getFriends(page, type) {
       {
         method: "GET",
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: "Bearer " + getToken(),
           "Content-Type": "application/json",
         },
       }
@@ -60,7 +62,7 @@ async function loadHomeFriends(page = 0) {
     const users = data.data.content;
 
     totalPages = data.data.page.totalPages || 1;
-    currentPage = page;
+    currentPageHome = page;
 
     users.forEach((friend) => {
       const avatar =
@@ -72,11 +74,13 @@ async function loadHomeFriends(page = 0) {
       div.className = "col";
       div.innerHTML = `
         <div class="card h-100 shadow-sm friend-card text-center border-0"        style="cursor:pointer;" 
-              onclick="window.location.href='other-profile.html?user-id=${
-                friend.userId
-              }'"
+             
 >
-          <img src="${avatar}" class="card-img-top" style="height: 180px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px;" />
+          <img src="${avatar}" class="card-img-top" 
+           onclick="window.location.href='other-profile.html?user-id=${
+             friend.userId
+           }'"
+          style="height: 180px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px;" />
           <div class="card-body p-2" data-id="${friend.userId}">
             <h6 class="card-title mb-1 text-truncate text-start">
               ${friend.fullName || "Không rõ"}
@@ -96,7 +100,7 @@ async function loadHomeFriends(page = 0) {
 
     // Ẩn spinner nếu hết trang hoặc không còn user nào
     if (spinner) {
-      if (currentPage + 1 >= totalPages || users.length === 0) {
+      if (currentPageHome + 1 >= totalPages || users.length === 0) {
         spinner.style.display = "none";
       } else {
         spinner.style.display = "block";
@@ -155,12 +159,13 @@ async function loadAllFriends(page = 0) {
 
       div.innerHTML = `
         <div class="card h-100 shadow-sm friend-card text-center border-0"        style="cursor:pointer;" 
-               onclick="window.location.href='other-profile.html?user-id=${
-                 friend.userId
-               }'"
+              
 
 >
           <img src="${avatar}" alt="avatar"
+           onclick="window.location.href='other-profile.html?user-id=${
+             friend.userId
+           }'"
                loading="lazy"
                class="card-img-top"
                style="height:180px;object-fit:cover;border-top-left-radius:8px;border-top-right-radius:8px;" />
@@ -240,11 +245,12 @@ async function loadFriendsSuggest(page = 0) {
 
       div.innerHTML = `
         <div class="card h-100 shadow-sm friend-card text-center border-0"        style="cursor:pointer;" 
-             onclick="window.location.href='other-profile.html?user-id=${
-               friend.userId
-             }'"
+            
 >
           <img src="${avatar}" alt="avatar"
+           onclick="window.location.href='other-profile.html?user-id=${
+             friend.userId
+           }'"
                loading="lazy"
                class="card-img-top"
                style="height:180px;object-fit:cover;border-top-left-radius:8px;border-top-right-radius:8px;" />
@@ -284,7 +290,7 @@ function addFriend(receiverId) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
+      Authorization: "Bearer " + getToken(),
     },
     body: JSON.stringify({ receiverId: receiverId }),
   })
@@ -336,7 +342,7 @@ function cancelRequest(receiverId) {
     {
       method: "PUT",
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + getToken(),
       },
     }
   )
@@ -405,9 +411,9 @@ function showSection(section) {
   // Hiện section được chọn + reset dữ liệu
   if (section === "home") {
     document.getElementById("friendContainer").classList.remove("d-none");
-    currentPage = 0;
+    currentPageHome = 0;
     totalPages = 1;
-    loadHomeFriends(currentPage);
+    loadHomeFriends(currentPageHome);
   } else if (section === "all") {
     document.getElementById("all-friend").classList.remove("d-none");
     allFriendsPage = 0;
@@ -435,18 +441,18 @@ function showSection(section) {
 // Thêm đoạn này vào cuối file hoặc sau khi khai báo các hàm
 document.addEventListener("DOMContentLoaded", () => {
   // Mặc định load Home Friends
-  currentPage = 0;
-  loadHomeFriends(currentPage);
+  currentPageHome = 0;
+  loadHomeFriends(currentPageHome);
 
   // Sự kiện cuộn cho Home Friends (toàn trang)
   window.addEventListener("scroll", () => {
     if (
       window.innerHeight + window.scrollY >= document.body.offsetHeight - 200 &&
       !loading &&
-      currentPage + 1 < totalPages &&
+      currentPageHome + 1 < totalPages &&
       document.getElementById("friendContainer").offsetParent !== null // tab đang hiển thị
     ) {
-      loadHomeFriends(currentPage + 1);
+      loadHomeFriends(currentPageHome + 1);
     }
   });
 
@@ -527,11 +533,12 @@ async function loadFriendRequests(page = 0) {
 
       div.innerHTML = `
         <div class="card h-100 shadow-sm friend-card text-center border-0"        style="cursor:pointer;" 
-                onclick="window.location.href='other-profile.html?user-id=${
-                  user.userId
-                }'"
+                
 >
           <img src="${avatar}" alt="avatar"
+          onclick="window.location.href='other-profile.html?user-id=${
+            user.userId
+          }'"
                loading="lazy"
                class="card-img-top"
                style="height:180px;object-fit:cover;border-top-left-radius:8px;border-top-right-radius:8px;" />
@@ -614,7 +621,7 @@ async function updateRequestFriend(receiverId, matchStatus) {
     const res = await fetch(`http://localhost:8080/api/match/update?${qs}`, {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: "Bearer " + getToken(),
       },
     });
 

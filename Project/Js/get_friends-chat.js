@@ -40,7 +40,8 @@ fetch("http://localhost:8080/api/user/friends?page=0&size=10", {
         document.getElementById("friendName").textContent = friend.fullName;
         document.getElementById("friendAvatar").src =
           friend.photoProfile || "../images/user-default.webp";
-
+        document.getElementById("friendAvatar").dataset.userId = friend.userId;
+        document.getElementById("friendName").dataset.userId = friend.userId;
         const chatBox = document.getElementById("chatBox");
         chatBox.style.display = "block";
         chatBox.dataset.friendId = friend.userId;
@@ -67,5 +68,21 @@ document.getElementById("chatInput").addEventListener("keydown", function (e) {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
     sendMessage();
+  }
+});
+
+// Bấm avatar trong chat → sang trang cá nhân
+document.getElementById("friendAvatar").addEventListener("click", function () {
+  const id = this.dataset.userId;
+  if (id) {
+    window.location.href = `other-profile.html?user-id=${id}`;
+  }
+});
+
+// Bấm tên trong chat → sang trang cá nhân
+document.getElementById("friendName").addEventListener("click", function () {
+  const id = this.dataset.userId;
+  if (id) {
+    window.location.href = `other-profile.html?user-id=${id}`;
   }
 });

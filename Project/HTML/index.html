@@ -95,7 +95,7 @@
               <div class="indicator"></div>
             </div>
             <div class="menu-item px-5" data-link="/">
-              <a href="#"><i class="bi bi-play-btn-fill fs-4"></i></a>
+              <a href="reel.html"><i class="bi bi-play-btn-fill fs-4"></i></a>
               <div class="indicator"></div>
             </div>
             <div class="menu-item px-5" data-link="/">
@@ -137,7 +137,7 @@
                 >
                   <i class="bi bi-file-post"></i>
                 </span>
-                <span class="dd-label">Post</span>
+                <span class="dd-label">Bài viết</span>
               </button>
 
               <!-- Story -->
@@ -152,7 +152,7 @@
                 >
                   <i class="bi bi-book-half"></i>
                 </span>
-                <span class="dd-label">Story</span>
+                <span class="dd-label">Tin</span>
               </button>
 
               <!-- Reel -->
@@ -200,11 +200,11 @@
                         value="off"
                         checked
                       />
-                      Off</label
+                      Tắt</label
                     >
                     <label
                       ><input type="radio" name="darkmode" value="on" />
-                      On</label
+                      Bật</label
                     >
                   </div>
                 </div>
@@ -239,7 +239,7 @@
           >
             <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <h4 class="mb-0 fw-bold">Chats</h4>
+              <h4 class="mb-0 fw-bold">Tin nhắn</h4>
               <div class="d-flex align-items-center">
                 <div
                   class="rounded-circle icon-wrapper d-flex justify-content-center align-items-center me-2"
@@ -333,7 +333,7 @@
               z-index: 9999;
             "
           >
-            <h4 style="font-weight: bold">Notifications</h4>
+            <h4 style="font-weight: bold">Thông báo</h4>
             <div id="notificationList"></div>
           </div>
 
@@ -347,7 +347,12 @@
               src="../images/OIP.jpg"
               class="rounded-circle userAvatar"
               alt="avatar"
-              style="width: 40px; height: 40px; border: 1px solid #bdc3c7"
+              style="
+                width: 40px;
+                height: 40px;
+                border: 1px solid #65676b; /* viền trắng */
+                box-shadow: 0 0 0 1px #ccc; /* outline mờ xám */
+              "
             />
           </div>
 
@@ -368,6 +373,7 @@
             <!-- User avatar -->
             <div
               class="d-flex align-items-center py-2 user-hover rounded-2 gap-2"
+              onclick="window.location.href='profile.html'"
             >
               <img
                 src="../images/IMG_2007.JPG"
@@ -548,8 +554,14 @@
                 <img
                   src="../images/OIP.jpg"
                   class="rounded-circle me-2 userAvatar"
-                  style="width: 40px; height: 40px; border: 1px solid #bdc3c7"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border: 1px solid #bdc3c7;
+                    cursor: pointer;
+                  "
                   alt="Avatar"
+                  onclick="window.location.href='profile.html'"
                 />
                 <button
                   class="form-control rounded-5 text-start"
@@ -767,7 +779,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title w-100 text-center" style="font-weight: bold">
-              Create post
+              Tạo bài viết
             </h5>
             <button
               type="button"
@@ -780,11 +792,17 @@
               <img
                 src="../images/OIP.jpg"
                 alt="Avatar"
-                class="rounded-circle me-2"
-                style="width: 40px; height: 40px"
+                class="rounded-circle me-2 userAvatar"
+                style="
+                  width: 40px;
+                  height: 40px;
+                  border: 2px solid #fff;
+                  box-shadow: 0 0 0 1px #ddd;
+                "
               />
+
               <div>
-                <strong>Nguyễn Văn A</strong>
+                <strong class="userName">Nguyễn Văn A</strong>
                 <!-- Dropdown chọn chế độ hiển thị -->
                 <div class="dropdown">
                   <button
@@ -796,7 +814,7 @@
                     style="font-size: 10px; border-radius: 15px"
                   >
                     <i class="bi bi-globe me-1"></i>
-                    <span id="privacyLabel">Public</span>
+                    <span id="privacyLabel">Công khai</span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="privacyDropdown">
                     <li>
@@ -805,7 +823,7 @@
                         href="#"
                         onclick="setPrivacy('public')"
                       >
-                        <i class="bi bi-globe me-2"></i> Public
+                        <i class="bi bi-globe me-2"></i> Công khai
                       </a>
                     </li>
                     <li>
@@ -814,7 +832,7 @@
                         href="#"
                         onclick="setPrivacy('private')"
                       >
-                        <i class="bi bi-lock-fill me-2"></i>Private
+                        <i class="bi bi-lock-fill me-2"></i>Riêng tư
                       </a>
                     </li>
                   </ul>
@@ -1100,16 +1118,19 @@
                 class="position-absolute d-flex bottom-0 start-0 end-0 bg-white border-top p-3 dark-mode-bg dark-mode-border"
               >
                 <img
-                  src="../images/IMG_2007.JPG"
-                  alt=""
+                  src="../images/user-default.webp"
+                  alt="Avatar"
                   style="
                     width: 35px;
                     height: 35px;
                     border-radius: 50%;
                     margin-right: 5px;
+                    border: 2px solid #fff; /* viền trắng */
+                    box-shadow: 0 0 0 1px #ccc; /* outline xám nhạt */
                   "
                   class="userAvatar"
                 />
+
                 <div
                   class="container d-block gap-2 align-items-end rounded-3 p-2 dark-mode-input-container"
                   style="background-color: #f0f2f5"
@@ -1256,9 +1277,15 @@
                 height: 40px;
                 border-radius: 50%;
                 border: 2px solid #fff;
+                cursor: pointer;
               "
             />
-            <span id="friendName" class="ms-2 fw-semibold">Người dùng</span>
+            <span
+              id="friendName"
+              class="ms-2 fw-semibold"
+              style="cursor: pointer"
+              >Người dùng</span
+            >
           </div>
           <button
             id="closeChatBtn"
@@ -1377,15 +1404,18 @@
           >
             <img
               src="../images/IMG_2007.JPG"
-              alt=""
+              alt="Avatar"
               style="
                 width: 35px;
                 height: 35px;
                 border-radius: 50%;
                 margin-right: 5px;
+                border: 2px solid #fff; /* viền trắng */
+                box-shadow: 0 0 0 1px #ccc; /* outline xám nhạt */
               "
               class="userAvatar"
             />
+
             <div
               class="container d-block gap-2 align-items-end rounded-3 p-2 dark-mode-input-container"
               style="background-color: #f0f2f5"
