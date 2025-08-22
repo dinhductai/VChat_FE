@@ -64,8 +64,8 @@ function renderTable() {
                 </button>`;
         } else if (r.reportStatus === 'RESOLVED') {
             actionBtn = `
-                <button class="btn btn-sm btn-warning" onclick="undoStatus('${r.reportedId}')" title="Hoàn tác">
-                    <i class="bi bi-arrow-counterclockwise"></i> Hoàn tác
+                <button class="btn btn-sm btn-warning" onclick="undoStatus('${r.reportedId}')" title="ACTIVE">
+                    <i class="bi bi-person-check"></i> ACTIVE
                 </button>`;
         } else {
             actionBtn = `<span class="text-muted"><i class="bi bi-lock"></i></span>`;
