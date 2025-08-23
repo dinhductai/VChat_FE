@@ -53,60 +53,46 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (nameEl) nameEl.textContent = d.fullName || "";
       const profileBioEl = document.getElementById("profile-bio");
       if (profileBioEl) {
-        profileBioEl.innerHTML = `<i class="fas fa-quote-left"></i> ${
-          d.bio || ""
-        }`;
+        profileBioEl.innerHTML = `<i class="fas fa-quote-left"></i> ${d.bio || ""
+          }`;
       }
       // Xử lý dữ liệu trả về
       const userDetail = document.querySelector(".user-details");
       if (userDetail) {
         userDetail.innerHTML = `
           <div class="user-info-basic">
-            <p><strong><i class="fas fa-user"></i> Họ tên:</strong> ${
-              d.fullName || ""
-            }</p>
-            <p><strong><i class="fas fa-phone"></i> Số điện thoại:</strong> ${
-              d.phoneNumber || ""
-            }</p>
-            <p><strong><i class="fas fa-birthday-cake"></i> Ngày sinh:</strong> ${
-              d.birthDate
-                ? new Date(d.birthDate).toLocaleDateString("vi-VN")
-                : ""
-            }</p>
-            <p><strong><i class="fas fa-mars"></i> Giới tính:</strong> ${
-              d.gender || ""
-            }</p>
+            <p><strong><i class="fas fa-user"></i> Họ tên:</strong> ${d.fullName || ""
+          }</p>
+            <p><strong><i class="fas fa-phone"></i> Số điện thoại:</strong> ${d.phoneNumber || ""
+          }</p>
+            <p><strong><i class="fas fa-birthday-cake"></i> Ngày sinh:</strong> ${d.birthDate
+            ? new Date(d.birthDate).toLocaleDateString("vi-VN")
+            : ""
+          }</p>
+            <p><strong><i class="fas fa-mars"></i> Giới tính:</strong> ${d.gender || ""
+          }</p>
           </div>
           <div class="user-info-more" style="display:none;">
-            <p><strong><i class="fas fa-search"></i> Đang tìm kiếm:</strong> ${
-              d.lookingFor || ""
-            }</p>
-            <p><strong><i class="fas fa-ruler-vertical"></i> Chiều cao:</strong> ${
-              d.height || ""
-            }</p>
-            <p><strong><i class="fas fa-weight"></i> Cân nặng:</strong> ${
-              d.weight || ""
-            }</p>
-            <p><strong><i class="fas fa-map-marker-alt"></i> Địa chỉ:</strong> ${
-              d.location || ""
-            }</p>
-            <p><strong><i class="fas fa-briefcase"></i> Vị trí:</strong> ${
-              d.jobTitle || ""
-            }</p>
-            <p><strong><i class="fas fa-building"></i> Công ty:</strong> ${
-              d.company || ""
-            }</p>
-            <p><strong><i class="fas fa-graduation-cap"></i> Học vấn:</strong> ${
-              d.education || ""
-            }</p>
-            <p><strong><i class="fas fa-info-circle"></i> Mô tả:</strong> ${
-              d.description || ""
-            }</p>
-            <p><strong><i class="fas fa-star"></i> Sở thích:</strong> ${
-              Array.isArray(d.interestName) && d.interestName.length > 0
-                ? d.interestName.join(", ")
-                : ""
-            }</p>
+            <p><strong><i class="fas fa-search"></i> Đang tìm kiếm:</strong> ${d.lookingFor || ""
+          }</p>
+            <p><strong><i class="fas fa-ruler-vertical"></i> Chiều cao:</strong> ${d.height || ""
+          }</p>
+            <p><strong><i class="fas fa-weight"></i> Cân nặng:</strong> ${d.weight || ""
+          }</p>
+            <p><strong><i class="fas fa-map-marker-alt"></i> Địa chỉ:</strong> ${d.location || ""
+          }</p>
+            <p><strong><i class="fas fa-briefcase"></i> Vị trí:</strong> ${d.jobTitle || ""
+          }</p>
+            <p><strong><i class="fas fa-building"></i> Công ty:</strong> ${d.company || ""
+          }</p>
+            <p><strong><i class="fas fa-graduation-cap"></i> Học vấn:</strong> ${d.education || ""
+          }</p>
+            <p><strong><i class="fas fa-info-circle"></i> Mô tả:</strong> ${d.description || ""
+          }</p>
+            <p><strong><i class="fas fa-star"></i> Sở thích:</strong> ${Array.isArray(d.interestName) && d.interestName.length > 0
+            ? d.interestName.join(", ")
+            : ""
+          }</p>
           </div>
         `;
 
@@ -186,13 +172,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         (url) =>
           `<div class="photo-item" style="position:relative;">
         <img src="${url}" alt="Ảnh" data-url="${url}" 
-          ${
-            isDeleteMode
-              ? 'style="opacity:0.7;cursor:pointer;border:2px solid #ff4d4f;"'
-              : ""
+          ${isDeleteMode
+            ? 'style="opacity:0.7;cursor:pointer;border:2px solid #ff4d4f;"'
+            : ""
           }
-          onclick="${
-            isDeleteMode ? "toggleSelectPhoto(this)" : `openModal('${url}')`
+          onclick="${isDeleteMode ? "toggleSelectPhoto(this)" : `openModal('${url}')`
           }">
       </div>`
       )
@@ -389,7 +373,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           const json = await res.json();
           if (json.success) successCount++;
-        } catch {}
+        } catch { }
       }
       alert(`Đã xóa ${successCount} ảnh!`);
       window.isPhotoDeleteMode = false;
@@ -618,10 +602,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return `
       <div class="video-item" style="position:relative;">
         <video src="${v.videoUrl}" controls data-url="${v.videoUrl}"
-          ${
-            isDeleteMode
-              ? 'style="opacity:0.7;cursor:pointer;border:2px solid #ff4d4f;"'
-              : ""
+          ${isDeleteMode
+            ? 'style="opacity:0.7;cursor:pointer;border:2px solid #ff4d4f;"'
+            : ""
           }
           onclick="${isDeleteMode ? "toggleSelectVideo(this)" : ""}"></video>
       </div>
@@ -711,124 +694,87 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadVideos(); // tải trang đầu tiên
   });
 
-  // --- HIỂN THỊ DANH SÁCH BÀI ĐĂNG Ở TAB BÀI VIẾT ---
-  // async function loadOwnPosts() {
-  //   const listPost = document.getElementById('list-post');
-  //   if (!listPost) return;
-  //   listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Đang tải bài viết...</div>';
-  //   const token = localStorage.getItem('accessToken');
-  //   try {
-  //     let allPosts = [];
-  //     let page = 0;
-  //     let totalPages = 1;
-  //     do {
-  //       const res = await fetch(`http://localhost:8080/api/post/owner?page=${page}&size=10`, {
-  //         headers: { 'Authorization': 'Bearer ' + token }
-  //       });
-  //       const json = await res.json();
-  //       if (json.success && json.data && Array.isArray(json.data.content)) {
-  //         allPosts = allPosts.concat(json.data.content);
-  //         totalPages = json.data.page.totalPages;
-  //         page++;
-  //       } else {
-  //         break;
-  //       }
-  //     } while (page < totalPages);
-
-  //     if (allPosts.length === 0) {
-  //       listPost.innerHTML = '<div style="text-align:center;color:#aaa;">Chưa có bài viết nào.</div>';
-  //     } else {
-  //       listPost.innerHTML = allPosts.map(post => renderPostItem(post)).join('');
-  //     }
-  //   } catch (err) {
-  //     listPost.innerHTML = '<div style="color:red;">Lỗi khi tải bài viết!</div>';
-  //   }
-  // }
-
-  // function renderPostItem(post) {
-  //   // Lấy avatar và tên từ localStorage
-  //   const userAvatar = localStorage.getItem("userAvatar") || "";
-  //   const userFullName = localStorage.getItem("userFullName") || "";
-
-  //   // Xử lý ngày đăng
-  //   const date = new Date(post.uploadDate).toLocaleString('vi-VN');
-  //   // Ảnh/video
-  //   let mediaHtml = '';
-  //   if (post.photosUrl && post.photosUrl.length > 0) {
-  //     mediaHtml += '<div class="post-media-row">' + post.photosUrl.map(url => `<img src="${url}" alt="Ảnh bài viết" class="post-media-img">`).join('') + '</div>';
-  //   }
-  //   if (post.videosUrl && post.videosUrl.length > 0) {
-  //     mediaHtml += '<div class="post-media-row">' + post.videosUrl.map(url => `<video src="${url}" controls class="post-media-video"></video>`).join('') + '</div>';
-  //   }
-  //   return `
-  //     <div class="post-item">
-  //       <div class="post-header">
-  //         <img src="${userAvatar}" class="post-avatar" alt="avatar">
-  //         <div>
-  //           <div class="post-author">${userFullName}</div>
-  //           <div class="post-date">${date}</div>
-  //         </div>
-  //       </div>
-  //       <div class="post-content">${post.content || ''}</div>
-  //       ${mediaHtml}
-  //     </div>
-  //   `;
-  // }
-  // Hiển thị thông tin rút gọn ở tab Bài viết
 
   // --- HIỂN THỊ DANH SÁCH BẠN BÈ Ở TAB BẠN BÈ ---
   async function loadFriends() {
     const listEl = document.getElementById("friend-list");
     if (!listEl) return;
     listEl.innerHTML =
-      '<div style="text-align:center;color:#aaa;">Đang tải danh sách bạn bè...</div>';
+      '<div style="text-align:center;color:#aaa;padding:20px;">Đang tải danh sách bạn bè...</div>';
+
     try {
       const res = await fetch("http://localhost:8080/api/user/friends", {
         headers: { Authorization: "Bearer " + token },
       });
       const json = await res.json();
+
       if (json.success && json.data && Array.isArray(json.data.content)) {
-        if (json.data.content.length === 0) {
+        const friends = json.data.content;
+
+        if (friends.length === 0) {
           listEl.innerHTML =
-            '<div style="text-align:center;color:#aaa;">Bạn chưa có bạn bè nào.</div>';
+            '<div style="text-align:center;color:#aaa;padding:20px;">Bạn chưa có bạn bè nào.</div>';
           return;
         }
-        listEl.innerHTML = json.data.content
-          .map((friend) => renderFriendItem(friend))
-          .join("");
+
+        listEl.innerHTML = friends.map((friend) => renderFriendItem(friend)).join("");
+
+        // Gắn sự kiện click cho mỗi friend
+        document.querySelectorAll(".friend-item").forEach((el) => {
+          el.addEventListener("click", function () {
+            const userId = this.getAttribute("data-user-id");
+            if (userId) {
+              window.location.href = `other-profile.html?user-id=${userId}`;
+
+            }
+          });
+        });
       } else {
         listEl.innerHTML =
-          '<div style="color:red;">Không tải được danh sách bạn bè!</div>';
+          '<div style="color:red;text-align:center;padding:20px;">Không tải được danh sách bạn bè!</div>';
       }
     } catch (err) {
+      console.error(err);
       listEl.innerHTML =
-        '<div style="color:red;">Lỗi khi tải danh sách bạn bè!</div>';
+        '<div style="color:red;text-align:center;padding:20px;">Lỗi khi tải danh sách bạn bè!</div>';
     }
   }
+
   function renderFriendItem(friend) {
     return `
-    <div class="friend-item">
-      <img src="${
-        friend.photoProfile ||
-        "https://ui-avatars.com/api/?name=" +
-          encodeURIComponent(friend.fullName)
-      }" alt="avatar" class="post-avatar" style="width:56px;height:56px;">
-      <div>
-        <div class="post-author">${friend.fullName || ""}</div>
-        <div class="post-date">${friend.phoneNumber || ""}</div>
-        <div class="post-content" style="font-size:14px;color:#b0b3b8;">${
-          friend.bio || ""
-        }</div>
+    <div class="friend-item" data-user-id="${friend.userId}" 
+         style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;cursor:pointer;transition:background 0.2s;">
+      <img src="${friend.photoProfile ||
+      "https://ui-avatars.com/api/?name=" +
+      encodeURIComponent(friend.fullName)
+      }" 
+        alt="avatar" 
+        style="width:56px;height:56px;border-radius:50%;object-fit:cover;box-shadow:0 0 4px rgba(0,0,0,0.2);">
+      <div style="flex:1;">
+        <div style="font-weight:600;font-size:15px;color:#e4e6eb;">${friend.fullName || ""}</div>
+        <div style="font-size:13px;color:#aaa;">${friend.phoneNumber || ""}</div>
+        <div style="font-size:14px;color:#b0b3b8;">${friend.bio || ""}</div>
       </div>
     </div>
   `;
   }
+
   const tabFriends = document.getElementById("tab-friends");
   if (tabFriends) {
     tabFriends.addEventListener("click", function () {
       loadFriends();
     });
   }
+
+  // CSS hover hiệu ứng
+  const style = document.createElement("style");
+  style.innerHTML = `
+  .friend-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+`;
+  document.head.appendChild(style);
+
 
   // Xử lý nút Xóa tài khoản
   const btnDeleteAccount = document.getElementById("btn-delete-account");
@@ -901,7 +847,7 @@ document.getElementById("btn-confirm-delete-video").onclick =
       try {
         const res = await fetch(
           "http://localhost:8080/api/video/delete?videoUrl=" +
-            encodeURIComponent(url),
+          encodeURIComponent(url),
           {
             method: "DELETE",
             headers: { Authorization: "Bearer " + token },
@@ -909,7 +855,7 @@ document.getElementById("btn-confirm-delete-video").onclick =
         );
         const json = await res.json();
         if (json.success) successCount++;
-      } catch {}
+      } catch { }
     }
     alert(`Đã xóa ${successCount} video!`);
     // window.isVideoDeleteMode = false;
@@ -937,11 +883,10 @@ function renderVideos(videoList) {
       return `
       <div class="video-item" style="position:relative;">
         <video src="${v.videoUrl}" controls data-url="${v.videoUrl}"
-          ${
-            isDeleteMode
-              ? 'style="opacity:0.7;cursor:pointer;border:2px solid #ff4d4f;"'
-              : ""
-          }
+          ${isDeleteMode
+          ? 'style="opacity:0.7;cursor:pointer;border:2px solid #ff4d4f;"'
+          : ""
+        }
           onclick="${isDeleteMode ? "toggleSelectVideo(this)" : ""}"></video>
       </div>
     `;
