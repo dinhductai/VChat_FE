@@ -426,18 +426,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   // Khi ấn nút "Chỉnh sửa thông tin cá nhân"
+  // Khi ấn nút "Chỉnh sửa thông tin cá nhân"
   document.getElementById("btn-edit-profile").onclick = async function () {
     const modal = document.getElementById("edit-profile-modal");
     const form = document.getElementById("form-edit-profile");
     const token = localStorage.getItem("accessToken");
 
     try {
+      // Lấy thông tin user
       const res = await fetch("http://localhost:8080/api/user-profile", {
         headers: { Authorization: "Bearer " + token },
       });
       const json = await res.json();
+
       if (json.success && json.data) {
         const d = json.data;
+
+        // Gán dữ liệu vào form
         form.fullName.value = d.fullName || "";
         form.email.value = d.email || "";
         form.phoneNumber.value = d.phoneNumber || "";
@@ -452,7 +457,41 @@ document.addEventListener("DOMContentLoaded", async () => {
         form.company.value = d.company || "";
         form.education.value = d.education || "";
         form.description.value = d.description || "";
-        form.interestName.value = (d.interestName || []).join(", ");
+
+        /* ============= Load danh sách sở thích ============= */
+        try {
+          const resInterests = await fetch("http://localhost:8080/api/interests-name", {
+            headers: { Authorization: "Bearer " + token },
+          });
+          const jsonInterests = await resInterests.json();
+
+          const container = document.getElementById("interestName");
+          container.innerHTML = ""; // clear cũ
+
+          if (jsonInterests.success && Array.isArray(jsonInterests.data)) {
+            const userInterests = d.interestName || [];
+
+            jsonInterests.data.forEach((interest) => {
+              const label = document.createElement("label");
+              label.style.display = "block";
+
+              const checkbox = document.createElement("input");
+              checkbox.type = "checkbox";
+              checkbox.value = interest;
+
+              if (userInterests.includes(interest)) {
+                checkbox.checked = true;
+              }
+
+              label.appendChild(checkbox);
+              label.appendChild(document.createTextNode(" " + interest));
+              container.appendChild(label);
+            });
+          }
+        } catch (err2) {
+          console.error("Không thể tải danh sách sở thích", err2);
+        }
+
         modal.style.display = "flex";
       } else {
         alert("Không thể tải thông tin người dùng!");
@@ -474,13 +513,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const form = e.target;
     const token = localStorage.getItem("accessToken");
 
+    // Lấy danh sách sở thích đã chọn
+    const selectedInterests = Array.from(
+      document.querySelectorAll("#interestName input[type=checkbox]:checked")
+    ).map((cb) => cb.value);
+
     const data = {
       fullName: form.fullName.value,
       email: form.email.value,
       phoneNumber: form.phoneNumber.value,
-      birthDate: form.birthDate.value
-        ? new Date(form.birthDate.value).toISOString()
-        : null,
+      birthDate: form.birthDate.value ? new Date(form.birthDate.value).toISOString() : null,
       gender: form.gender.value,
       lookingFor: form.lookingFor.value,
       bio: form.bio.value,
@@ -491,10 +533,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       company: form.company.value,
       education: form.education.value,
       description: form.description.value,
-      interestName: form.interestName.value
-        .split(",")
-        .map((s) => s.trim())
-        .filter((s) => s),
+      interestName: selectedInterests,
     };
 
     try {
@@ -507,10 +546,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         body: JSON.stringify(data),
       });
       const json = await res.json();
+
       if (json.success) {
         alert("Cập nhật thông tin thành công!");
         document.getElementById("edit-profile-modal").style.display = "none";
-        location.reload(); // hoặc gọi lại loadUserProfile() nếu bạn tách hàm
+        location.reload(); // hoặc gọi lại loadUserProfile()
       } else {
         alert("Cập nhật thất bại!");
       }
@@ -518,6 +558,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Lỗi khi cập nhật!");
     }
   };
+
 
   // Xử lý submit form upload video trong modal
   document.getElementById("form-upload-video-modal").onsubmit = async function (

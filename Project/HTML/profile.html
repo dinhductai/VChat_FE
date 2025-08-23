@@ -663,6 +663,7 @@
       <h3 style="margin-bottom: 20px; text-align: center; color: #1877f2">
         Chỉnh sửa thông tin cá nhân
       </h3>
+
       <form id="form-edit-profile" style="width: 100%; display: flex; flex-direction: column; gap: 14px">
         <!-- Grouped field -->
         <div>
@@ -745,41 +746,43 @@
           <textarea name="description" class="edit-input" rows="3"></textarea>
         </div>
 
+        <!-- 🟢 Sửa lại phần Sở thích -->
         <div>
-          <label><strong>Sở thích (phân tách bằng dấu phẩy):</strong></label>
-          <input type="text" name="interestName" class="edit-input" />
+          <label><strong>Sở thích:</strong></label>
+          <div id="interestName" class="interests-container"></div>
         </div>
 
         <div style="
-              display: flex;
-              gap: 12px;
-              justify-content: center;
-              margin-top: 12px;
-            ">
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 12px;
+          ">
           <button type="submit" style="
-                background: #1877f2;
-                color: #fff;
-                padding: 10px 28px;
-                border: none;
-                border-radius: 8px;
-                font-weight: bold;
-              ">
+              background: #1877f2;
+              color: #fff;
+              padding: 10px 28px;
+              border: none;
+              border-radius: 8px;
+              font-weight: bold;
+            ">
             Lưu
           </button>
           <button type="button" id="btn-cancel-edit-profile" style="
-                background: #e4e6eb;
-                color: #050505;
-                padding: 10px 28px;
-                border: none;
-                border-radius: 8px;
-                font-weight: bold;
-              ">
+              background: #e4e6eb;
+              color: #050505;
+              padding: 10px 28px;
+              border: none;
+              border-radius: 8px;
+              font-weight: bold;
+            ">
             Hủy bỏ
           </button>
         </div>
       </form>
     </div>
   </div>
+
 
   <!-- modal xoa tk -->
   <div class="modal" id="delete-account-modal" style="display: none">
@@ -1308,7 +1311,7 @@
   <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
   <script src="../Js/Thiep/profile.js"></script>
   <script src="../Js/Thiep/createReel.js"></script>
-  <script src="../Js/Thiep/post-lazyload.js"></script>
+
   <script src="../Js/Thiep/story.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../Js/Thiep/profile-post-modal.js"></script>
