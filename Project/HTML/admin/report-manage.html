@@ -150,7 +150,7 @@
         .main-content {
             margin-left: 240px;
             /* tăng một chút để cách sidebar */
-            max-width: 1200px;
+            max-width: 1250px;
             /* thu gọn chiều ngang */
             width: 100%;
             padding-right: 24px;
@@ -165,6 +165,14 @@
                 padding-left: 12px;
                 padding-right: 12px;
             }
+        }
+
+        th:nth-child(8),
+        td:nth-child(8) {
+            width: 80px;
+            max-width: 80px;
+            text-align: center;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -193,15 +201,15 @@
             <table class="table table-bordered table-hover align-middle">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Người báo cáo</th>
-                        <th>Người bị báo cáo</th>
-                        <th>Loại báo cáo</th>
-                        <th>Chi tiết</th>
-                        <th>Trạng thái</th>
-                        <th>Ngày báo cáo</th>
-                        <th>Số lần bị báo cáo</th>
-                        <th class="action-col">Hành động</th>
+                        <th style="width:60px;">ID</th>
+                        <th style="width:140px;">Người báo cáo</th>
+                        <th style="width:140px;">Người bị báo cáo</th>
+                        <th style="width:120px;">Loại báo cáo</th>
+                        <th style="width:180px;">Chi tiết</th>
+                        <th style="width:110px;">Trạng thái</th>
+                        <th style="width:120px;">Ngày báo cáo</th>
+                        <th style="width:80px;">Số lần</th>
+                        <th style="width:120px;" class="action-col">Hành động</th>
                     </tr>
                 </thead>
                 <tbody id="reportTableBody"></tbody>
