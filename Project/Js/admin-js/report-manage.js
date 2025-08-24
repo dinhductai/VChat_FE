@@ -8,7 +8,7 @@ async function fetchReports() {
     const token = localStorage.getItem("accessToken");
     if (!token) {
         alert("Bạn chưa đăng nhập! Đang chuyển hướng...");
-        window.location.href = "login.html";
+        window.location.href = "../login.html";
         return;
     }
 
