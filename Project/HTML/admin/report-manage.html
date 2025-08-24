@@ -1,220 +1,315 @@
 <!DOCTYPE html>
 <html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VChat | Quản lí report</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="../../images/logo.png" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Reports</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body {
-            background: linear-gradient(135deg, #eaf3ff 0%, #fdfdff 100%);
-            min-height: 100vh;
-            font-family: "Segoe UI", sans-serif;
-        }
+      body {
+        background: linear-gradient(135deg, #eaf3ff 0%, #fdfdff 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", sans-serif;
+      }
 
-        h2 {
-            font-weight: 700;
-            color: #1877f2;
-        }
+      h2 {
+        font-weight: 700;
+        color: #1877f2;
+      }
 
-        .table-responsive {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(24, 119, 242, 0.1);
-            padding: 20px;
-        }
+      .table-responsive {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(24, 119, 242, 0.1);
+        padding: 20px;
+      }
 
-        .table thead th {
-            background: linear-gradient(90deg, #1877f2, #42a5f5);
-            color: #fff;
-            font-weight: 600;
-            text-align: center;
-        }
+      .table thead th {
+        background: linear-gradient(90deg, #1877f2, #42a5f5);
+        color: #fff;
+        font-weight: 600;
+        text-align: center;
+      }
 
-        .table-hover tbody tr:hover {
-            background-color: #f3f8ff;
-            transition: 0.2s;
-        }
+      .table-hover tbody tr:hover {
+        background-color: #f3f8ff;
+        transition: 0.2s;
+      }
 
-        .badge.bg-warning {
-            background: linear-gradient(90deg, #ffe082, #ffd54f);
-            color: #333;
-        }
+      .badge.bg-warning {
+        background: linear-gradient(90deg, #ffe082, #ffd54f);
+        color: #333;
+      }
 
-        .badge.bg-success {
-            background: linear-gradient(90deg, #43e97b, #38f9d7);
-            color: #fff;
-        }
+      .badge.bg-success {
+        background: linear-gradient(90deg, #43e97b, #38f9d7);
+        color: #fff;
+      }
 
-        .btn {
-            border-radius: 24px;
-            font-weight: 500;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: 0.2s;
-        }
+      .btn {
+        border-radius: 24px;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: 0.2s;
+      }
 
-        .btn:hover {
-            transform: scale(1.05);
-        }
+      .btn:hover {
+        transform: scale(1.05);
+      }
 
-        .btn-success:hover,
-        .btn-warning:hover {
-            background: #1877f2 !important;
-            color: #fff !important;
-        }
+      .btn-success:hover,
+      .btn-warning:hover {
+        background: #1877f2 !important;
+        color: #fff !important;
+      }
 
-        /* Pagination cố định */
-        #fixed-pagination-bar {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            background: #fff;
-            box-shadow: 0 -2px 12px rgba(24, 119, 242, 0.08);
-            padding: 10px 0;
-            z-index: 100;
-        }
+      /* Pagination cố định */
+      #fixed-pagination-bar {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background: #fff;
+        box-shadow: 0 -2px 12px rgba(24, 119, 242, 0.08);
+        padding: 10px 0;
+        z-index: 100;
+      }
 
-        .pagination .page-link {
-            border-radius: 50px !important;
-            background: #f0f4ff;
-            color: #1877f2;
-            border: none;
-            font-weight: 500;
-            transition: 0.2s;
-        }
+      .pagination .page-link {
+        border-radius: 50px !important;
+        background: #f0f4ff;
+        color: #1877f2;
+        border: none;
+        font-weight: 500;
+        transition: 0.2s;
+      }
 
-        .pagination .page-link:hover {
-            background: #1877f2;
-            color: #fff;
-            transform: scale(1.1);
-        }
+      .pagination .page-link:hover {
+        background: #1877f2;
+        color: #fff;
+        transform: scale(1.1);
+      }
 
-        .pagination .page-item.active .page-link {
-            background: linear-gradient(90deg, #1877f2, #42a5f5);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(24, 119, 242, 0.15);
-        }
+      .pagination .page-item.active .page-link {
+        background: linear-gradient(90deg, #1877f2, #42a5f5);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(24, 119, 242, 0.15);
+      }
 
-        /* Modal đẹp */
-        .modal-content {
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(24, 119, 242, 0.15);
-        }
+      /* Modal đẹp */
+      .modal-content {
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(24, 119, 242, 0.15);
+      }
 
-        .modal-header {
-            background: linear-gradient(90deg, #1877f2, #42a5f5);
-            color: #fff;
-            border-radius: 16px 16px 0 0;
-        }
+      .modal-header {
+        background: linear-gradient(90deg, #1877f2, #42a5f5);
+        color: #fff;
+        border-radius: 16px 16px 0 0;
+      }
 
-        /* Toast */
-        .toast {
-            border-radius: 14px;
-            font-size: 15px;
-            box-shadow: 0 4px 20px rgba(24, 119, 242, 0.12);
-        }
+      /* Toast */
+      .toast {
+        border-radius: 14px;
+        font-size: 15px;
+        box-shadow: 0 4px 20px rgba(24, 119, 242, 0.12);
+      }
+
+      /* Sidebar */
+      .sidebar {
+        min-height: 100vh;
+        width: 220px;
+        background-color: #343a40;
+        color: white;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding-top: 20px;
+        z-index: 2000;
+      }
+
+      .sidebar a {
+        display: block;
+        padding: 12px 20px;
+        color: #ddd;
+        text-decoration: none;
+      }
+
+      .sidebar a:hover,
+      .sidebar a.active {
+        background-color: #495057;
+        color: #fff;
+      }
+
+      /* Nội dung dịch sang phải */
+      .main-content {
+        margin-left: 220px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-    <div class="container py-4">
-        <h2 class="text-center mb-4">Quản lý Reports</h2>
+  <body>
+    <!-- ✅ Sidebar -->
+    <div class="sidebar">
+      <h4 class="text-center mb-4">Trang quản trị</h4>
+      <a href="admin.html"
+        ><i class="bi bi-people-fill"></i> Quản lý người dùng</a
+      >
+      <a href="report-manage.html" class="active"
+        ><i class="bi bi-flag-fill"></i> Quản lý Reports</a
+      >
+    </div>
 
-        <!-- Nút mở modal -->
-        <div class="d-flex justify-content-end mb-3">
-            <button class="btn btn-primary" id="btnReportType" data-bs-toggle="modal" data-bs-target="#reportTypeModal">
-                <i class="bi bi-tags"></i> Report Type
-            </button>
-        </div>
+    <!-- ✅ Nội dung chính -->
+    <div class="container py-4 main-content">
+      <h2 class="text-center mb-4">Quản lý Reports</h2>
 
-        <!-- Bảng Reports -->
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Người báo cáo</th>
-                        <th>Người bị báo cáo</th>
-                        <th>Loại báo cáo</th>
-                        <th>Chi tiết</th>
-                        <th>Trạng thái</th>
-                        <th>Ngày báo cáo</th>
-                        <th>Số lần bị báo cáo</th>
-                        <th class="action-col">Hành động</th>
-                    </tr>
-                </thead>
-                <tbody id="reportTableBody"></tbody>
-            </table>
-        </div>
+      <!-- Nút mở modal -->
+      <div class="d-flex justify-content-end mb-3">
+        <button
+          class="btn btn-primary"
+          id="btnReportType"
+          data-bs-toggle="modal"
+          data-bs-target="#reportTypeModal"
+        >
+          <i class="bi bi-tags"></i> Report Type
+        </button>
+      </div>
 
-        <!-- Pagination -->
-        <div id="fixed-pagination-bar">
-            <nav>
-                <ul class="pagination justify-content-center" id="pagination"></ul>
-            </nav>
-        </div>
+      <!-- Bảng Reports -->
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Người báo cáo</th>
+              <th>Người bị báo cáo</th>
+              <th>Loại báo cáo</th>
+              <th>Chi tiết</th>
+              <th>Trạng thái</th>
+              <th>Ngày báo cáo</th>
+              <th>Số lần bị báo cáo</th>
+              <th class="action-col">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="reportTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div id="fixed-pagination-bar" class="main-content">
+        <nav>
+          <ul class="pagination justify-content-center" id="pagination"></ul>
+        </nav>
+      </div>
     </div>
 
     <!-- Modal Report Type -->
-    <div class="modal fade" id="reportTypeModal" tabindex="-1" aria-labelledby="reportTypeModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reportTypeModalLabel">Quản lý Report Type</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="input-group mb-2">
-                        <input type="text" class="form-control" id="reportTypeSearch"
-                            placeholder="Tìm theo ID, tên hoặc mô tả...">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    </div>
-                    <div style="max-height: 350px; overflow-y: auto;" id="reportTypeTableScroll">
-                        <table class="table table-bordered align-middle">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">ID</th>
-                                    <th class="text-center">Tên loại</th>
-                                    <th class="text-center">Mô tả</th>
-                                    <th class="text-center">Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody id="reportTypeTableBody"></tbody>
-                        </table>
-                    </div>
-                    <hr>
-                    <h6>Thêm/Sửa loại báo cáo</h6>
-                    <form id="reportTypeForm">
-                        <input type="hidden" id="reportTypeId">
-                        <div class="mb-2">
-                            <input type="text" class="form-control" id="reportTypeName" placeholder="Tên loại báo cáo"
-                                required>
-                        </div>
-                        <div class="mb-2">
-                            <input type="text" class="form-control" id="reportTypeDesc" placeholder="Mô tả" required>
-                        </div>
-                        <button type="submit" class="btn btn-success" id="saveReportTypeBtn">
-                            <i class="bi bi-save"></i> Lưu
-                        </button>
-                        <button type="button" class="btn btn-secondary" id="resetReportTypeBtn">
-                            <i class="bi bi-x-circle"></i> Reset
-                        </button>
-                    </form>
-                </div>
+    <div
+      class="modal fade"
+      id="reportTypeModal"
+      tabindex="-1"
+      aria-labelledby="reportTypeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="reportTypeModalLabel">
+              Quản lý Report Type
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group mb-2">
+              <input
+                type="text"
+                class="form-control"
+                id="reportTypeSearch"
+                placeholder="Tìm theo ID, tên hoặc mô tả..."
+              />
+              <span class="input-group-text"><i class="bi bi-search"></i></span>
             </div>
+            <div
+              style="max-height: 350px; overflow-y: auto"
+              id="reportTypeTableScroll"
+            >
+              <table class="table table-bordered align-middle">
+                <thead>
+                  <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Tên loại</th>
+                    <th class="text-center">Mô tả</th>
+                    <th class="text-center">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="reportTypeTableBody"></tbody>
+              </table>
+            </div>
+            <hr />
+            <h6>Thêm/Sửa loại báo cáo</h6>
+            <form id="reportTypeForm">
+              <input type="hidden" id="reportTypeId" />
+              <div class="mb-2">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="reportTypeName"
+                  placeholder="Tên loại báo cáo"
+                  required
+                />
+              </div>
+              <div class="mb-2">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="reportTypeDesc"
+                  placeholder="Mô tả"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn btn-success"
+                id="saveReportTypeBtn"
+              >
+                <i class="bi bi-save"></i> Lưu
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="resetReportTypeBtn"
+              >
+                <i class="bi bi-x-circle"></i> Reset
+              </button>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Toast -->
-    <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
+    <div
+      id="toastContainer"
+      class="position-fixed top-0 end-0 p-3"
+      style="z-index: 9999"
+    ></div>
 
-    <script src="/Project/Js/admin-js/report-manage.js"></script>
-    <script src="/Project/Js/admin-js/report-type-manage.js"></script>
-</body>
-
+    <script src="../../Js/admin-js/report-manage.js"></script>
+    <script src="../../Js/admin-js/report-type-manage.js"></script>
+  </body>
 </html>

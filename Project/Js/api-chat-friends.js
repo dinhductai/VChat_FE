@@ -76,27 +76,140 @@ function sendMessage() {
 }
 function showMessage(msg, isMe) {
   const wrapper = document.createElement("div");
-  // Hàng full width + canh trái/phải bằng flex
-  wrapper.className = `d-flex w-100 mb-2 ${
+  wrapper.className = `chat-wrapper d-flex w-100 mb-2 ${
     isMe ? "justify-content-end" : "justify-content-start"
-  }`;
+  } position-relative`;
 
   const bubble = document.createElement("div");
-  bubble.className = `${
-    isMe ? "bg-primary text-white" : "bg-light text-dark"
-  } px-3 py-2 rounded-3`;
-  bubble.style.maxWidth = "70%";
-  bubble.style.wordBreak = "break-word";
-  bubble.style.whiteSpace = "pre-wrap"; // giữ xuống dòng
+  bubble.dataset.messageId = msg.id; // gắn id để dùng cho xoá/sửa sau
 
-  // An toàn: không innerHTML
-  bubble.textContent = msg.message ?? "";
+  // Nếu tin nhắn đã xoá
+  if (msg.isDeleted) {
+    bubble.className =
+      "bg-light text-muted px-3 py-2 rounded-3 fst-italic message-bubble";
+    bubble.textContent = "Tin nhắn đã xoá";
+    wrapper.appendChild(bubble);
+  } else {
+    // Tin nhắn bình thường
+    bubble.className = `${
+      isMe ? "bg-primary text-white" : "bg-light text-dark"
+    } px-3 py-2 rounded-3 message-bubble`;
+    bubble.style.maxWidth = "70%";
+    bubble.style.wordBreak = "break-word";
+    bubble.style.whiteSpace = "pre-wrap";
+    bubble.textContent = msg.message ?? "";
+    bubble.dataset.messageId = msg.messageId;
 
-  wrapper.appendChild(bubble);
+    wrapper.appendChild(bubble);
 
-  const chatMessages = document.getElementById("chatMessages"); // container cuộn chính
+    // Nếu là tin nhắn của mình thì thêm nút ⋮ và menu
+    if (isMe) {
+      const moreBtn = document.createElement("span");
+      moreBtn.className = "three-dots-btn";
+      moreBtn.innerHTML = `<i class="bi bi-three-dots"></i>`;
+      moreBtn.style.position = "absolute";
+      moreBtn.style.top = "50%";
+      moreBtn.style.left = "70px"; // tuỳ chỉnh vị trí
+      moreBtn.style.transform = "translateY(-50%)";
+      moreBtn.style.cursor = "pointer";
+      moreBtn.style.display = "none";
+
+      const menu = document.createElement("div");
+      menu.className = "message-menu shadow rounded-2";
+      menu.style.position = "absolute";
+      menu.style.left = "-10px";
+      menu.style.top = "50%";
+      menu.style.transform = "translateY(-50%)";
+      menu.style.background = "#fff";
+      menu.style.border = "1px solid #eee";
+      menu.style.minWidth = "150px";
+      menu.style.display = "none";
+      menu.style.zIndex = "1000";
+      menu.innerHTML = `
+        <div class="message-menu-item px-3 py-2" style="cursor:pointer;">✏️ Sửa tin nhắn</div>
+        <div class="message-menu-item px-3 py-2 text-danger" style="cursor:pointer;" onclick="deleteMessage(this)">🗑️ Xoá tin nhắn</div>
+      `;
+
+      const editBtn = menu.querySelector(".message-menu-item:nth-child(1)");
+      const deleteBtn = menu.querySelector(".message-menu-item:nth-child(2)");
+
+      // 👉 Khi bấm sửa
+      editBtn.addEventListener("click", () => {
+        const chatInput = document.getElementById("chatInput");
+        chatInput.value = msg.message;
+        chatInput.focus();
+        chatInput.dataset.editing = "true";
+        chatInput.dataset.messageId = msg.id;
+        menu.style.display = "none";
+      });
+
+      // 👉 Khi bấm xoá
+      deleteBtn.addEventListener("click", () => {
+        // Gửi socket xoá (nếu có backend)
+        stompClient.send(
+          "/app/message.delete",
+          {},
+          JSON.stringify({ messageId: msg.id, token: token })
+        );
+
+        // Cập nhật UI ngay
+        bubble.textContent = "Tin nhắn đã xoá";
+        bubble.className =
+          "bg-light text-muted px-3 py-2 rounded-3 fst-italic message-bubble";
+        menu.style.display = "none";
+      });
+
+      wrapper.addEventListener("mouseenter", () => {
+        moreBtn.style.display = "inline-block";
+      });
+      wrapper.addEventListener("mouseleave", () => {
+        moreBtn.style.display = "none";
+        menu.style.display = "none";
+      });
+
+      moreBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        menu.style.display = menu.style.display === "none" ? "block" : "none";
+      });
+
+      document.addEventListener("click", () => {
+        menu.style.display = "none";
+      });
+
+      wrapper.appendChild(moreBtn);
+      wrapper.appendChild(menu);
+    }
+  }
+
+  const chatMessages = document.getElementById("chatMessages");
   chatMessages.appendChild(wrapper);
-  chatMessages.scrollTop = chatMessages.scrollHeight; // auto scroll
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Dummy function, bạn cần tự xử lý logic sửa/xoá
+function editMessage(el) {
+  alert("Sửa tin nhắn (bạn tự xử lý logic này)");
+}
+function deleteMessage(el) {
+  const bubble = el.closest(".chat-wrapper").querySelector(".message-bubble");
+  const messageId = bubble.dataset.messageId;
+  console.log("messID: ", messageId);
+  console.log("currentReceiverId: ", currentReceiverId);
+
+  if (!messageId || !currentReceiverId) {
+    console.error("Thiếu messageId hoặc receiverId");
+    return;
+  }
+
+  stompClient.send(
+    "/app/message.delete",
+    {},
+    JSON.stringify({
+      token: token,
+      receiverId: currentReceiverId,
+      messageId: parseInt(messageId),
+    })
+  );
 }
 
 async function getHistoryChat(currentUserId, receiverId) {

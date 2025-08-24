@@ -45,3 +45,84 @@ body.dark-mode .chat-hover:hover {
 .dark-mode .icon-wrapper .bi {
   color: #e4e6eb;
 }
+
+/* Nút 3 chấm */
+.three-dots-btn {
+  color: #888;
+  font-size: 15px;
+  background: #f0f2f5;
+  border-radius: 50%;
+  padding: 6px 8px;
+  transition: color 0.2s, background 0.2s;
+  position: absolute;
+  left: -35px; /* chỉnh vị trí gần bubble hơn */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  display: none;
+  z-index: 2;
+}
+.three-dots-btn:hover {
+  color: #333;
+  background: #e4e6eb;
+}
+/* Hiện nút 3 chấm khi hover vào chat-wrapper hoặc nút */
+.chat-wrapper:hover .three-dots-btn {
+  display: inline-block;
+}
+
+/* Menu popup */
+.message-menu {
+  min-width: 140px; /* auto height theo nội dung */
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #eee;
+  padding: 4px 0;
+  font-size: 14px;
+  animation: fadeIn 0.15s ease-in-out;
+  z-index: 999;
+}
+
+/* Item trong menu */
+.message-menu-item {
+  color: #333;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.message-menu-item:hover {
+  background: #f5f5f5;
+}
+.message-menu-item.text-danger {
+  color: #d00;
+}
+.message-menu-item.text-danger:hover {
+  background: #ffeaea;
+}
+
+/* Hiệu ứng xuất hiện */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-menu::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -6px; /* nếu menu nằm bên trái bubble */
+  transform: translateY(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-left: 1px solid #eee;
+  border-top: 1px solid #eee;
+}
