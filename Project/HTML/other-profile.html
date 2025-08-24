@@ -1,1716 +1,1033 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Facebook | Trang cá nhân</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600&display=swap"
-      rel="stylesheet"
-    />
-    <link href="../CSS/profile.css" rel="stylesheet" />
-    <link href="../CSS/modal_profile.css" rel="stylesheet" />
-    <link href="../CSS/post-container-profile.css" rel="stylesheet" />
 
-    <!-- Font Awesome for beautiful icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
-    <style>
-      body {
-        background-color: #f2f4f7;
-        transition: background-color 0.3s, color 0.3s;
+<head>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const params = new URLSearchParams(window.location.search);
+      const otherUserId = params.get("user-id");
+      const userId = localStorage.getItem("userId");
+      if (otherUserId && userId && otherUserId === userId) {
+        window.location.href = "profile.html";
+      }
+    });
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook | Trang cá nhân</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600&display=swap" rel="stylesheet">
+  <link href="../CSS/profile.css" rel="stylesheet">
+  <link href="../CSS/modal_profile.css" rel="stylesheet">
+  <link href="../CSS/post-container-profile.css" rel="stylesheet">
+
+
+  <!-- Font Awesome for beautiful icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <style>
+    body {
+      background-color: #f2f4f7;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .post {
+      background-color: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: background-color 0.3s;
+    }
+
+    #section-story {
+      display: none !important;
+    }
+
+    #section-story.show-story {
+      display: block !important;
+    }
+
+
+    #form-edit-profile {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    #form-edit-profile label {
+      margin-bottom: 6px;
+      display: inline-block;
+      color: #333;
+    }
+
+    .edit-input {
+
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+
+
+    .photo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: flex-start;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .photo-row .photo-item {
+      flex: 0 0 calc(33.333% - 12px);
+      /* 3 ảnh 1 hàng, trừ gap */
+      display: flex;
+      justify-content: center;
+    }
+
+    .photo-row img {
+      width: 240px;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, border 0.2s, opacity 0.2s;
+      box-shadow: 0 2px 8px rgba(24, 119, 242, 0.08);
+    }
+
+    .photo-row img:hover {
+      transform: scale(1.04);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.25);
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .modal-content.upload-modal {
+      background: #fff;
+      padding: 32px 36px 28px 36px;
+      border-radius: 16px;
+      min-width: 340px;
+      max-width: 95vw;
+      box-shadow: 0 12px 40px rgba(24, 119, 242, 0.13), 0 2px 8px rgba(0, 0, 0, 0.08);
+      position: relative;
+      margin: 40px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: modalFadeIn 0.25s;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        transform: translateY(-40px);
+        opacity: 0;
       }
 
-      .post {
-        background-color: white;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 15px;
-        transition: background-color 0.3s;
+      to {
+        transform: translateY(0);
+        opacity: 1;
       }
+    }
 
-      #section-story {
-        display: none !important;
+    #upload-photo-modal {
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+    }
+
+    #upload-photo-modal .close-modal {
+      position: absolute;
+      top: 14px;
+      right: 20px;
+      font-size: 28px;
+      color: #888;
+      cursor: pointer;
+      transition: color 0.2s;
+      z-index: 2;
+    }
+
+    #upload-photo-modal .close-modal:hover {
+      color: #1877F2;
+    }
+
+    #form-upload-photo-modal input[type="file"] {
+      border: 1px solid #e4e6eb;
+      border-radius: 8px;
+      padding: 10px;
+      background: #f0f2f5;
+      width: 250px;
+      margin-bottom: 18px;
+      font-size: 15px;
+    }
+
+    #form-upload-photo-modal .modal-btns {
+      display: flex;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    #form-upload-photo-modal button[type="submit"] {
+      background: linear-gradient(90deg, #1877F2 60%, #42a5f5 100%);
+      color: #fff;
+      border: none;
+      padding: 9px 28px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+      box-shadow: 0 2px 8px rgba(24, 119, 242, 0.08);
+      transition: background 0.2s;
+    }
+
+    #form-upload-photo-modal button[type="submit"]:hover {
+      background: #1456b8;
+    }
+
+    #btn-cancel-upload-modal {
+      background: #e4e6eb;
+      color: #050505;
+      border: none;
+      padding: 9px 28px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.2s;
+    }
+
+    #btn-cancel-upload-modal:hover {
+      background: #d0d2d6;
+    }
+
+    .loading-upload {
+      margin-top: 12px;
+      color: #1877F2;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+    }
+
+    .loading-upload .spinner {
+      width: 18px;
+      height: 18px;
+      border: 3px solid #e3eafc;
+      border-top: 3px solid #1877F2;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
       }
+    }
+  </style>
+  <style>
+    .page-btn {
+      padding: 6px 12px;
+      margin: 0 4px;
+      background-color: #f0f2f5;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
 
-      #section-story.show-story {
-        display: block !important;
-      }
+    .page-btn:hover {
+      background-color: #d8d8d8;
+    }
 
-      #form-edit-profile {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        font-family: "Roboto", sans-serif;
-      }
+    .page-btn.active {
+      background-color: #1877f2;
+      color: #fff;
+    }
+  </style>
 
-      #form-edit-profile label {
-        margin-bottom: 6px;
-        display: inline-block;
-        color: #333;
-      }
+</head>
 
-      .edit-input {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 15px;
-      }
-
-      .photo-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 18px;
-        justify-content: flex-start;
-        align-items: center;
-        margin: 20px 0;
-      }
-
-      .photo-row .photo-item {
-        flex: 0 0 calc(33.333% - 12px);
-        /* 3 ảnh 1 hàng, trừ gap */
-        display: flex;
-        justify-content: center;
-      }
-
-      .photo-row img {
-        width: 240px;
-        height: 240px;
-        object-fit: cover;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: transform 0.2s, border 0.2s, opacity 0.2s;
-        box-shadow: 0 2px 8px rgba(24, 119, 242, 0.08);
-      }
-
-      .photo-row img:hover {
-        transform: scale(1.04);
-      }
-
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 2000;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.25);
-        align-items: center;
-        justify-content: center;
-        transition: background 0.2s;
-      }
-
-      .modal-content.upload-modal {
-        background: #fff;
-        padding: 32px 36px 28px 36px;
-        border-radius: 16px;
-        min-width: 340px;
-        max-width: 95vw;
-        box-shadow: 0 12px 40px rgba(24, 119, 242, 0.13),
-          0 2px 8px rgba(0, 0, 0, 0.08);
-        position: relative;
-        margin: 40px auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        animation: modalFadeIn 0.25s;
-      }
-
-      @keyframes modalFadeIn {
-        from {
-          transform: translateY(-40px);
-          opacity: 0;
-        }
-
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
-
-      #upload-photo-modal {
-        align-items: center;
-        justify-content: center;
-        z-index: 1001;
-      }
-
-      #upload-photo-modal .close-modal {
-        position: absolute;
-        top: 14px;
-        right: 20px;
-        font-size: 28px;
-        color: #888;
-        cursor: pointer;
-        transition: color 0.2s;
-        z-index: 2;
-      }
-
-      #upload-photo-modal .close-modal:hover {
-        color: #1877f2;
-      }
-
-      #form-upload-photo-modal input[type="file"] {
-        border: 1px solid #e4e6eb;
-        border-radius: 8px;
-        padding: 10px;
-        background: #f0f2f5;
-        width: 250px;
-        margin-bottom: 18px;
-        font-size: 15px;
-      }
-
-      #form-upload-photo-modal .modal-btns {
-        display: flex;
-        gap: 14px;
-        margin-top: 8px;
-      }
-
-      #form-upload-photo-modal button[type="submit"] {
-        background: linear-gradient(90deg, #1877f2 60%, #42a5f5 100%);
-        color: #fff;
-        border: none;
-        padding: 9px 28px;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        font-size: 15px;
-        box-shadow: 0 2px 8px rgba(24, 119, 242, 0.08);
-        transition: background 0.2s;
-      }
-
-      #form-upload-photo-modal button[type="submit"]:hover {
-        background: #1456b8;
-      }
-
-      #btn-cancel-upload-modal {
-        background: #e4e6eb;
-        color: #050505;
-        border: none;
-        padding: 9px 28px;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        font-size: 15px;
-        transition: background 0.2s;
-      }
-
-      #btn-cancel-upload-modal:hover {
-        background: #d0d2d6;
-      }
-
-      .loading-upload {
-        margin-top: 12px;
-        color: #1877f2;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 15px;
-      }
-
-      .loading-upload .spinner {
-        width: 18px;
-        height: 18px;
-        border: 3px solid #e3eafc;
-        border-top: 3px solid #1877f2;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-        display: inline-block;
-      }
-
-      @keyframes spin {
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
-    <style>
-      .page-btn {
-        padding: 6px 12px;
-        margin: 0 4px;
-        background-color: #f0f2f5;
-        border: none;
-        border-radius: 6px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.2s, color 0.2s;
-      }
-
-      .page-btn:hover {
-        background-color: #d8d8d8;
-      }
-
-      .page-btn.active {
-        background-color: #1877f2;
-        color: #fff;
-      }
-    </style>
-  </head>
-
-  <body>
-    <!-- Loading Animation + Logo -->
-    <div
-      id="page-loader"
-      style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: #f2f4f7;
-        z-index: 99999;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        transition: opacity 0.5s;
-      "
-    >
-      <img
-        id="main-logo"
-        src="../images/logo.png"
-        alt="logo"
-        style="
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          box-shadow: 0 4px 24px #1877f233;
-          animation: logoZoomIn 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        "
-      />
-      <div style="margin-top: 18px">
-        <div
-          class="spinner-border text-primary"
-          style="width: 2.5rem; height: 2.5rem"
-        ></div>
-      </div>
+<body>
+  <!-- Loading Animation + Logo -->
+  <div id="page-loader" style="
+  position:fixed;top:0;left:0;width:100vw;height:100vh;
+  background:#f2f4f7;z-index:99999;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;transition:opacity 0.5s;">
+    <img id="main-logo" src="../images/logo.png" alt="logo" style="
+    width:80px;height:80px;border-radius:50%;box-shadow:0 4px 24px #1877f233;
+    animation:logoZoomIn 1s cubic-bezier(.68,-0.55,.27,1.55);" />
+    <div style="margin-top:18px;">
+      <div class="spinner-border text-primary" style="width:2.5rem;height:2.5rem;"></div>
     </div>
-    <style>
-      @keyframes logoZoomIn {
-        0% {
-          transform: scale(0.7);
-          opacity: 0;
-        }
-
-        60% {
-          transform: scale(1.15);
-          opacity: 1;
-        }
-
-        100% {
-          transform: scale(1);
-          opacity: 1;
-        }
+  </div>
+  <style>
+    @keyframes logoZoomIn {
+      0% {
+        transform: scale(0.7);
+        opacity: 0;
       }
-    </style>
-    <!-- Header -->
-    <nav
-      class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top"
-    >
-      <div
-        class="container-fluid d-flex flex-nowrap align-items-center justify-content-between"
-      >
-        <!-- LOGO + SEARCH -->
-        <div class="d-flex align-items-center flex-grow-1 flex-md-grow-0">
-          <!-- Logo -->
-          <a href="index.html" class="me-2">
-            <img
-              class="rounded-circle"
-              style="width: 40px; height: 40px"
-              src="../images/logo.png"
-              alt="logo"
-            />
-          </a>
-          <!-- Tìm kiếm (ẩn trên mobile) -->
-          <form
-            class="d-none d-lg-flex ms-2 position-relative"
-            style="width: 250px"
-          >
-            <i
-              class="bi bi-search text-secondary position-absolute top-50 start-0 translate-middle-y ms-3"
-            ></i>
-            <input
-              type="search"
-              class="form-control form-control-sm rounded-5 border-0 ps-5 shadow-sm"
-              placeholder="Search"
-              style="background-color: #f0f2f5; height: 35px; width: 240px"
-            />
+
+      60% {
+        transform: scale(1.15);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+
+    <div class="container-fluid d-flex flex-nowrap align-items-center justify-content-between">
+      <!-- LOGO + SEARCH -->
+      <div class="d-flex align-items-center flex-grow-1 flex-md-grow-0">
+        <!-- Logo -->
+        <a href="index.html" class="me-2">
+          <img class="rounded-circle" style="width: 40px; height: 40px" src="../images/logo.png" alt="logo" />
+        </a>
+        <!-- Tìm kiếm (ẩn trên mobile) -->
+        <form class="d-none d-lg-flex ms-2 position-relative" style="width: 250px">
+          <i class="bi bi-search text-secondary position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+          <input type="search" class="form-control form-control-sm rounded-5 border-0 ps-5 shadow-sm"
+            placeholder="Search" style="background-color: #f0f2f5; height: 35px; width: 240px" />
+        </form>
+        <!-- Nút tìm kiếm cho thiết bị nhỏ -->
+        <button class="btn btn-light d-lg-none ms-2" id="mobileSearchBtn" type="button" onclick="toggleMobileSearch()">
+          <i class="bi bi-search fs-5 text-dark"></i>
+        </button>
+      </div>
+
+      <!-- MENU ICONS GIỮA (ẩn trên mobile, hoặc bạn có thể điều chỉnh thành collapse) -->
+      <div class="d-none d-lg-flex mx-auto" id="menuTabs">
+        <div class="d-flex justify-content-center text-center">
+          <div class="menu-item px-5 active" data-link="index.html">
+            <a href="index.html"><i class="bi bi-house-door-fill fs-4 active"></i></a>
+            <div class="indicator"></div>
+          </div>
+          <div class="menu-item px-5" data-link="friend.html">
+            <a href="friend.html"><i class="bi bi-people-fill fs-4"></i></a>
+            <div class="indicator"></div>
+          </div>
+          <div class="menu-item px-5" data-link="reel.html">
+            <a href="reel.html"><i class="bi bi-play-btn-fill fs-4"></i></a>
+            <div class="indicator"></div>
+          </div>
+          <div class="menu-item px-5" data-link="#">
+            <a href="#"><i class="bi bi-bell-fill fs-4"></i></a>
+            <div class="indicator"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ICONS + AVATAR -->
+      <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
+        <!-- App grid -->
+        <div id="menuToggle" class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
+          style="width: 40px; height: 40px; cursor: pointer; position: relative;">
+          <i class="bi bi-grid-3x3-gap-fill fs-5 text-dark"></i>
+        </div>
+        <!-- Dropdown menu -->
+        <div id="menuDropdown" class="position-absolute bg-white shadow rounded-4 p-3"
+          style="top: 60px; right: 10px; width: 250px; display: none; z-index: 9999; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+          <h5 class="mb-2" style="font-weight: 700; font-size: 25px">Menu</h5>
+          <hr class="my-2" />
+          <div class="px-1">
+            <!-- 🔵 Post -->
+            <div class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
+              style="cursor: pointer; transition: background 0.2s" onmouseover="this.style.background='#f0f2f5'"
+              onmouseout="this.style.background='transparent'" onclick="openPostModal()">
+              <div class="d-flex justify-content-center align-items-center"
+                style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #ff9a9e, #fad0c4); margin-left: 10px;">
+                <i class="bi bi-file-post text-white fs-5"></i>
+              </div>
+              <span style="font-size: 15px; font-weight: 500">Post</span>
+            </div>
+            <!-- 🟠 Story -->
+            <div class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
+              style="cursor: pointer; transition: background 0.2s" onmouseover="this.style.background='#f0f2f5'"
+              onmouseout="this.style.background='transparent'" onclick="window.location.href='tao_tin.html'">
+              <div class="d-flex justify-content-center align-items-center"
+                style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #a18cd1, #fbc2eb); margin-left: 10px;">
+                <i class="bi bi-book-half text-white fs-5"></i>
+              </div>
+              <span style="font-size: 15px; font-weight: 500">Story</span>
+            </div>
+            <!-- 🟣 Reel -->
+            <div class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
+              style="cursor: pointer; transition: background 0.2s" onmouseover="this.style.background='#f0f2f5'"
+              onmouseout="this.style.background='transparent'" onclick="window.location.href='tao_tin.html'">
+              <div class="d-flex justify-content-center align-items-center"
+                style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #84fab0, #8fd3f4); margin-left: 10px;">
+                <i class="bi bi-fast-forward-btn-fill text-white fs-5"></i>
+              </div>
+              <span style="font-size: 15px; font-weight: 500">Reel</span>
+            </div>
+            <div>
+              <div class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
+                style="cursor: pointer; transition: background 0.2s" onmouseover="this.style.background='#f0f2f5'"
+                onmouseout="this.style.background='transparent'">
+                <div class="d-flex justify-content-center align-items-center"
+                  style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #ecf0f1, #bdc3c7); margin-left: 10px;">
+                  <i class="bi bi-moon-fill text-white fs-5"></i>
+                </div>
+                <div>
+                  <span style="font-size: 15px; font-weight: 500">Dark mode</span>
+                  <form class="darkmode-options" style="display: flex; gap: 20px; font-size: 12px">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                      <input type="radio" name="darkmode" value="off" checked style="margin-right: 6px" />
+                      Off
+                    </label>
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                      <input type="radio" name="darkmode" value="on" style="margin-right: 6px" />
+                      On
+                    </label>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Messenger -->
+        <div id="messengerBtn"
+          class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
+          style="width: 40px; height: 40px; cursor: pointer">
+          <i class="bi bi-messenger fs-5 text-dark"></i>
+        </div>
+        <!-- Sidebar Chat -->
+        <div id="chatSidebar" class="chat-sidebar position-fixed top-0 end-0 bg-white dark-mode-bg p-3 shadow"
+          style="width: 380px; height: 100vh; transform: translateX(100%); transition: transform 0.3s ease; z-index: 1050;">
+          <!-- Header -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0 fw-bold">Chats</h4>
+            <div class="d-flex align-items-center">
+              <div class="rounded-circle icon-wrapper d-flex justify-content-center align-items-center me-2"
+                style="width: 30px; height: 30px; cursor: pointer">
+                <i class="bi bi-arrows-fullscreen"></i>
+              </div>
+              <button class="btn-close btn-close-custom rounded-circle" onclick="toggleChatSidebar()"></button>
+            </div>
+          </div>
+          <!-- Tìm kiếm -->
+          <form class="d-none d-md-flex mb-3" style="position: relative; width: 100%">
+            <i class="bi bi-search text-secondary position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+            <input type="search" class="form-control form-control-sm rounded-5 border-0 ps-5 shadow-sm"
+              placeholder="Search" style="background-color: #f0f2f5; height: 35px; width: 100%" />
           </form>
-          <!-- Nút tìm kiếm cho thiết bị nhỏ -->
-          <button
-            class="btn btn-light d-lg-none ms-2"
-            id="mobileSearchBtn"
-            type="button"
-            onclick="toggleMobileSearch()"
-          >
-            <i class="bi bi-search fs-5 text-dark"></i>
-          </button>
-        </div>
-
-        <!-- MENU ICONS GIỮA (ẩn trên mobile, hoặc bạn có thể điều chỉnh thành collapse) -->
-        <div class="d-none d-lg-flex mx-auto" id="menuTabs">
-          <div class="d-flex justify-content-center text-center">
-            <div class="menu-item px-5 active" data-link="index.html">
-              <a href="index.html"
-                ><i class="bi bi-house-door-fill fs-4 active"></i
-              ></a>
-              <div class="indicator"></div>
-            </div>
-            <div class="menu-item px-5" data-link="friend.html">
-              <a href="friend.html"><i class="bi bi-people-fill fs-4"></i></a>
-              <div class="indicator"></div>
-            </div>
-            <div class="menu-item px-5" data-link="reel.html">
-              <a href="reel.html"><i class="bi bi-play-btn-fill fs-4"></i></a>
-              <div class="indicator"></div>
-            </div>
-            <div class="menu-item px-5" data-link="#">
-              <a href="#"><i class="bi bi-bell-fill fs-4"></i></a>
-              <div class="indicator"></div>
+          <!-- Một dòng chat -->
+          <div class="d-flex align-items-center gap-2 mb-3 chat-hover">
+            <img src="../images/OIP.jpg" class="rounded-circle" style="width: 48px; height: 48px" />
+            <div>
+              <div class="fw-semibold">Hoàng Đức</div>
+              <div class="text-muted" style="font-size: 13px">
+                sent a photo · 4h
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- ICONS + AVATAR -->
-        <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
-          <!-- App grid -->
-          <div
-            id="menuToggle"
-            class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
-            style="
-              width: 40px;
-              height: 40px;
-              cursor: pointer;
-              position: relative;
-            "
-          >
-            <i class="bi bi-grid-3x3-gap-fill fs-5 text-dark"></i>
-          </div>
-          <!-- Dropdown menu -->
-          <div
-            id="menuDropdown"
-            class="position-absolute bg-white shadow rounded-4 p-3"
-            style="
-              top: 60px;
-              right: 10px;
-              width: 250px;
-              display: none;
-              z-index: 9999;
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-                'Helvetica Neue', Arial, sans-serif;
-            "
-          >
-            <h5 class="mb-2" style="font-weight: 700; font-size: 25px">Menu</h5>
-            <hr class="my-2" />
-            <div class="px-1">
-              <!-- 🔵 Post -->
-              <div
-                class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
-                style="cursor: pointer; transition: background 0.2s"
-                onmouseover="this.style.background='#f0f2f5'"
-                onmouseout="this.style.background='transparent'"
-                onclick="openPostModal()"
-              >
-                <div
-                  class="d-flex justify-content-center align-items-center"
-                  style="
-                    width: 44px;
-                    height: 44px;
-                    border-radius: 50%;
-                    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-                    margin-left: 10px;
-                  "
-                >
-                  <i class="bi bi-file-post text-white fs-5"></i>
-                </div>
-                <span style="font-size: 15px; font-weight: 500">Post</span>
-              </div>
-              <!-- 🟠 Story -->
-              <div
-                class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
-                style="cursor: pointer; transition: background 0.2s"
-                onmouseover="this.style.background='#f0f2f5'"
-                onmouseout="this.style.background='transparent'"
-                onclick="window.location.href='tao_tin.html'"
-              >
-                <div
-                  class="d-flex justify-content-center align-items-center"
-                  style="
-                    width: 44px;
-                    height: 44px;
-                    border-radius: 50%;
-                    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
-                    margin-left: 10px;
-                  "
-                >
-                  <i class="bi bi-book-half text-white fs-5"></i>
-                </div>
-                <span style="font-size: 15px; font-weight: 500">Story</span>
-              </div>
-              <!-- 🟣 Reel -->
-              <div
-                class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
-                style="cursor: pointer; transition: background 0.2s"
-                onmouseover="this.style.background='#f0f2f5'"
-                onmouseout="this.style.background='transparent'"
-                onclick="window.location.href='tao_tin.html'"
-              >
-                <div
-                  class="d-flex justify-content-center align-items-center"
-                  style="
-                    width: 44px;
-                    height: 44px;
-                    border-radius: 50%;
-                    background: linear-gradient(135deg, #84fab0, #8fd3f4);
-                    margin-left: 10px;
-                  "
-                >
-                  <i class="bi bi-fast-forward-btn-fill text-white fs-5"></i>
-                </div>
-                <span style="font-size: 15px; font-weight: 500">Reel</span>
-              </div>
-              <div>
-                <div
-                  class="dropdown-item py-2 d-flex align-items-center gap-3 rounded-3"
-                  style="cursor: pointer; transition: background 0.2s"
-                  onmouseover="this.style.background='#f0f2f5'"
-                  onmouseout="this.style.background='transparent'"
-                >
-                  <div
-                    class="d-flex justify-content-center align-items-center"
-                    style="
-                      width: 44px;
-                      height: 44px;
-                      border-radius: 50%;
-                      background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
-                      margin-left: 10px;
-                    "
-                  >
-                    <i class="bi bi-moon-fill text-white fs-5"></i>
-                  </div>
-                  <div>
-                    <span style="font-size: 15px; font-weight: 500"
-                      >Dark mode</span
-                    >
-                    <form
-                      class="darkmode-options"
-                      style="display: flex; gap: 20px; font-size: 12px"
-                    >
-                      <label
-                        style="
-                          display: flex;
-                          align-items: center;
-                          cursor: pointer;
-                        "
-                      >
-                        <input
-                          type="radio"
-                          name="darkmode"
-                          value="off"
-                          checked
-                          style="margin-right: 6px"
-                        />
-                        Off
-                      </label>
-                      <label
-                        style="
-                          display: flex;
-                          align-items: center;
-                          cursor: pointer;
-                        "
-                      >
-                        <input
-                          type="radio"
-                          name="darkmode"
-                          value="on"
-                          style="margin-right: 6px"
-                        />
-                        On
-                      </label>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Messenger -->
-          <div
-            id="messengerBtn"
-            class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
-            style="width: 40px; height: 40px; cursor: pointer"
-          >
-            <i class="bi bi-messenger fs-5 text-dark"></i>
-          </div>
-          <!-- Sidebar Chat -->
-          <div
-            id="chatSidebar"
-            class="chat-sidebar position-fixed top-0 end-0 bg-white dark-mode-bg p-3 shadow"
-            style="
-              width: 380px;
-              height: 100vh;
-              transform: translateX(100%);
-              transition: transform 0.3s ease;
-              z-index: 1050;
-            "
-          >
-            <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h4 class="mb-0 fw-bold">Chats</h4>
-              <div class="d-flex align-items-center">
-                <div
-                  class="rounded-circle icon-wrapper d-flex justify-content-center align-items-center me-2"
-                  style="width: 30px; height: 30px; cursor: pointer"
-                >
-                  <i class="bi bi-arrows-fullscreen"></i>
-                </div>
-                <button
-                  class="btn-close btn-close-custom rounded-circle"
-                  onclick="toggleChatSidebar()"
-                ></button>
-              </div>
-            </div>
-            <!-- Tìm kiếm -->
-            <form
-              class="d-none d-md-flex mb-3"
-              style="position: relative; width: 100%"
-            >
-              <i
-                class="bi bi-search text-secondary position-absolute top-50 start-0 translate-middle-y ms-3"
-              ></i>
-              <input
-                type="search"
-                class="form-control form-control-sm rounded-5 border-0 ps-5 shadow-sm"
-                placeholder="Search"
-                style="background-color: #f0f2f5; height: 35px; width: 100%"
-              />
-            </form>
-            <!-- Một dòng chat -->
-            <div class="d-flex align-items-center gap-2 mb-3 chat-hover">
-              <img
-                src="../images/OIP.jpg"
-                class="rounded-circle"
-                style="width: 48px; height: 48px"
-              />
-              <div>
-                <div class="fw-semibold">Hoàng Đức</div>
-                <div class="text-muted" style="font-size: 13px">
-                  sent a photo · 4h
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Bell -->
-          <div
-            id="notificationBell"
-            class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
-            style="
-              width: 40px;
-              height: 40px;
-              cursor: pointer;
-              position: relative;
-            "
-          >
-            <i class="bi bi-bell fs-5 text-dark"></i>
-            <span
-              id="notificationBadge"
-              class="notification-badge d-none"
-              style="
-                position: absolute;
-                top: -4px;
-                right: -4px;
-                background: red;
-                color: white;
-                font-size: 10px;
-                width: 16px;
-                height: 16px;
-                border-radius: 50%;
-                text-align: center;
-                line-height: 16px;
-              "
-              >0</span
-            >
-          </div>
-          <!-- Dropdown thông báo -->
-          <div
-            id="notificationDropdown"
-            class="dropdown-menu p-3 shadow"
-            style="
-              display: none;
-              position: absolute;
-              top: 60px;
-              right: 20px;
-              width: 360px;
-              max-height: 400px;
-              overflow-y: auto;
-              z-index: 9999;
-            "
-          >
-            <h4 style="font-weight: bold">Notifications</h4>
-            <div id="notificationList"></div>
-          </div>
-          <!-- Avatar -->
-          <div
-            class="rounded-circle d-flex align-items-center justify-content-center position-relative"
-            style="width: 40px; height: 40px; overflow: hidden; cursor: pointer"
-          >
-            <img
-              src="../images/OIP.jpg"
-              class="rounded-circle userAvatar"
-              alt="avatar"
-              style="width: 40px; height: 40px; border: 1px solid #bdc3c7"
-            />
-          </div>
+        <!-- Bell -->
+        <div id="notificationBell"
+          class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
+          style="width: 40px; height: 40px; cursor: pointer; position: relative;">
+          <i class="bi bi-bell fs-5 text-dark"></i>
+          <span id="notificationBadge" class="notification-badge d-none"
+            style="position: absolute; top: -4px; right: -4px; background: red; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; text-align: center; line-height: 16px;">0</span>
         </div>
-      </div>
-    </nav>
-
-    <div
-      class="profile-header"
-      style="display: flex; align-items: center; justify-content: space-between"
-    >
-      <div style="display: flex; align-items: center">
-        <img src="" alt="avatar" class="avatar" id="profile-avatar" />
-        <div class="profile-info">
-          <h1 id="profile-fullname">Đang tải...</h1>
-          <p id="profile-bio"><i class="fas fa-quote-left"></i></p>
+        <!-- Dropdown thông báo -->
+        <div id="notificationDropdown" class="dropdown-menu p-3 shadow"
+          style="display: none; position: absolute; top: 60px; right: 20px; width: 360px; max-height: 400px; overflow-y: auto; z-index: 9999;">
+          <h4 style="font-weight: bold">Notifications</h4>
+          <div id="notificationList"></div>
         </div>
-      </div>
-      <div
-        style="
-          width: 300px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        "
-      >
-        <button
-          id="btn-add-friend"
-          class="btn btn-primary d-flex align-items-center"
-          style="gap: 8px; font-weight: 500; margin-bottom: 12px"
-        >
-          <i class="fas fa-user-plus"></i> Kết bạn
-        </button>
-
-        <button
-          id="btn-report-user"
-          class="btn btn-danger d-flex align-items-center"
-          style="gap: 8px; font-weight: 500"
-        >
-          <i class="fas fa-exclamation-triangle"></i> Báo cáo
-        </button>
+        <!-- Avatar -->
+        <div class="rounded-circle d-flex align-items-center justify-content-center position-relative"
+          style="width: 40px; height: 40px; overflow: hidden; cursor: pointer">
+          <img src="../images/OIP.jpg" class="rounded-circle userAvatar" alt="avatar"
+            style="width: 40px; height: 40px; border: 1px solid #bdc3c7" />
+        </div>
       </div>
     </div>
-    <nav>
-      <a class="active" id="tab-info" href="#"
-        ><i class="fas fa-info-circle"></i> Giới thiệu</a
-      >
-      <a id="tab-photo" href="#"><i class="fas fa-image"></i> Ảnh</a>
-      <a id="tab-video" href="#"><i class="fas fa-video"></i> Video</a>
-      <a id="tab-story" href="#"><i class="fas fa-book-open"></i> Story</a>
-      <a id="tab-friends" href="#"
-        ><i class="fas fa-user-friends"></i> Bạn bè</a
-      >
-      <!-- <a id="tab-checkin" href="#"><i class="fas fa-map-marker-alt"></i> Check in</a> -->
-    </nav>
-    <div class="main">
-      <div class="left-panel" id="left-panel">
-        <div class="intro-box">
-          <div class="user-details" id="user-details"></div>
-          <!-- nút xem thêm profile -->
-          <div
-            id="btn-show-more-details"
-            class="show-more-banner"
-            style="
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              gap: 6px;
-              cursor: pointer;
-            "
-          >
-            <span class="banner-text">Xem thêm thông tin</span>
-            <i class="fas fa-chevron-down"></i>
-          </div>
-        </div>
-        <!-- <div class="friend-list"> ... </div> -->
+  </nav>
+
+
+  <div class="profile-header" style="display: flex; align-items: center; justify-content: space-between;">
+    <div style="display: flex; align-items: center;">
+      <img src="" alt="avatar" class="avatar" id="profile-avatar">
+      <div class="profile-info">
+        <h1 id="profile-fullname">Đang tải...</h1>
+        <p id="profile-bio"><i class="fas fa-quote-left"></i></p>
       </div>
-      <div class="right-panel">
-        <div class="intro-box animate__animated" id="section-info">
-          <h3><i class="fas fa-newspaper"></i> BÀI ĐĂNG</h3>
-          <!-- ...danh sách post... -->
-          <!-- <div class="list-post" id="list-post"></div>
+    </div>
+    <div style="width: 300px; display: flex; flex-direction: column; align-items: center;">
+      <button id="btn-add-friend" class="btn btn-primary d-flex align-items-center"
+        style="gap: 8px; font-weight: 500; margin-bottom: 12px;">
+        <i class="fas fa-user-plus"></i> Kết bạn
+      </button>
+
+      <button id="btn-report-user" class="btn btn-danger d-flex align-items-center" style="gap: 8px; font-weight: 500;">
+        <i class="fas fa-exclamation-triangle"></i> Báo cáo
+      </button>
+    </div>
+
+  </div>
+  <nav>
+    <a class="active" id="tab-info" href="#"><i class="fas fa-info-circle"></i> Giới thiệu</a>
+    <a id="tab-photo" href="#"><i class="fas fa-image"></i> Ảnh</a>
+    <a id="tab-video" href="#"><i class="fas fa-video"></i> Video</a>
+    <a id="tab-story" href="#"><i class="fas fa-book-open"></i> Story</a>
+    <a id="tab-friends" href="#"><i class="fas fa-user-friends"></i> Bạn bè</a>
+    <!-- <a id="tab-checkin" href="#"><i class="fas fa-map-marker-alt"></i> Check in</a> -->
+  </nav>
+  <div class="main">
+    <div class="left-panel" id="left-panel">
+      <div class="intro-box">
+        <div class="user-details" id="user-details"></div>
+        <!-- nút xem thêm profile -->
+        <div id="btn-show-more-details" class="show-more-banner"
+          style="display:flex;justify-content: center;align-items:center;gap:6px;cursor:pointer;">
+          <span class="banner-text">Xem thêm thông tin</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+
+
+      </div>
+      <!-- <div class="friend-list"> ... </div> -->
+    </div>
+    <div class="right-panel">
+      <div class="intro-box animate__animated" id="section-info">
+
+        <h3><i class="fas fa-newspaper"></i> BÀI ĐĂNG</h3>
+        <!-- ...danh sách post... -->
+        <!-- <div class="list-post" id="list-post"></div>
         <div id="load-more-post-wrapper" style="text-align:center; margin:16px 0;">
           <button id="btn-load-more-post"
             style="padding:8px 18px; background:#1877F2; color:white; border:none; border-radius:6px; cursor:pointer;">
             Xem thêm bài viết
           </button>
         </div> -->
-          <div
-            id="postContainer"
-            class="d-flex flex-column align-items-center w-100"
-          ></div>
-          <div id="loading" class="text-center py-3 d-none">
-            <div class="spinner-border text-primary" role="status"></div>
+        <div id="postContainer" class="d-flex flex-column align-items-center w-100"></div>
+        <div id="loading" class="text-center py-3 d-none">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
+
+      </div>
+      <div id="section-photo" class="animate__animated" style="display:none;">
+
+        <div class="photo-row" id="photo-row">
+          <!-- Ảnh sẽ được JS render vào đây -->
+        </div>
+        <div id="photo-pagination" style="text-align:center; margin: 10px 0;">
+          <!-- Nút phân trang sẽ render ở đây -->
+        </div>
+      </div>
+      <div id="section-video" class="animate__animated" style="display: none;">
+
+        <div id="video-row" class="video-row" style="display:flex;flex-wrap:wrap;gap:18px;"></div>
+        <div id="video-pagination" style="text-align:center;margin-top:10px;"></div>
+      </div>
+      <div class="intro-box animate__animated" id="section-story" style="display:none;">
+        <h3 style="text-align:center;margin-bottom:18px;color:#fff;font-size:22px;letter-spacing:1px;">Story của bạn
+        </h3>
+        <div class="own-story-row" id="own-story-row"
+          style="display:flex;flex-wrap:wrap;gap:18px;justify-content:center;"></div>
+        <div id="own-story-pagination" style="text-align:center;margin-top:10px;"></div>
+      </div>
+      <div class="intro-box animate__animated" id="section-friends" style="display:none;">
+        <h3><i class="fas fa-user-friends"></i> Danh sách bạn bè</h3>
+        <div class="friend-list" id="friend-list"></div>
+      </div>
+
+
+    </div>
+  </div>
+
+
+  <div class="modal" id="image-modal" style="display:none;">
+    <span class="close-modal" onclick="closeModal()">X</span>
+    <div class="modal-content">
+      <img id="zoomed-image" src="" alt="Zoomed Image">
+    </div>
+  </div>
+  <!-- modal them anh, dung chung voi them anh profile -->
+  <div class="modal" id="upload-photo-modal" style="display:none;">
+    <div class="modal-content upload-modal" style="max-width:550px; min-width:280px;">
+      <span class="close-modal" id="close-upload-modal" title="Đóng">×</span>
+      <h3 style="margin-bottom:18px; text-align:center; color:#1877F2;">Thêm ảnh mới</h3>
+      <form id="form-upload-photo-modal" style="width:100%;display:flex;flex-direction:column;align-items:center;">
+        <label for="input-photo-file-modal" class="custom-photo-upload">
+          <i class="fas fa-image"></i> Chọn ảnh để đăng
+        </label>
+        <input type="file" id="input-photo-file-modal" name="file" accept="image/*" required hidden>
+
+        <div id="preview-photo-modal" style="margin:10px 0; text-align:center;"></div>
+        <div class="modal-btns">
+          <button type="submit">Tải lên</button>
+          <button type="button" id="btn-cancel-upload-modal">Hủy</button>
+        </div>
+        <div id="upload-loading" class="loading-upload" style="display:none;">
+          <span class="spinner"></span> Đang tải lên...
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- modal upload video -->
+  <div class="modal" id="upload-video-modal" style="display:none;">
+    <div class="modal-content upload-modal" style="max-width:550px; min-width:280px;">
+      <span class="close-modal" id="close-upload-video-modal" title="Đóng">×</span>
+      <h3 style="margin-bottom:18px; text-align:center; color:#1877F2;">Thêm video mới</h3>
+      <form id="form-upload-video-modal" style="width:100%;display:flex;flex-direction:column;align-items:center;">
+        <label for="input-video-file-modal" class="custom-video-upload">
+          <i class="fas fa-video"></i> Chọn video để đăng
+        </label>
+        <input type="file" id="input-video-file-modal" name="file" accept="video/*" required hidden>
+        <div id="preview-video-modal" style="margin:10px 0; text-align:center;"></div>
+        <div class="modal-btns" style="display: flex; gap: 14px; margin-top: 8px;">
+          <button type="submit"
+            style="background: linear-gradient(90deg,#1877F2 60%,#42a5f5 100%); color: #fff; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; box-shadow: 0 2px 8px rgba(24,119,242,0.08);">Tải
+            lên</button>
+          <button type="button" id="btn-cancel-upload-video-modal"
+            style="background: #e4e6eb; color: #050505; border: none; padding: 9px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px;">Hủy</button>
+        </div>
+        <div id="upload-video-loading" class="loading-upload" style="display:none;">
+          <span class="spinner"></span> Đang tải lên...
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- modal chinh sua thong tin ca nhan -->
+  <div class="modal" id="edit-profile-modal" style="display:none;">
+    <div class="modal-content upload-modal" style=" overflow:auto;">
+      <span class="close-modal" id="close-edit-profile-modal" title="Đóng">×</span>
+      <h3 style="margin-bottom:20px; text-align:center; color:#1877F2;">Chỉnh sửa thông tin cá nhân</h3>
+      <form id="form-edit-profile" style="width:100%;display:flex;flex-direction:column;gap:14px;">
+
+        <!-- Grouped field -->
+        <div>
+          <label><strong>Họ tên:</strong></label>
+          <input type="text" name="fullName" class="edit-input" required />
+        </div>
+
+        <div>
+          <label><strong>Email:</strong></label>
+          <input type="email" name="email" class="edit-input" required />
+        </div>
+
+        <div>
+          <label><strong>Số điện thoại:</strong></label>
+          <input type="text" name="phoneNumber" class="edit-input" />
+        </div>
+
+        <div>
+          <label><strong>Ngày sinh:</strong></label>
+          <input type="date" name="birthDate" class="edit-input" />
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <div style="flex:1;">
+            <label><strong>Giới tính:</strong></label>
+            <select name="gender" class="edit-input">
+              <option value="MALE">Nam</option>
+              <option value="FEMALE">Nữ</option>
+              <option value="OTHER">Khác</option>
+            </select>
+          </div>
+          <div style="flex:1;">
+            <label><strong>Đang tìm kiếm:</strong></label>
+            <select name="lookingFor" class="edit-input">
+              <option value="MALE">Nam</option>
+              <option value="FEMALE">Nữ</option>
+              <option value="OTHER">Khác</option>
+            </select>
           </div>
         </div>
-        <div id="section-photo" class="animate__animated" style="display: none">
-          <div class="photo-row" id="photo-row">
-            <!-- Ảnh sẽ được JS render vào đây -->
+
+        <div>
+          <label><strong>Tiểu sử:</strong></label>
+          <textarea name="bio" class="edit-input" rows="2"></textarea>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <div style="flex:1;">
+            <label><strong>Chiều cao (cm):</strong></label>
+            <input type="number" name="height" class="edit-input" />
           </div>
-          <div id="photo-pagination" style="text-align: center; margin: 10px 0">
-            <!-- Nút phân trang sẽ render ở đây -->
+          <div style="flex:1;">
+            <label><strong>Cân nặng (kg):</strong></label>
+            <input type="number" name="weight" class="edit-input" />
           </div>
         </div>
-        <div id="section-video" class="animate__animated" style="display: none">
-          <div
-            id="video-row"
-            class="video-row"
-            style="display: flex; flex-wrap: wrap; gap: 18px"
-          ></div>
-          <div
-            id="video-pagination"
-            style="text-align: center; margin-top: 10px"
-          ></div>
+
+        <div>
+          <label><strong>Địa chỉ:</strong></label>
+          <input type="text" name="location" class="edit-input" />
         </div>
-        <div
-          class="intro-box animate__animated"
-          id="section-story"
-          style="display: none"
-        >
-          <h3
-            style="
-              text-align: center;
-              margin-bottom: 18px;
-              color: #fff;
-              font-size: 22px;
-              letter-spacing: 1px;
-            "
-          >
-            Story của bạn
-          </h3>
-          <div
-            class="own-story-row"
-            id="own-story-row"
-            style="
-              display: flex;
-              flex-wrap: wrap;
-              gap: 18px;
-              justify-content: center;
-            "
-          ></div>
-          <div
-            id="own-story-pagination"
-            style="text-align: center; margin-top: 10px"
-          ></div>
+
+        <div>
+          <label><strong>Vị trí công việc:</strong></label>
+          <input type="text" name="jobTitle" class="edit-input" />
         </div>
-        <div
-          class="intro-box animate__animated"
-          id="section-friends"
-          style="display: none"
-        >
-          <h3><i class="fas fa-user-friends"></i> Danh sách bạn bè</h3>
-          <div class="friend-list" id="friend-list"></div>
+
+        <div>
+          <label><strong>Công ty:</strong></label>
+          <input type="text" name="company" class="edit-input" />
         </div>
+
+        <div>
+          <label><strong>Học vấn:</strong></label>
+          <input type="text" name="education" class="edit-input" />
+        </div>
+
+        <div>
+          <label><strong>Mô tả:</strong></label>
+          <textarea name="description" class="edit-input" rows="3"></textarea>
+        </div>
+
+        <div>
+          <label><strong>Sở thích (phân tách bằng dấu phẩy):</strong></label>
+          <input type="text" name="interestName" class="edit-input" />
+        </div>
+
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:12px;">
+          <button type="submit"
+            style="background:#1877F2;color:#fff;padding:10px 28px;border:none;border-radius:8px;font-weight:bold;">Lưu</button>
+          <button type="button" id="btn-cancel-edit-profile"
+            style="background:#e4e6eb;color:#050505;padding:10px 28px;border:none;border-radius:8px;font-weight:bold;">Hủy
+            bỏ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+  <!-- modal xoa tk -->
+  <div class="modal" id="delete-account-modal" style="display:none;">
+    <div class="modal-content upload-modal" style="min-width:320px;max-width:95vw;text-align:center;">
+      <h3 style="color:#d32f2f;margin-bottom:18px;">Bạn có chắc chắn muốn xóa tài khoản này không?</h3>
+      <div style="display:flex;gap:18px;justify-content:center;">
+        <button id="btn-confirm-delete-account"
+          style="background:#d32f2f;color:#fff;padding:10px 28px;border:none;border-radius:8px;font-weight:bold;">Có</button>
+        <button id="btn-cancel-delete-account"
+          style="background:#e4e6eb;color:#050505;padding:10px 28px;border:none;border-radius:8px;font-weight:bold;">Không</button>
       </div>
     </div>
 
-    <div class="modal" id="image-modal" style="display: none">
-      <span class="close-modal" onclick="closeModal()">X</span>
+  </div>
+
+  <!-- modal tao reel -->
+  <div class="modal" id="create-reel-modal" style="display:none;">
+    <div class="modal-content upload-modal" style="max-width:500px;min-width:280px;">
+      <span class="close-modal" id="close-create-reel-modal" title="Đóng">X</span>
+      <h3 style="margin-bottom:18px;text-align:center;color:#1877F2;">Tạo Reel mới</h3>
+      <form id="form-create-reel-modal" style="display:flex;flex-direction:column;align-items:center;width:100%;">
+
+        <textarea id="reel-content" placeholder="Nhập nội dung..." required
+          style="width:250px;height:80px;padding:10px;border-radius:8px;margin-bottom:10px;"></textarea>
+        <label style="margin-bottom:10px;">
+          <input type="checkbox" id="reel-public" checked> Công khai
+        </label>
+        <label for="input-reel-file-modal" class="custom-file-upload">
+          <i class="fas fa-video"></i> Chọn video để đăng
+        </label>
+        <input type="file" id="input-reel-file-modal" name="file" accept="video/*" style="display:none;">
+
+        <div id="preview-reel-modal" style="margin:10px 0; text-align:center;"></div>
+        <div class="modal-btns" style="display:flex;gap:14px;">
+          <button type="submit"
+            style="background:linear-gradient(90deg,#1877F2 60%,#42a5f5 100%);color:white;padding:9px 28px;border:none;border-radius:8px;font-weight:bold;">Tạo
+            Reel</button>
+          <button type="button" id="btn-cancel-create-reel-modal"
+            style="background:#e4e6eb;color:#050505;padding:9px 28px;border:none;border-radius:8px;font-weight:bold;">Hủy</button>
+        </div>
+
+        <div id="create-reel-loading" class="loading-upload" style="display:none;margin-top:12px;">
+          <span class="spinner"></span> Đang tạo reel...
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal tạo bài viết (giữ nguyên như index, hoặc copy từ index.html nếu chưa có) -->
+  <div class="modal fade" id="postModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 500px">
       <div class="modal-content">
-        <img id="zoomed-image" src="" alt="Zoomed Image" />
-      </div>
-    </div>
-    <!-- modal them anh, dung chung voi them anh profile -->
-    <div class="modal" id="upload-photo-modal" style="display: none">
-      <div
-        class="modal-content upload-modal"
-        style="max-width: 550px; min-width: 280px"
-      >
-        <span class="close-modal" id="close-upload-modal" title="Đóng">×</span>
-        <h3 style="margin-bottom: 18px; text-align: center; color: #1877f2">
-          Thêm ảnh mới
-        </h3>
-        <form
-          id="form-upload-photo-modal"
-          style="
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-          "
-        >
-          <label for="input-photo-file-modal" class="custom-photo-upload">
-            <i class="fas fa-image"></i> Chọn ảnh để đăng
-          </label>
-          <input
-            type="file"
-            id="input-photo-file-modal"
-            name="file"
-            accept="image/*"
-            required
-            hidden
-          />
-
-          <div
-            id="preview-photo-modal"
-            style="margin: 10px 0; text-align: center"
-          ></div>
-          <div class="modal-btns">
-            <button type="submit">Tải lên</button>
-            <button type="button" id="btn-cancel-upload-modal">Hủy</button>
-          </div>
-          <div id="upload-loading" class="loading-upload" style="display: none">
-            <span class="spinner"></span> Đang tải lên...
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- modal upload video -->
-    <div class="modal" id="upload-video-modal" style="display: none">
-      <div
-        class="modal-content upload-modal"
-        style="max-width: 550px; min-width: 280px"
-      >
-        <span class="close-modal" id="close-upload-video-modal" title="Đóng"
-          >×</span
-        >
-        <h3 style="margin-bottom: 18px; text-align: center; color: #1877f2">
-          Thêm video mới
-        </h3>
-        <form
-          id="form-upload-video-modal"
-          style="
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-          "
-        >
-          <label for="input-video-file-modal" class="custom-video-upload">
-            <i class="fas fa-video"></i> Chọn video để đăng
-          </label>
-          <input
-            type="file"
-            id="input-video-file-modal"
-            name="file"
-            accept="video/*"
-            required
-            hidden
-          />
-          <div
-            id="preview-video-modal"
-            style="margin: 10px 0; text-align: center"
-          ></div>
-          <div
-            class="modal-btns"
-            style="display: flex; gap: 14px; margin-top: 8px"
-          >
-            <button
-              type="submit"
-              style="
-                background: linear-gradient(90deg, #1877f2 60%, #42a5f5 100%);
-                color: #fff;
-                border: none;
-                padding: 9px 28px;
-                border-radius: 8px;
-                font-weight: bold;
-                cursor: pointer;
-                font-size: 15px;
-                box-shadow: 0 2px 8px rgba(24, 119, 242, 0.08);
-              "
-            >
-              Tải lên
-            </button>
-            <button
-              type="button"
-              id="btn-cancel-upload-video-modal"
-              style="
-                background: #e4e6eb;
-                color: #050505;
-                border: none;
-                padding: 9px 28px;
-                border-radius: 8px;
-                font-weight: bold;
-                cursor: pointer;
-                font-size: 15px;
-              "
-            >
-              Hủy
-            </button>
-          </div>
-          <div
-            id="upload-video-loading"
-            class="loading-upload"
-            style="display: none"
-          >
-            <span class="spinner"></span> Đang tải lên...
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- modal chinh sua thong tin ca nhan -->
-    <div class="modal" id="edit-profile-modal" style="display: none">
-      <div class="modal-content upload-modal" style="overflow: auto">
-        <span class="close-modal" id="close-edit-profile-modal" title="Đóng"
-          >×</span
-        >
-        <h3 style="margin-bottom: 20px; text-align: center; color: #1877f2">
-          Chỉnh sửa thông tin cá nhân
-        </h3>
-        <form
-          id="form-edit-profile"
-          style="width: 100%; display: flex; flex-direction: column; gap: 14px"
-        >
-          <!-- Grouped field -->
-          <div>
-            <label><strong>Họ tên:</strong></label>
-            <input type="text" name="fullName" class="edit-input" required />
-          </div>
-
-          <div>
-            <label><strong>Email:</strong></label>
-            <input type="email" name="email" class="edit-input" required />
-          </div>
-
-          <div>
-            <label><strong>Số điện thoại:</strong></label>
-            <input type="text" name="phoneNumber" class="edit-input" />
-          </div>
-
-          <div>
-            <label><strong>Ngày sinh:</strong></label>
-            <input type="date" name="birthDate" class="edit-input" />
-          </div>
-
-          <div style="display: flex; gap: 10px">
-            <div style="flex: 1">
-              <label><strong>Giới tính:</strong></label>
-              <select name="gender" class="edit-input">
-                <option value="MALE">Nam</option>
-                <option value="FEMALE">Nữ</option>
-                <option value="OTHER">Khác</option>
-              </select>
-            </div>
-            <div style="flex: 1">
-              <label><strong>Đang tìm kiếm:</strong></label>
-              <select name="lookingFor" class="edit-input">
-                <option value="MALE">Nam</option>
-                <option value="FEMALE">Nữ</option>
-                <option value="OTHER">Khác</option>
-              </select>
+        <div class="modal-header">
+          <h5 class="modal-title w-100 text-center" style="font-weight: bold; transform: translateY(-30px);">
+            Create post
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+            style="position: absolute; top: 18px; right: 18px;"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex align-items-center">
+            <img src="../images/OIP.jpg" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px" />
+            <div>
+              <strong> Name</strong>
+              <div class="dropdown">
+                <button class="btn btn-light border dropdown-toggle d-flex align-items-center px-2 py-1 mt-1"
+                  type="button" id="privacyDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                  style="font-size: 10px; border-radius: 15px">
+                  <i class="bi bi-globe me-1"></i>
+                  <span id="privacyLabel">Public</span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="privacyDropdown">
+                  <li>
+                    <a class="dropdown-item" href="#" onclick="setPrivacy('public')">
+                      <i class="bi bi-globe me-2"></i> Public
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#" onclick="setPrivacy('private')">
+                      <i class="bi bi-lock-fill me-2"></i>Private
+                    </a>
+                  </li>
+                </ul>
+                <input type="hidden" id="privacyValue" name="privacy" value="public" />
+              </div>
             </div>
           </div>
-
-          <div>
-            <label><strong>Tiểu sử:</strong></label>
-            <textarea name="bio" class="edit-input" rows="2"></textarea>
-          </div>
-
-          <div style="display: flex; gap: 10px">
-            <div style="flex: 1">
-              <label><strong>Chiều cao (cm):</strong></label>
-              <input type="number" name="height" class="edit-input" />
+          <div style="overflow-y: auto; max-height: 450px">
+            <div style="margin: 20px 0">
+              <textarea id="postContent" class="form-control" placeholder="What's on your mind?"
+                style="overflow: hidden; resize: none; min-height: 38px; line-height: 1.5; border-radius: 8px; padding: 8px; font-size: 16px; background-color: #f8f9fa;"></textarea>
             </div>
-            <div style="flex: 1">
-              <label><strong>Cân nặng (kg):</strong></label>
-              <input type="number" name="weight" class="edit-input" />
+            <div id="imagePreviewContainer" class="d-none d-flex flex-wrap gap-2 mt-3 rounded-3" style="height: 350px">
             </div>
           </div>
-
-          <div>
-            <label><strong>Địa chỉ:</strong></label>
-            <input type="text" name="location" class="edit-input" />
+          <div class="rounded-3 d-flex"
+            style="background-color: #f8f9fa; height: 50px; border: 0.5px solid #bdc3c7; margin-top: 5px; align-items: center; justify-content: space-between; margin-top: 10px;">
+            <p style="margin: auto 10px">Add to your post</p>
+            <input type="file" id="fileInput" class="d-none" accept="image/*,video/*" multiple />
+            <label for="fileInput" style="cursor: pointer; margin: 0 10px">
+              <i class="bi bi-image fs-4" style="color: #2ecc71"></i>
+            </label>
           </div>
-
-          <div>
-            <label><strong>Vị trí công việc:</strong></label>
-            <input type="text" name="jobTitle" class="edit-input" />
-          </div>
-
-          <div>
-            <label><strong>Công ty:</strong></label>
-            <input type="text" name="company" class="edit-input" />
-          </div>
-
-          <div>
-            <label><strong>Học vấn:</strong></label>
-            <input type="text" name="education" class="edit-input" />
-          </div>
-
-          <div>
-            <label><strong>Mô tả:</strong></label>
-            <textarea name="description" class="edit-input" rows="3"></textarea>
-          </div>
-
-          <div>
-            <label><strong>Sở thích (phân tách bằng dấu phẩy):</strong></label>
-            <input type="text" name="interestName" class="edit-input" />
-          </div>
-
-          <div
-            style="
-              display: flex;
-              gap: 12px;
-              justify-content: center;
-              margin-top: 12px;
-            "
-          >
-            <button
-              type="submit"
-              style="
-                background: #1877f2;
-                color: #fff;
-                padding: 10px 28px;
-                border: none;
-                border-radius: 8px;
-                font-weight: bold;
-              "
-            >
-              Lưu
-            </button>
-            <button
-              type="button"
-              id="btn-cancel-edit-profile"
-              style="
-                background: #e4e6eb;
-                color: #050505;
-                padding: 10px 28px;
-                border: none;
-                border-radius: 8px;
-                font-weight: bold;
-              "
-            >
-              Hủy bỏ
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- modal xoa tk -->
-    <div class="modal" id="delete-account-modal" style="display: none">
-      <div
-        class="modal-content upload-modal"
-        style="min-width: 320px; max-width: 95vw; text-align: center"
-      >
-        <h3 style="color: #d32f2f; margin-bottom: 18px">
-          Bạn có chắc chắn muốn xóa tài khoản này không?
-        </h3>
-        <div style="display: flex; gap: 18px; justify-content: center">
-          <button
-            id="btn-confirm-delete-account"
-            style="
-              background: #d32f2f;
-              color: #fff;
-              padding: 10px 28px;
-              border: none;
-              border-radius: 8px;
-              font-weight: bold;
-            "
-          >
-            Có
-          </button>
-          <button
-            id="btn-cancel-delete-account"
-            style="
-              background: #e4e6eb;
-              color: #050505;
-              padding: 10px 28px;
-              border: none;
-              border-radius: 8px;
-              font-weight: bold;
-            "
-          >
-            Không
+        </div>
+        <div class="modal-footer">
+          <button id="postBtn" class="btn btn-primary w-100" onclick="submitPost()">
+            <span id="postBtnText">Post</span>
+            <span id="postBtnSpinner" class="spinner-border spinner-border-sm d-none ms-2" role="status"
+              aria-hidden="true"></span>
           </button>
         </div>
       </div>
     </div>
-
-    <!-- modal tao reel -->
-    <div class="modal" id="create-reel-modal" style="display: none">
-      <div
-        class="modal-content upload-modal"
-        style="max-width: 500px; min-width: 280px"
-      >
-        <span class="close-modal" id="close-create-reel-modal" title="Đóng"
-          >X</span
-        >
-        <h3 style="margin-bottom: 18px; text-align: center; color: #1877f2">
-          Tạo Reel mới
-        </h3>
-        <form
-          id="form-create-reel-modal"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-          "
-        >
-          <textarea
-            id="reel-content"
-            placeholder="Nhập nội dung..."
-            required
-            style="
-              width: 250px;
-              height: 80px;
-              padding: 10px;
-              border-radius: 8px;
-              margin-bottom: 10px;
-            "
-          ></textarea>
-          <label style="margin-bottom: 10px">
-            <input type="checkbox" id="reel-public" checked /> Công khai
-          </label>
-          <label for="input-reel-file-modal" class="custom-file-upload">
-            <i class="fas fa-video"></i> Chọn video để đăng
-          </label>
-          <input
-            type="file"
-            id="input-reel-file-modal"
-            name="file"
-            accept="video/*"
-            style="display: none"
-          />
-
-          <div
-            id="preview-reel-modal"
-            style="margin: 10px 0; text-align: center"
-          ></div>
-          <div class="modal-btns" style="display: flex; gap: 14px">
-            <button
-              type="submit"
-              style="
-                background: linear-gradient(90deg, #1877f2 60%, #42a5f5 100%);
-                color: white;
-                padding: 9px 28px;
-                border: none;
-                border-radius: 8px;
-                font-weight: bold;
-              "
-            >
-              Tạo Reel
-            </button>
-            <button
-              type="button"
-              id="btn-cancel-create-reel-modal"
-              style="
-                background: #e4e6eb;
-                color: #050505;
-                padding: 9px 28px;
-                border: none;
-                border-radius: 8px;
-                font-weight: bold;
-              "
-            >
-              Hủy
-            </button>
-          </div>
-
-          <div
-            id="create-reel-loading"
-            class="loading-upload"
-            style="display: none; margin-top: 12px"
-          >
-            <span class="spinner"></span> Đang tạo reel...
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Modal tạo bài viết (giữ nguyên như index, hoặc copy từ index.html nếu chưa có) -->
-    <div class="modal fade" id="postModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" style="max-width: 500px">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5
-              class="modal-title w-100 text-center"
-              style="font-weight: bold; transform: translateY(-30px)"
-            >
-              Create post
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              style="position: absolute; top: 18px; right: 18px"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="d-flex align-items-center">
-              <img
-                src="../images/OIP.jpg"
-                alt="Avatar"
-                class="rounded-circle me-2"
-                style="width: 40px; height: 40px"
-              />
-              <div>
-                <strong> Name</strong>
-                <div class="dropdown">
-                  <button
-                    class="btn btn-light border dropdown-toggle d-flex align-items-center px-2 py-1 mt-1"
-                    type="button"
-                    id="privacyDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    style="font-size: 10px; border-radius: 15px"
-                  >
-                    <i class="bi bi-globe me-1"></i>
-                    <span id="privacyLabel">Public</span>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="privacyDropdown">
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        href="#"
-                        onclick="setPrivacy('public')"
-                      >
-                        <i class="bi bi-globe me-2"></i> Public
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        href="#"
-                        onclick="setPrivacy('private')"
-                      >
-                        <i class="bi bi-lock-fill me-2"></i>Private
-                      </a>
-                    </li>
-                  </ul>
-                  <input
-                    type="hidden"
-                    id="privacyValue"
-                    name="privacy"
-                    value="public"
-                  />
-                </div>
-              </div>
-            </div>
-            <div style="overflow-y: auto; max-height: 450px">
-              <div style="margin: 20px 0">
-                <textarea
-                  id="postContent"
-                  class="form-control"
-                  placeholder="What's on your mind?"
-                  style="
-                    overflow: hidden;
-                    resize: none;
-                    min-height: 38px;
-                    line-height: 1.5;
-                    border-radius: 8px;
-                    padding: 8px;
-                    font-size: 16px;
-                    background-color: #f8f9fa;
-                  "
-                ></textarea>
-              </div>
-              <div
-                id="imagePreviewContainer"
-                class="d-none d-flex flex-wrap gap-2 mt-3 rounded-3"
-                style="height: 350px"
-              ></div>
-            </div>
-            <div
-              class="rounded-3 d-flex"
-              style="
-                background-color: #f8f9fa;
-                height: 50px;
-                border: 0.5px solid #bdc3c7;
-                margin-top: 5px;
-                align-items: center;
-                justify-content: space-between;
-                margin-top: 10px;
-              "
-            >
-              <p style="margin: auto 10px">Add to your post</p>
-              <input
-                type="file"
-                id="fileInput"
-                class="d-none"
-                accept="image/*,video/*"
-                multiple
-              />
-              <label for="fileInput" style="cursor: pointer; margin: 0 10px">
-                <i class="bi bi-image fs-4" style="color: #2ecc71"></i>
-              </label>
+  </div>
+  <div class="modal fade" id="allImagesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 700px">
+      <div class="modal-content" style="height: 90vh; display: flex; flex-direction: column">
+        <!-- Modal Body Cuộn được -->
+        <div class="modal-body" style="overflow-y: auto; flex: 1; padding-bottom: 16px">
+          <!-- Thông tin người đăng -->
+          <div class="d-flex align-items-center mb-3">
+            <img id="allImagesAvatar" src="../images/user-default.webp" alt="Avatar" class="rounded-circle me-2"
+              style="width: 40px; height: 40px; object-fit: cover" />
+            <div>
+              <strong id="allImagesName">Tên người dùng</strong><br />
+              <small id="allImagesTime">...</small>
             </div>
           </div>
-          <div class="modal-footer">
-            <button
-              id="postBtn"
-              class="btn btn-primary w-100"
-              onclick="submitPost()"
-            >
-              <span id="postBtnText">Post</span>
-              <span
-                id="postBtnSpinner"
-                class="spinner-border spinner-border-sm d-none ms-2"
-                role="status"
-                aria-hidden="true"
-              ></span>
-            </button>
+
+          <!-- Nội dung bài viết -->
+          <p id="allImagesContent" class="mb-3"></p>
+
+          <!-- Ảnh & Video -->
+          <div id="mediaWrapper" class="mb-3">
+            <div id="allImagesGrid"></div>
+            <div id="allVideosGrid" class="mt-2"></div>
+          </div>
+
+          <hr />
+
+          <!-- Danh sách bình luận -->
+          <div id="commentList" class="mb-3">
+            <div id="noCommentPlaceholder" class="text-center text-muted my-4" style="display: block">
+              <i class="bi bi-chat-left-text" style="font-size: 2rem"></i>
+              <p class="mt-2 mb-0">No comments yet</p>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div
-      class="modal fade"
-      id="allImagesModal"
-      tabindex="-1"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered" style="max-width: 700px">
-        <div
-          class="modal-content"
-          style="height: 90vh; display: flex; flex-direction: column"
-        >
-          <!-- Modal Body Cuộn được -->
-          <div
-            class="modal-body"
-            style="overflow-y: auto; flex: 1; padding-bottom: 16px"
-          >
-            <!-- Thông tin người đăng -->
-            <div class="d-flex align-items-center mb-3">
-              <img
-                id="allImagesAvatar"
-                src="../images/user-default.webp"
-                alt="Avatar"
-                class="rounded-circle me-2"
-                style="width: 40px; height: 40px; object-fit: cover"
-              />
-              <div>
-                <strong id="allImagesName">Tên người dùng</strong><br />
-                <small id="allImagesTime">...</small>
-              </div>
-            </div>
 
-            <!-- Nội dung bài viết -->
-            <p id="allImagesContent" class="mb-3"></p>
-
-            <!-- Ảnh & Video -->
-            <div id="mediaWrapper" class="mb-3">
-              <div id="allImagesGrid"></div>
-              <div id="allVideosGrid" class="mt-2"></div>
-            </div>
-
-            <hr />
-
-            <!-- Danh sách bình luận -->
-            <div id="commentList" class="mb-3">
-              <div
-                id="noCommentPlaceholder"
-                class="text-center text-muted my-4"
-                style="display: block"
-              >
-                <i class="bi bi-chat-left-text" style="font-size: 2rem"></i>
-                <p class="mt-2 mb-0">No comments yet</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Ô nhập bình luận (Cố định) -->
-          <div
-            class="d-flex bg-white border-top p-3 dark-mode-bg dark-mode-border"
-          >
-            <img
-              src="../images/IMG_2007.JPG"
-              alt=""
-              style="
+        <!-- Ô nhập bình luận (Cố định) -->
+        <div class="d-flex bg-white border-top p-3 dark-mode-bg dark-mode-border">
+          <img src="../images/IMG_2007.JPG" alt="" style="
                 width: 35px;
                 height: 35px;
                 border-radius: 50%;
                 margin-right: 5px;
-              "
-              class="userAvatar"
-            />
-            <div
-              class="container d-block gap-2 align-items-end rounded-3 p-2 dark-mode-input-container"
-              style="background-color: #f0f2f5"
-            >
-              <textarea
-                id="commentInput"
-                class="form-control dark-mode-textarea"
-                placeholder="Write a comment..."
-                rows="1"
-                style="
+              " class="userAvatar" />
+          <div class="container d-block gap-2 align-items-end rounded-3 p-2 dark-mode-input-container"
+            style="background-color: #f0f2f5">
+            <textarea id="commentInput" class="form-control dark-mode-textarea" placeholder="Write a comment..."
+              rows="1" style="
                   max-height: 292px;
                   overflow-y: auto;
                   resize: none;
                   padding: 10px 0;
                   border: none;
                   background-color: transparent;
-                "
-                oninput="autoGrow(this)"
-              ></textarea>
-              <div
-                class="d-flex justify-content-between align-items-center mb-1"
-              >
-                <!-- Emoji Icon -->
-                <div
-                  class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
-                  style="width: 30px; height: 30px; cursor: pointer"
-                >
-                  <i
-                    class="bi bi-emoji-smile text-dark dark-mode-icon"
-                    style="font-size: 15px"
-                  ></i>
-                </div>
+                " oninput="autoGrow(this)"></textarea>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <!-- Emoji Icon -->
+              <div class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
+                style="width: 30px; height: 30px; cursor: pointer">
+                <i class="bi bi-emoji-smile text-dark dark-mode-icon" style="font-size: 15px"></i>
+              </div>
 
-                <!-- Send Icon -->
-                <div
-                  class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
-                  style="width: 30px; height: 30px; cursor: pointer"
-                  id="sendCommentBtn"
-                >
-                  <i
-                    class="bi bi-send-fill text-dark dark-mode-icon"
-                    style="font-size: 15px"
-                  ></i>
-                </div>
+              <!-- Send Icon -->
+              <div class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
+                style="width: 30px; height: 30px; cursor: pointer" id="sendCommentBtn">
+                <i class="bi bi-send-fill text-dark dark-mode-icon" style="font-size: 15px"></i>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal xem ảnh -->
-    <!-- Modal toàn màn hình -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content border-0">
-          <div class="modal-body p-0 d-flex" style="height: 100vh">
-            <!-- Cột ảnh -->
-            <div
-              class="d-flex justify-content-center align-items-center position-relative flex-grow-1"
-              style="width: 75%; background-color: #000"
-            >
-              <!-- Nút đóng -->
-              <button
-                type="button"
-                class="btn-close btn-close-white position-absolute top-0 end-0 m-3 rounded-circle btn-light"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                style="background-color: #bdc3c7; width: 30px; height: 30px"
-              ></button>
+  <!-- Modal xem ảnh -->
+  <!-- Modal toàn màn hình -->
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content border-0">
+        <div class="modal-body p-0 d-flex" style="height: 100vh">
+          <!-- Cột ảnh -->
+          <div class="d-flex justify-content-center align-items-center position-relative flex-grow-1"
+            style="width: 75%; background-color: #000">
+            <!-- Nút đóng -->
+            <button type="button"
+              class="btn-close btn-close-white position-absolute top-0 end-0 m-3 rounded-circle btn-light"
+              data-bs-dismiss="modal" aria-label="Close"
+              style="background-color: #bdc3c7; width: 30px; height: 30px"></button>
 
-              <!-- Ảnh lớn -->
-              <img
-                id="modalImage"
-                src="../images/user-default.webp"
-                alt="Ảnh phóng to"
-                class="img-fluid"
-                style="max-height: 100vh; object-fit: contain"
-              />
-            </div>
+            <!-- Ảnh lớn -->
+            <img id="modalImage" src="../images/user-default.webp" alt="Ảnh phóng to" class="img-fluid"
+              style="max-height: 100vh; object-fit: contain" />
+          </div>
 
-            <!-- Cột thông tin -->
-            <div
-              class="modal-info flex-shrink-0 d-flex flex-column position-relative"
-              style="width: 25%; height: 100vh"
-            >
-              <div
-                class="post shadow-sm p-3 rounded mb-3"
-                style="padding-bottom: 80px"
-              >
-                <div class="d-flex justify-content-between">
-                  <div class="d-flex align-items-center mb-2">
-                    <img
-                      src="../images/user-default.webp"
-                      class="rounded-circle me-2"
-                      style="
+          <!-- Cột thông tin -->
+          <div class="modal-info flex-shrink-0 d-flex flex-column position-relative" style="width: 25%; height: 100vh">
+            <div class="post shadow-sm p-3 rounded mb-3" style="padding-bottom: 80px">
+              <div class="d-flex justify-content-between">
+                <div class="d-flex align-items-center mb-2">
+                  <img src="../images/user-default.webp" class="rounded-circle me-2" style="
                         width: 40px;
                         height: 40px;
                         border: 1px solid #bdc3c7;
-                      "
-                      alt="Avatar"
-                      id="profile_image"
-                    />
-                    <div>
-                      <strong id="post-userName"></strong><br />
-                      <small class="text-muted" id="postTime"
-                        >2 giờ trước</small
-                      >
-                    </div>
-                  </div>
-                  <div
-                    class="action-icon d-flex justify-content-center align-items-center rounded-circle"
-                    style="width: 30px; height: 30px; cursor: pointer"
-                    title="Tùy chọn"
-                  >
-                    <i class="bi bi-three-dots"></i>
+                      " alt="Avatar" id="profile_image" />
+                  <div>
+                    <strong id="post-userName"></strong><br />
+                    <small class="text-muted" id="postTime">2 giờ trước</small>
                   </div>
                 </div>
-                <p class="post-text" id="postContentID"></p>
-
-                <div
-                  class="d-flex justify-content-around mt-5 border-top pt-2 position-relative"
-                >
-                  <div class="like-wrapper position-relative w-100 me-1">
-                    <button
-                      class="btn btn-light w-100 btn-action like-btn"
-                      style="font-weight: bold; color: #65676b; font-size: 13px"
-                    >
-                      <i class="fa-solid fa-thumbs-up"></i>
-                      Like
-                    </button>
-
-                    <div
-                      class="reaction-popup d-flex gap-2 rounded-5 shadow border"
-                    >
-                      <span class="icon" data-emotion="LIKE">
-                        <img
-                          src="../images/Animation/uv2XD2zFzt.gif"
-                          alt="Like"
-                          class="reaction-img"
-                        />
-                      </span>
-                      <span class="icon" data-emotion="LOVE"
-                        ><img
-                          src="../images/Animation/Emojis - Love (1).gif"
-                          alt=""
-                          style="width: 40px; height: 40px"
-                      /></span>
-                      <span class="icon" data-emotion="HAHA"
-                        ><img
-                          src="../images/Animation/smiley emoji 2.gif"
-                          alt=""
-                          style="width: 50px; height: 50px"
-                      /></span>
-                      <span class="icon" data-emotion="WOW"
-                        ><img
-                          src="../images/Animation/Emojis - Wow.gif"
-                          alt=""
-                          style="width: 40px; height: 40px"
-                      /></span>
-                      <span class="icon" data-emotion="SAD"
-                        ><img
-                          src="../images/Animation/Sad Emoji.gif"
-                          alt=""
-                          style="width: 50px; height: 50px"
-                      /></span>
-                      <span class="icon" data-emotion="ANGRY"
-                        ><img
-                          src="../images/Animation/Angry emoji.gif"
-                          alt=""
-                          style="width: 35px; height: 35px"
-                      /></span>
-                    </div>
-                  </div>
-
-                  <button
-                    class="btn btn-light w-100 me-1 btn-action toggle-comment"
-                    style="font-weight: bold; color: #65676b; font-size: 13px"
-                  >
-                    <i class="bi bi-chat-left"></i> Comment
-                  </button>
-
-                  <button
-                    class="btn btn-light w-100 btn-action"
-                    style="font-weight: bold; color: #65676b; font-size: 13px"
-                  >
-                    <i class="bi bi-share"></i> Share
-                  </button>
+                <div class="action-icon d-flex justify-content-center align-items-center rounded-circle"
+                  style="width: 30px; height: 30px; cursor: pointer" title="Tùy chọn">
+                  <i class="bi bi-three-dots"></i>
                 </div>
               </div>
+              <p class="post-text" id="postContentID"></p>
 
-              <!-- Danh sách bình luận -->
-              <div
-                id="commentList"
-                class="p-3 flex-grow-1 overflow-auto"
-                style="
+              <div class="d-flex justify-content-around mt-5 border-top pt-2 position-relative">
+                <div class="like-wrapper position-relative w-100 me-1">
+                  <button class="btn btn-light w-100 btn-action like-btn"
+                    style="font-weight: bold; color: #65676b; font-size: 13px">
+                    <i class="fa-solid fa-thumbs-up"></i>
+                    Like
+                  </button>
+
+                  <div class="reaction-popup d-flex gap-2 rounded-5 shadow border">
+                    <span class="icon" data-emotion="LIKE">
+                      <img src="../images/Animation/uv2XD2zFzt.gif" alt="Like" class="reaction-img" />
+                    </span>
+                    <span class="icon" data-emotion="LOVE"><img src="../images/Animation/Emojis - Love (1).gif" alt=""
+                        style="width: 40px; height: 40px" /></span>
+                    <span class="icon" data-emotion="HAHA"><img src="../images/Animation/smiley emoji 2.gif" alt=""
+                        style="width: 50px; height: 50px" /></span>
+                    <span class="icon" data-emotion="WOW"><img src="../images/Animation/Emojis - Wow.gif" alt=""
+                        style="width: 40px; height: 40px" /></span>
+                    <span class="icon" data-emotion="SAD"><img src="../images/Animation/Sad Emoji.gif" alt=""
+                        style="width: 50px; height: 50px" /></span>
+                    <span class="icon" data-emotion="ANGRY"><img src="../images/Animation/Angry emoji.gif" alt=""
+                        style="width: 35px; height: 35px" /></span>
+                  </div>
+                </div>
+
+                <button class="btn btn-light w-100 me-1 btn-action toggle-comment"
+                  style="font-weight: bold; color: #65676b; font-size: 13px">
+                  <i class="bi bi-chat-left"></i> Comment
+                </button>
+
+                <button class="btn btn-light w-100 btn-action"
+                  style="font-weight: bold; color: #65676b; font-size: 13px">
+                  <i class="bi bi-share"></i> Share
+                </button>
+              </div>
+            </div>
+
+            <!-- Danh sách bình luận -->
+            <div id="commentList" class="p-3 flex-grow-1 overflow-auto" style="
                   height: calc(100vh - 350px - 80px);
                   max-height: 430px;
                   margin-bottom: 90px;
-                "
-              >
-                <!-- Các bình luận sẽ được render ở đây -->
-              </div>
+                ">
+              <!-- Các bình luận sẽ được render ở đây -->
+            </div>
 
-              <!-- Ô nhập bình luận cố định -->
-              <div
-                class="position-absolute d-flex bottom-0 start-0 end-0 bg-white border-top p-3 dark-mode-bg dark-mode-border"
-              >
-                <img
-                  src="../images/IMG_2007.JPG"
-                  alt=""
-                  style="
+            <!-- Ô nhập bình luận cố định -->
+            <div
+              class="position-absolute d-flex bottom-0 start-0 end-0 bg-white border-top p-3 dark-mode-bg dark-mode-border">
+              <img src="../images/IMG_2007.JPG" alt="" style="
                     width: 35px;
                     height: 35px;
                     border-radius: 50%;
                     margin-right: 5px;
-                  "
-                  class="userAvatar"
-                />
-                <div
-                  class="container d-block gap-2 align-items-end rounded-3 p-2 dark-mode-input-container"
-                  style="background-color: #f0f2f5"
-                >
-                  <textarea
-                    id="commentInput"
-                    class="form-control dark-mode-textarea"
-                    placeholder="Write a comment..."
-                    rows="1"
-                    style="
+                  " class="userAvatar" />
+              <div class="container d-block gap-2 align-items-end rounded-3 p-2 dark-mode-input-container"
+                style="background-color: #f0f2f5">
+                <textarea id="commentInput" class="form-control dark-mode-textarea" placeholder="Write a comment..."
+                  rows="1" style="
                       max-height: 292px;
                       overflow-y: auto;
                       resize: none;
                       padding: 10px 0;
                       border: none;
                       background-color: transparent;
-                    "
-                    oninput="autoGrow(this)"
-                  ></textarea>
-                  <div
-                    class="d-flex justify-content-between align-items-center mb-1"
-                  >
-                    <!-- Emoji Icon -->
-                    <div
-                      class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
-                      style="width: 30px; height: 30px; cursor: pointer"
-                    >
-                      <i
-                        class="bi bi-emoji-smile text-dark dark-mode-icon"
-                        style="font-size: 15px"
-                      ></i>
-                    </div>
+                    " oninput="autoGrow(this)"></textarea>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <!-- Emoji Icon -->
+                  <div class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
+                    style="width: 30px; height: 30px; cursor: pointer">
+                    <i class="bi bi-emoji-smile text-dark dark-mode-icon" style="font-size: 15px"></i>
+                  </div>
 
-                    <!-- Send Icon -->
-                    <div
-                      class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
-                      style="width: 30px; height: 30px; cursor: pointer"
-                      id="sendCommentBtn"
-                    >
-                      <i
-                        class="bi bi-send-fill text-dark dark-mode-icon"
-                        style="font-size: 15px"
-                      ></i>
-                    </div>
+                  <!-- Send Icon -->
+                  <div class="d-flex justify-content-center align-items-center rounded-circle icon-hover-dark"
+                    style="width: 30px; height: 30px; cursor: pointer" id="sendCommentBtn">
+                    <i class="bi bi-send-fill text-dark dark-mode-icon" style="font-size: 15px"></i>
                   </div>
                 </div>
               </div>
@@ -1719,325 +1036,256 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- modal hỏi có muốn xóa post ko -->
-    <div
-      class="modal fade"
-      id="deletePostModal"
-      tabindex="-1"
-      aria-labelledby="deletePostModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deletePostModalLabel">
-              Xác nhận xóa bài viết
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Đóng"
-            ></button>
-          </div>
-          <div class="modal-body">
-            Bạn có chắc chắn muốn xóa post này không?
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Hủy
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              id="btn-confirm-delete-post"
-            >
-              Xóa
-            </button>
-          </div>
+  <!-- modal hỏi có muốn xóa post ko -->
+  <div class="modal fade" id="deletePostModal" tabindex="-1" aria-labelledby="deletePostModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deletePostModalLabel">Xác nhận xóa bài viết</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+        </div>
+        <div class="modal-body">
+          Bạn có chắc chắn muốn xóa post này không?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-danger" id="btn-confirm-delete-post">Xóa</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- modal cập nhật conten bài viết -->
-    <div
-      class="modal fade"
-      id="updatePostModal"
-      tabindex="-1"
-      aria-labelledby="updatePostModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="updatePostModalLabel">
-              Cập nhật nội dung bài viết
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Đóng"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <input
-              type="text"
-              id="updatePostContentInput"
-              class="form-control"
-              placeholder="Nhập nội dung mới"
-            />
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Hủy
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary"
-              id="btn-save-update-post"
-            >
-              Lưu
-            </button>
-          </div>
+  <!-- modal cập nhật conten bài viết -->
+  <div class="modal fade" id="updatePostModal" tabindex="-1" aria-labelledby="updatePostModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updatePostModalLabel">Cập nhật nội dung bài viết</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="updatePostContentInput" class="form-control" placeholder="Nhập nội dung mới" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-primary" id="btn-save-update-post">Lưu</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <script>
-      function openModal(imageUrl) {
-        const modal = document.getElementById("image-modal");
-        const zoomedImage = document.getElementById("zoomed-image");
-        zoomedImage.src = imageUrl;
-        modal.style.display = "flex";
-      }
+  <script>
+    function openModal(imageUrl) {
+      const modal = document.getElementById('image-modal');
+      const zoomedImage = document.getElementById('zoomed-image');
+      zoomedImage.src = imageUrl;
+      modal.style.display = 'flex';
+    }
 
-      function closeModal() {
-        document.getElementById("image-modal").style.display = "none";
-      }
+    function closeModal() {
+      document.getElementById('image-modal').style.display = 'none';
+    }
 
-      // Tab switching logic
-      document.getElementById("tab-info").onclick = function (e) {
-        e.preventDefault();
-        showSection("info");
-      };
-      document.getElementById("tab-photo").onclick = function (e) {
-        e.preventDefault();
-        showSection("photo");
-      };
-      document.getElementById("tab-video").onclick = function (e) {
-        e.preventDefault();
-        showSection("video");
-      };
-      document.getElementById("tab-story").onclick = function (e) {
-        e.preventDefault();
-        window.location.href =
-          "other-story.html?userId=" + encodeURIComponent(userId);
-      };
-      document.getElementById("tab-friends").onclick = function (e) {
-        e.preventDefault();
-        showSection("friends");
-      };
-      // document.getElementById('tab-checkin').onclick = function (e) {
-      //   e.preventDefault();
-      //   showSection('checkin');
-      // };
+    // Tab switching logic
+    document.getElementById('tab-info').onclick = function (e) {
+      e.preventDefault();
+      showSection('info');
+    };
+    document.getElementById('tab-photo').onclick = function (e) {
+      e.preventDefault();
+      showSection('photo');
+    };
+    document.getElementById('tab-video').onclick = function (e) {
+      e.preventDefault();
+      showSection('video');
+    };
+    document.getElementById('tab-story').onclick = function (e) {
+      e.preventDefault();
+      window.location.href = 'other-story.html?userId=' + encodeURIComponent(userId);
+    };
+    document.getElementById('tab-friends').onclick = function (e) {
+      e.preventDefault();
+      showSection('friends');
+    };
+    // document.getElementById('tab-checkin').onclick = function (e) {
+    //   e.preventDefault();
+    //   showSection('checkin');
+    // };
 
-      function showSection(section) {
-        const sectionIds = [
-          "section-info",
-          "section-photo",
-          "section-video",
-          "section-story",
-          "section-friends",
-        ];
-        sectionIds.forEach((id) => {
-          const el = document.getElementById(id);
-          if (el) {
-            el.style.display = "none";
-            el.classList.remove("animate__fadeIn");
-            el.classList.remove("show-story");
-          }
-        });
-
-        // Bỏ active tab
-        const tabIds = [
-          "tab-info",
-          "tab-photo",
-          "tab-video",
-          "tab-story",
-          "tab-friends",
-        ];
-        tabIds.forEach((id) => {
-          const el = document.getElementById(id);
-          if (el) el.classList.remove("active");
-        });
-
-        // Hiện section được chọn với hiệu ứng animate.css
-        const showEl = document.getElementById("section-" + section);
-        if (showEl) {
-          showEl.style.display = "block";
-          showEl.classList.add("animate__fadeIn");
-          if (section === "story") {
-            showEl.classList.add("show-story");
-          }
+    function showSection(section) {
+      const sectionIds = [
+        'section-info', 'section-photo', 'section-video',
+        'section-story', 'section-friends'
+      ];
+      sectionIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.style.display = 'none';
+          el.classList.remove('animate__fadeIn');
+          el.classList.remove('show-story');
         }
+      });
 
-        const tabEl = document.getElementById("tab-" + section);
-        if (tabEl) {
-          tabEl.classList.add("active");
-        }
+      // Bỏ active tab
+      const tabIds = ['tab-info', 'tab-photo', 'tab-video', 'tab-story', 'tab-friends'];
+      tabIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
 
-        // Chỉ load Story nếu là tab story
-        // if (section === 'story') {
-        //   loadOwnStories();
-        // }
-
-        // Xử lý ẩn/hiện left panel
-        const leftPanel = document.getElementById("left-panel");
-        const rightPanel = document.querySelector(".right-panel");
-        if (["photo", "video", "story", "friends"].includes(section)) {
-          if (leftPanel) leftPanel.style.display = "none";
-          if (rightPanel) rightPanel.style.width = "100%";
-        } else {
-          if (leftPanel) leftPanel.style.display = "block";
-          if (rightPanel) rightPanel.style.width = "";
+      // Hiện section được chọn với hiệu ứng animate.css
+      const showEl = document.getElementById('section-' + section);
+      if (showEl) {
+        showEl.style.display = 'block';
+        showEl.classList.add('animate__fadeIn');
+        if (section === 'story') {
+          showEl.classList.add('show-story');
         }
       }
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
-    <script src="../Js/Thiep/other-profile.js"></script>
 
-    <script src="../Js/Thiep/story.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="../Js/api-like.js"></script>
-    <script src="../Js/api-reaction.js"></script>
-    <script src="../Js/comment.js"></script>
-    <script src="../Js/api-share-save-post.js"></script>
-
-    <script src="../Js/Thiep/update-post.js"></script>
-    <script src="../Js/Thiep/post-container-other-profile.js"></script>
-
-    <script>
-      // Kiểm tra token khi tải trang
-
-      if (!token) {
-        alert("Vui lòng đăng nhập để tiếp tục!");
-        window.location.href = "login.html";
+      const tabEl = document.getElementById('tab-' + section);
+      if (tabEl) {
+        tabEl.classList.add('active');
       }
-    </script>
-    <script>
-      // Preview ảnh profile
-      document
-        .getElementById("input-profile-photo-modal")
-        ?.addEventListener("change", function (e) {
-          const preview = document.getElementById(
-            "preview-profile-photo-modal"
-          );
-          preview.innerHTML = "";
-          const file = e.target.files[0];
-          if (file) {
-            const url = URL.createObjectURL(file);
-            preview.innerHTML = `<img src="${url}" style="max-width:100%;max-height:180px;border-radius:8px;">`;
-          }
-        });
 
-      // Preview ảnh
-      document
-        .getElementById("input-photo-file-modal")
-        ?.addEventListener("change", function (e) {
-          const preview = document.getElementById("preview-photo-modal");
-          preview.innerHTML = "";
-          const file = e.target.files[0];
-          if (file) {
-            const url = URL.createObjectURL(file);
-            preview.innerHTML = `<img src="${url}" style="max-width:100%;max-height:180px;border-radius:8px;">`;
-          }
-        });
+      // Chỉ load Story nếu là tab story
+      // if (section === 'story') {
+      //   loadOwnStories();
+      // }
 
-      // Preview video
-      document
-        .getElementById("input-video-file-modal")
-        ?.addEventListener("change", function (e) {
-          const preview = document.getElementById("preview-video-modal");
-          preview.innerHTML = "";
-          const file = e.target.files[0];
-          if (file) {
-            const url = URL.createObjectURL(file);
-            preview.innerHTML = `<video src="${url}" controls style="max-width:100%;max-height:180px;border-radius:8px;"></video>`;
-          }
-        });
+      // Xử lý ẩn/hiện left panel
+      const leftPanel = document.getElementById('left-panel');
+      const rightPanel = document.querySelector('.right-panel');
+      if (['photo', 'video', 'story', 'friends'].includes(section)) {
+        if (leftPanel) leftPanel.style.display = 'none';
+        if (rightPanel) rightPanel.style.width = '100%';
+      } else {
+        if (leftPanel) leftPanel.style.display = 'block';
+        if (rightPanel) rightPanel.style.width = '';
+      }
+    }
 
-      // Preview reel (ảnh hoặc video)
-      document
-        .getElementById("input-reel-file-modal")
-        ?.addEventListener("change", function (e) {
-          const preview = document.getElementById("preview-reel-modal");
-          preview.innerHTML = "";
-          const file = e.target.files[0];
-          if (file) {
-            const url = URL.createObjectURL(file);
-            if (file.type.startsWith("video/")) {
-              preview.innerHTML = `<video src="${url}" controls style="max-width:100%;max-height:180px;border-radius:8px;"></video>`;
-            } else if (file.type.startsWith("image/")) {
-              preview.innerHTML = `<img src="${url}" style="max-width:100%;max-height:180px;border-radius:8px;">`;
-            }
-          }
-        });
-    </script>
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+  <script src="../Js/Thiep/other-profile.js"></script>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
+
+  <script src="../Js/Thiep/story.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="../Js/api-like.js"></script>
+  <script src="../Js/api-reaction.js"></script>
+  <script src="../Js/comment.js"></script>
+  <script src="../Js/api-share-save-post.js"></script>
+
+
+  <script src="../Js/Thiep/update-post.js"></script>
+  <script src="../Js/Thiep/post-container-other-profile.js"></script>
+
+
+  <script>
+    // Kiểm tra token khi tải trang
+
+    if (!token) {
+      alert('Vui lòng đăng nhập để tiếp tục!');
+      window.location.href = 'login.html';
+    }
+  </script>
+  <script>
+    // Preview ảnh profile
+    document.getElementById('input-profile-photo-modal')?.addEventListener('change', function (e) {
+      const preview = document.getElementById('preview-profile-photo-modal');
+      preview.innerHTML = '';
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        preview.innerHTML = `<img src="${url}" style="max-width:100%;max-height:180px;border-radius:8px;">`;
+      }
+    });
+
+    // Preview ảnh
+    document.getElementById('input-photo-file-modal')?.addEventListener('change', function (e) {
+      const preview = document.getElementById('preview-photo-modal');
+      preview.innerHTML = '';
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        preview.innerHTML = `<img src="${url}" style="max-width:100%;max-height:180px;border-radius:8px;">`;
+      }
+    });
+
+    // Preview video
+    document.getElementById('input-video-file-modal')?.addEventListener('change', function (e) {
+      const preview = document.getElementById('preview-video-modal');
+      preview.innerHTML = '';
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        preview.innerHTML = `<video src="${url}" controls style="max-width:100%;max-height:180px;border-radius:8px;"></video>`;
+      }
+    });
+
+    // Preview reel (ảnh hoặc video)
+    document.getElementById('input-reel-file-modal')?.addEventListener('change', function (e) {
+      const preview = document.getElementById('preview-reel-modal');
+      preview.innerHTML = '';
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        if (file.type.startsWith('video/')) {
+          preview.innerHTML = `<video src="${url}" controls style="max-width:100%;max-height:180px;border-radius:8px;"></video>`;
+        } else if (file.type.startsWith('image/')) {
+          preview.innerHTML = `<img src="${url}" style="max-width:100%;max-height:180px;border-radius:8px;">`;
+        }
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(function () {
+        document.getElementById("page-loader").style.opacity = "0";
         setTimeout(function () {
-          document.getElementById("page-loader").style.opacity = "0";
-          setTimeout(function () {
-            document.getElementById("page-loader").style.display = "none";
-            document.body.classList.add("animate__animated", "animate__fadeIn");
-          }, 500);
-        }, 1200); // Thời gian loader (ms)
-      });
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const avatarUrl = localStorage.getItem("userAvatar");
-        const avatarImg = document.querySelector(".userAvatar");
+          document.getElementById("page-loader").style.display = "none";
+          document.body.classList.add("animate__animated", "animate__fadeIn");
+        }, 500);
+      }, 1200); // Thời gian loader (ms)
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const avatarUrl = localStorage.getItem("userAvatar");
+      const avatarImg = document.querySelector(".userAvatar");
 
-        if (avatarUrl && avatarImg) {
-          avatarImg.src = avatarUrl;
-        }
-      });
-    </script>
-    <style>
-      nav a {
-        transition: background 0.22s, color 0.22s, transform 0.22s;
-        border-radius: 8px;
-        padding: 8px 18px;
-        margin-right: 8px;
-        font-weight: 500;
-        color: #aca7a7;
-        background: transparent;
+      if (avatarUrl && avatarImg) {
+        avatarImg.src = avatarUrl;
       }
+    });
+  </script>
+  <style>
+    nav a {
+      transition: background 0.22s, color 0.22s, transform 0.22s;
+      border-radius: 8px;
+      padding: 8px 18px;
+      margin-right: 8px;
+      font-weight: 500;
+      color: #aca7a7;
+      background: transparent;
+    }
 
-      nav a:hover,
-      nav a.active {
-        background: #1877f2;
-        color: #fff !important;
-        transform: scale(1.08);
-        box-shadow: 0 2px 8px rgba(24, 119, 242, 0.13);
-      }
-    </style>
-    <script src="../Js/Thiep/match-other-profile.js"></script>
-    <script src="../Js/Thiep/report-other-profile.js"></script>
-  </body>
+    nav a:hover,
+    nav a.active {
+      background: #1877F2;
+      color: #fff !important;
+      transform: scale(1.08);
+      box-shadow: 0 2px 8px rgba(24, 119, 242, 0.13);
+    }
+  </style>
+  <script src="../Js/Thiep/match-other-profile.js"></script>
+  <script src="../Js/Thiep/report-other-profile.js"></script>
+</body>
+
 </html>

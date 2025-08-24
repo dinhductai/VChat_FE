@@ -60,8 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
         listDiv.innerHTML += `
                 <input type="text" id="input-typeName" style="display:none;" />
                 <div style="margin-top:8px;">
-                    <label for="input-additionalDetails" style="font-weight:500;">Chi tiết báo cáo:</label>
-                    <textarea id="input-additionalDetails" class="form-control" rows="2" placeholder="Nhập chi tiết nếu có..."></textarea>
+                    <label for="input-additionalDetails" style="font-weight:500;">Ghi chú thêm:</label>
+                    <textarea id="input-additionalDetails" class="form-control" rows="2" placeholder="Nhập ghi chú nếu có..."></textarea>
                 </div>
             `;
         // Sự kiện chọn radio
@@ -95,9 +95,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const additionalDetails = additionalDetailsInput.value.trim();
         const reportDate = new Date().toISOString();
         const token = localStorage.getItem("accessToken");
+
         // Gửi API
         try {
-            const typeName = typeNameInput.value.trim();
             const res = await fetch(`http://localhost:8080/api/report?typeName=${encodeURIComponent(typeName)}`, {
                 method: "POST",
                 headers: {
