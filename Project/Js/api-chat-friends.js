@@ -18,32 +18,53 @@ function startChat() {
   currentReceiverId = receiverId;
 
   const userId = JSON.parse(atob(token.split(".")[1])).sub;
-  const newChannel = createChatChannel(userId, currentReceiverId); // ví dụ: /topic/chat/12_17
+  const newChannel = createChatChannel(userId, currentReceiverId);
 
   if (subscribedChannel !== newChannel) {
-    // Bỏ sub cũ nếu có
     if (subscribedChannel && stompClient && stompClient.connected) {
       stompClient.unsubscribe(subscribedChannel);
       console.log("🔌 Unsubscribed from:", subscribedChannel);
     }
 
-    // Sub kênh mới
+    // 👉 Sub kênh mới
     const subscription = stompClient.subscribe(newChannel, (message) => {
       const msg = JSON.parse(message.body);
       const senderId = parseInt(msg.senderId);
 
       console.log("📨 Nhận được response:", msg);
 
-      // Nếu người gửi không phải là chính mình thì mới hiển thị
-      if (senderId !== parseInt(userId)) {
-        showMessage(msg, false); // Hiển thị message bên trái (friend)
+      // 👉 Nếu là event xoá message realtime
+      if (msg.isDeleted && msg.messageId) {
+        const bubble = document.querySelector(
+          `.message-bubble[data-message-id="${msg.messageId}"]`
+        );
+        if (bubble) {
+          bubble.textContent = "Tin nhắn đã xoá";
+          bubble.className =
+            "bg-light text-muted px-3 py-2 rounded-3 fst-italic message-bubble";
+        }
+        return;
       }
+
+      // 👉 Nếu messageId đã tồn tại → coi là tin nhắn sửa
+      const existingBubble = document.querySelector(
+        `.message-bubble[data-message-id="${msg.messageId}"]`
+      );
+      if (existingBubble) {
+        existingBubble.textContent = msg.message;
+        return;
+      }
+
+      // 👉 Nếu là tin nhắn mới
+      showMessage(msg, senderId === parseInt(userId));
     });
 
     subscribedChannel = subscription.id;
     console.log("📡 Subscribed to:", newChannel);
   }
-  document.getElementById("chatMessages").innerHTML = ""; // clear tin nhắn cũ
+
+  // 👉 Clear tin nhắn cũ và load lịch sử
+  document.getElementById("chatMessages").innerHTML = "";
   getHistoryChat(parseInt(userId), currentReceiverId);
 }
 
@@ -134,29 +155,72 @@ function showMessage(msg, isMe) {
       const deleteBtn = menu.querySelector(".message-menu-item:nth-child(2)");
 
       // 👉 Khi bấm sửa
-      editBtn.addEventListener("click", () => {
-        const chatInput = document.getElementById("chatInput");
-        chatInput.value = msg.message;
-        chatInput.focus();
-        chatInput.dataset.editing = "true";
-        chatInput.dataset.messageId = msg.id;
+      editBtn.addEventListener("click", async () => {
         menu.style.display = "none";
+        const { value: newText } = await Swal.fire({
+          title: "Sửa tin nhắn",
+          input: "text",
+          inputValue: msg.message,
+          showCancelButton: true,
+          confirmButtonText: "Lưu",
+          cancelButtonText: "Huỷ",
+          inputValidator: (value) => {
+            if (!value) {
+              return "Nội dung không được để trống!";
+            }
+          },
+        });
+
+        if (newText && newText !== msg.message) {
+          stompClient.send(
+            "/app/message.edit",
+            {},
+            JSON.stringify({
+              token: token,
+              receiverId: currentReceiverId,
+              messageId: msg.messageId,
+              message: newText,
+            })
+          );
+
+          Swal.fire({
+            icon: "success",
+            title: "Đã sửa",
+            text: "Tin nhắn đã được cập nhật",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        }
       });
 
       // 👉 Khi bấm xoá
-      deleteBtn.addEventListener("click", () => {
-        // Gửi socket xoá (nếu có backend)
-        stompClient.send(
-          "/app/message.delete",
-          {},
-          JSON.stringify({ messageId: msg.id, token: token })
-        );
+      deleteBtn.addEventListener("click", async () => {
+        const result = await Swal.fire({
+          title: "Xoá tin nhắn?",
+          text: "Bạn có chắc muốn xoá tin nhắn này?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Xoá",
+          cancelButtonText: "Huỷ",
+          reverseButtons: true,
+        });
 
-        // Cập nhật UI ngay
-        bubble.textContent = "Tin nhắn đã xoá";
-        bubble.className =
-          "bg-light text-muted px-3 py-2 rounded-3 fst-italic message-bubble";
-        menu.style.display = "none";
+        if (result.isConfirmed) {
+          // Gửi socket xoá
+          stompClient.send(
+            "/app/message.delete",
+            {},
+            JSON.stringify({ messageId: msg.messageId, token: token })
+          );
+
+          Swal.fire({
+            icon: "success",
+            title: "Đã xoá",
+            text: "Tin nhắn đã được xoá.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
       });
 
       wrapper.addEventListener("mouseenter", () => {
