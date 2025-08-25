@@ -65,7 +65,7 @@ function startChat() {
 
   // 👉 Clear tin nhắn cũ và load lịch sử
   document.getElementById("chatMessages").innerHTML = "";
-  getHistoryChat(parseInt(userId), currentReceiverId);
+  getHistoryChat(parseInt(userId), currentReceiverId, 0);
 }
 
 function sendMessage() {
@@ -89,8 +89,6 @@ function sendMessage() {
   );
 
   // Hiển thị tin nhắn của chính mình
-  showMessage({ message: messageText }, true);
-
   // Reset textarea và chiều cao
   chatInput.value = "";
   chatInput.style.height = "auto";
@@ -102,7 +100,7 @@ function showMessage(msg, isMe) {
   } position-relative`;
 
   const bubble = document.createElement("div");
-  bubble.dataset.messageId = msg.id; // gắn id để dùng cho xoá/sửa sau
+  bubble.dataset.messageId = msg.messageId;
 
   // Nếu tin nhắn đã xoá
   if (msg.isDeleted) {
@@ -147,8 +145,8 @@ function showMessage(msg, isMe) {
       menu.style.display = "none";
       menu.style.zIndex = "1000";
       menu.innerHTML = `
-        <div class="message-menu-item px-3 py-2" style="cursor:pointer;">✏️ Sửa tin nhắn</div>
-        <div class="message-menu-item px-3 py-2 text-danger" style="cursor:pointer;" onclick="deleteMessage(this)">🗑️ Xoá tin nhắn</div>
+        <div class="message-menu-item px-3 py-2" style="cursor:pointer;"><i class="bi bi-pencil"></i> Sửa tin nhắn</div>
+        <div class="message-menu-item px-3 py-2 text-danger" style="cursor:pointer;"><i class="bi bi-calendar2-x"></i> Xoá tin nhắn</div>
       `;
 
       const editBtn = menu.querySelector(".message-menu-item:nth-child(1)");
@@ -195,6 +193,7 @@ function showMessage(msg, isMe) {
 
       // 👉 Khi bấm xoá
       deleteBtn.addEventListener("click", async () => {
+        const messageId = bubble.dataset.messageId;
         const result = await Swal.fire({
           title: "Xoá tin nhắn?",
           text: "Bạn có chắc muốn xoá tin nhắn này?",
@@ -210,7 +209,11 @@ function showMessage(msg, isMe) {
           stompClient.send(
             "/app/message.delete",
             {},
-            JSON.stringify({ messageId: msg.messageId, token: token })
+            JSON.stringify({
+              token: token,
+              receiverId: currentReceiverId,
+              messageId: parseInt(messageId),
+            })
           );
 
           Swal.fire({
@@ -254,58 +257,96 @@ function showMessage(msg, isMe) {
 function editMessage(el) {
   alert("Sửa tin nhắn (bạn tự xử lý logic này)");
 }
-function deleteMessage(el) {
-  const bubble = el.closest(".chat-wrapper").querySelector(".message-bubble");
-  const messageId = bubble.dataset.messageId;
-  console.log("messID: ", messageId);
-  console.log("currentReceiverId: ", currentReceiverId);
+// function deleteMessage(el) {
+//   alert("day la ham delete");
+//   const bubble = el.closest(".chat-wrapper").querySelector(".message-bubble");
+//   const messageId = bubble.dataset.messageId;
+//   console.log("messID: ", messageId);
+//   console.log("currentReceiverId: ", currentReceiverId);
 
-  if (!messageId || !currentReceiverId) {
-    console.error("Thiếu messageId hoặc receiverId");
-    return;
-  }
+//   if (!messageId || !currentReceiverId) {
+//     console.error("Thiếu messageId hoặc receiverId");
+//     return;
+//   }
 
-  stompClient.send(
-    "/app/message.delete",
-    {},
-    JSON.stringify({
-      token: token,
-      receiverId: currentReceiverId,
-      messageId: parseInt(messageId),
-    })
-  );
-}
+//   stompClient.send(
+//     "/app/message.delete",
+//     {},
+//     JSON.stringify({
+//       token: token,
+//       receiverId: currentReceiverId,
+//       messageId: parseInt(messageId),
+//     })
+//   );
+// }
+let currentPageF = 0;
+let totalPagesF = 1;
+let isLoadingF = false;
 
-async function getHistoryChat(currentUserId, receiverId) {
+async function getHistoryChat(currentUserId, receiverId, page = 0) {
+  if (isLoadingF || page >= totalPagesF) return;
+  isLoadingF = true;
+
   const token = localStorage.getItem("accessToken");
 
-  const res = await fetch(
-    `http://localhost:8080/api/message/history?receiverId=${receiverId}&page=0&size=20`,
-    { headers: { Authorization: "Bearer " + token } }
-  );
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/message/history?receiverId=${receiverId}&page=${page}&size=100`,
+      { headers: { Authorization: "Bearer " + token } }
+    );
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Server error ${res.status}: ${text}`);
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Server error ${res.status}: ${text}`);
+    }
+
+    const json = await res.json();
+    if (!json.success) {
+      console.error("Lỗi lấy lịch sử:", json.message);
+      return;
+    }
+
+    const messages = json.data.content ?? [];
+    totalPagesF = json.data.totalPages ?? 1;
+
+    const chatMessages = document.getElementById("chatMessages");
+
+    // Nếu là page 0 (load lần đầu) thì xoá cũ
+    if (page === 0) {
+      chatMessages.innerHTML = "";
+    }
+
+    // Lưu vị trí scroll trước khi prepend
+    const prevScrollHeight = chatMessages.scrollHeight;
+
+    // Hiển thị tin nhắn
+    messages.forEach((m) => {
+      const isMe = String(m.senderId) === String(currentUserId);
+      const temp = document.createElement("div");
+      showMessage(m, isMe); // showMessage vẫn append xuống cuối
+      // 👉 Nếu muốn prepend khi page > 0 thì cần showMessage return element
+    });
+
+    // Giữ nguyên vị trí scroll khi load thêm
+    if (page > 0) {
+      chatMessages.scrollTop =
+        chatMessages.scrollHeight - prevScrollHeight + chatMessages.scrollTop;
+    } else {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    currentPageF = page;
+  } catch (err) {
+    console.error("❌ Lỗi load history:", err);
+  } finally {
+    isLoadingF = false;
   }
-
-  const json = await res.json();
-  if (!json.success) {
-    console.error("Lỗi lấy lịch sử:", json.message);
-    return;
-  }
-
-  const messages = json.data.content ?? [];
-  const chatMessages = document.getElementById("chatMessages");
-  chatMessages.innerHTML = ""; // clear cũ nếu cần
-
-  // Nếu API trả mới->cũ, có thể đảo lại để hiển thị từ cũ->mới:
-  // messages.reverse();
-
-  messages.forEach((m) => {
-    const isMe = String(m.senderId) === String(currentUserId);
-    showMessage(m, isMe);
-  });
-
-  chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
+const chatMessages = document.getElementById("chatMessages");
+
+chatMessages.addEventListener("scroll", () => {
+  if (chatMessages.scrollTop === 0 && !isLoadingF) {
+    getHistoryChat(currentUserId, currentReceiverId, currentPageF + 1);
+  }
+});
