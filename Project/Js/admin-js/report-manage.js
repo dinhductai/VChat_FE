@@ -6,11 +6,11 @@ let reports = [];
 /* ================= Fetch dữ liệu ================= */
 async function fetchReports() {
     const token = localStorage.getItem("accessToken");
-    if (!token) {
-        alert("Bạn chưa đăng nhập! Đang chuyển hướng...");
-        window.location.href = "login.html";
-        return;
-    }
+    // if (!token) {
+    //     alert("Bạn chưa đăng nhập! Đang chuyển hướng...");
+    //     window.location.href = "../login.html";
+    //     return;
+    // }
 
     try {
         const res = await fetch("http://localhost:8080/api/admin/reports", {
@@ -59,13 +59,13 @@ function renderTable() {
         let actionBtn = '';
         if (r.reportStatus === 'PENDING') {
             actionBtn = `
-                <button class="btn btn-sm btn-success" onclick="updateStatus('${r.reportedId}', 'block')" title="Block tài khoản">
-                    <i class="bi bi-person-x"></i> Block
+                <button class="btn btn-sm btn-success" onclick="updateStatus('${r.reportedId}', 'block')" title="Khóa tài khoản">
+                    <i class="bi bi-person-x"></i> Khóa
                 </button>`;
         } else if (r.reportStatus === 'RESOLVED') {
             actionBtn = `
-                <button class="btn btn-sm btn-warning" onclick="undoStatus('${r.reportedId}')" title="ACTIVE">
-                    <i class="bi bi-person-check"></i> ACTIVE
+                <button class="btn btn-sm btn-warning" onclick="undoStatus('${r.reportedId}')" title="Kích hoạt lại">
+                    <i class="bi bi-person-check"></i> Kích hoạt lại
                 </button>`;
         } else {
             actionBtn = `<span class="text-muted"><i class="bi bi-lock"></i></span>`;
@@ -151,7 +151,7 @@ async function undoStatus(userId) {
 }
 
 async function updateStatus(userId, status = "block") {
-    const msg = status === "block" ? "Block tài khoản thành công!" : "Cập nhật trạng thái thành công!";
+    const msg = status === "block" ? "Khóa tài khoản thành công!" : "Cập nhật trạng thái thành công!";
     await changeUserStatus(userId, status, msg);
 }
 
@@ -181,7 +181,6 @@ async function changeUserStatus(userId, status, successMsg) {
     }
 }
 
-/* ================= Toast ================= */
 function showToast(message, type = "success") {
     const toastContainer = document.getElementById("toastContainer");
     const toastId = "toast-" + Date.now() + Math.random();
@@ -200,7 +199,7 @@ function showToast(message, type = "success") {
         <div class="d-flex">
             <div class="toast-body">${icon} ${message}</div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                    data-bs-dismiss="toast" aria-label="Close"></button>
+                    data-bs-dismiss="toast" aria-label="Đóng"></button>
         </div>
     `;
     toastContainer.appendChild(toast);
