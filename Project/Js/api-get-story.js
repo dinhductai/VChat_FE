@@ -30,10 +30,12 @@ function loadStories() {
       storyList.innerHTML = "";
 
       stories.forEach((story, index) => {
-        const avatar = story.profileUrl;
+        let avatar = story.profileUrl;
         const image = story.listStoryPhoto[0];
         const name = story.fullName;
-
+        if (!avatar) {
+          avatar = "../images/user-default.webp";
+        }
         const html = `
           <div
             class="rounded-3 text-center story-item-wrapper position-relative overflow-hidden pter"

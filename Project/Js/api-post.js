@@ -117,7 +117,6 @@ async function loadPosts() {
     const data = await response.json();
     if (Array.isArray(data?.data?.content)) {
       data.data.content.forEach((post) => {
-        console.log("post id: " + post.postId);
         console.log("renderedPostIds:", [...renderedPostIds].join(", "));
         if (!renderedPostIds.has(post.postId)) {
           renderedPostIds.add(post.postId);

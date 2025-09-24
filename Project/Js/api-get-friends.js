@@ -85,9 +85,7 @@ async function loadHomeFriends(page = 0) {
             <h6 class="card-title mb-1 text-truncate text-start">
               ${friend.fullName || "Không rõ"}
             </h6>
-            <p class="text-muted small mb-2 text-start">
-              ${friend.mutualFriends || 0} mutual friends
-            </p>
+
             <button class="btn btn-sm btn-primary w-100 mb-1" onclick="addFriend(${
               friend.userId
             })">Thêm bạn bè</button>
@@ -173,7 +171,6 @@ async function loadAllFriends(page = 0) {
             <h6 class="card-title mb-1 text-truncate text-start">
               ${friend.fullName || "Không rõ"}
             </h6>
-            ${mutual}
             <div class="d-flex gap-1">
               <button class="btn btn-sm btn-secondary border w-50 d-flex align-items-center justify-content-center gap-1">
                 <i class="bi bi-person-fill-check"></i>
@@ -260,7 +257,6 @@ async function loadFriendsSuggest(page = 0) {
             <h6 class="card-title mb-1 text-truncate text-start">${
               friend.fullName || "Unknown"
             }</h6>
-            ${mutual}
             <button class="btn btn-sm btn-primary w-100 mb-1" onclick="addFriend(${
               friend.userId
             })">

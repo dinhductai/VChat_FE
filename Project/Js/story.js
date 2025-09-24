@@ -18,12 +18,6 @@ const updateScrollButtons = () => {
   }
 };
 
-// Cuộn sang phải
-scrollRightBtn.addEventListener("click", () => {
-  storyContainer.scrollBy({ left: 150, behavior: "smooth" });
-  setTimeout(updateScrollButtons, 300); // Đợi scroll xong
-});
-
 // ✅ Bấm nút trái thì về đầu luôn
 scrollLeftBtn.addEventListener("click", () => {
   storyContainer.scrollTo({ left: 0, behavior: "smooth" });
@@ -91,4 +85,3 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
